@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.2.0 (Unreleased)
 
 - Truecolor support with auto-detection via `COLORTERM` env var
 - Smooth RGB interpolation between gradient stops
