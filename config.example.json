@@ -1,33 +1,36 @@
 {
   "progressLength": 12,
-  "emptyBgDark": 236,
-  "emptyBgLight": 252,
   // "auto" (default), "truecolor", or "256"
   "colorMode": "auto",
   // First matching entry wins. Omit dark-mode/true-color to match both.
+  // bg: empty bar background color (integer for 256-color, [R,G,B] for truecolor)
   "colors": [
     // Truecolor on dark terminal: bright smooth gradient
     {
       "dark-mode": true,
       "true-color": true,
+      "bg": [48, 48, 48],
       "gradient": [[0,215,0], [95,215,0], [175,215,0], [255,255,0], [255,215,0], [255,175,0], [255,135,0], [255,95,0], [255,55,0], [255,0,0]]
     },
     // Truecolor on light terminal: medium intensity
     {
       "dark-mode": false,
       "true-color": true,
+      "bg": [208, 208, 208],
       "gradient": [[0,170,0], [75,170,0], [140,170,0], [200,200,0], [200,170,0], [200,135,0], [200,100,0], [200,65,0], [200,30,0], [190,0,0]]
     },
     // 256-color on dark terminal
     {
       "dark-mode": true,
       "true-color": false,
+      "bg": 236,
       "gradient": [46, 82, 118, 154, 190, 226, 220, 214, 208, 202, 196]
     },
     // 256-color on light terminal
     {
       "dark-mode": false,
       "true-color": false,
+      "bg": 252,
       "gradient": [40, 76, 112, 148, 184, 178, 172, 166, 160]
     }
   ]

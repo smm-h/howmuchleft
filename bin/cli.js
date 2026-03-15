@@ -63,8 +63,8 @@ Usage:
 Config file: ${CONFIG_PATH}
   {
     "progressLength": 12,       Bar width in characters (3-40, default 12)
-    "emptyBgDark": 236,         256-color index for empty bar in dark mode
-    "emptyBgLight": 252         256-color index for empty bar in light mode
+    "colorMode": "auto",        Color depth: "auto", "truecolor", or "256"
+    "colors": [...]             Gradient and bg color entries (see README)
   }
 
 Examples:
@@ -153,13 +153,17 @@ function showConfig() {
     const config = JSON.parse(fs.readFileSync(CONFIG_PATH, 'utf8'));
     console.log('Current settings:');
     console.log(`  progressLength: ${config.progressLength ?? '(default: 12)'}`);
-    console.log(`  emptyBgDark:    ${config.emptyBgDark ?? '(default: 236)'}`);
-    console.log(`  emptyBgLight:   ${config.emptyBgLight ?? '(default: 252)'}`);
+    console.log(`  colorMode:      ${config.colorMode ?? '(default: auto)'}`);
+    if (Array.isArray(config.colors)) {
+      console.log(`  colors:         ${config.colors.length} entries`);
+    } else {
+      console.log('  colors:         (using built-in defaults)');
+    }
   } catch {
     console.log('No config file found. Using defaults:');
     console.log('  progressLength: 12');
-    console.log('  emptyBgDark:    236');
-    console.log('  emptyBgLight:   252');
+    console.log('  colorMode:      auto');
+    console.log('  colors:         built-in gradients');
     console.log();
     console.log(`Create one with: cp ${path.resolve(__dirname, '..', 'config.example.json')} ${CONFIG_PATH}`);
   }
