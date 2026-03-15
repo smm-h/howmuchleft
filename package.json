@@ -8,7 +8,8 @@
   "main": "lib/statusline.js",
   "files": [
     "bin/",
-    "lib/"
+    "lib/",
+    "config.example.json"
   ],
   "keywords": [
     "claude-code",
