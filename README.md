@@ -33,13 +33,19 @@ howmuchleft --install ~/.claude-personal
 
 Config file: `~/.config/howmuchleft.json`
 
-```json
+The config file supports JSONC (comments and trailing commas).
+
+```jsonc
 {
   "progressLength": 12,
   "emptyBgDark": 236,
   "emptyBgLight": 252,
-  "gradientDark": [46, 82, 118, 154, 190, 226, 220, 214, 208, 202, 196],
-  "gradientLight": [28, 64, 100, 136, 172, 178, 172, 166, 160, 124, 88]
+  "colorMode": "auto",
+  // First matching entry wins. Omit dark-mode/true-color to match both.
+  "colors": [
+    { "dark-mode": true, "true-color": true, "gradient": [[0,215,0], [255,255,0], [255,0,0]] },
+    { "dark-mode": true, "true-color": false, "gradient": [46, 226, 196] }
+  ]
 }
 ```
 
@@ -48,9 +54,19 @@ Config file: `~/.config/howmuchleft.json`
 | `progressLength` | `12` | Bar width in characters (3-40) |
 | `emptyBgDark` | `236` | 256-color index for empty bar background in dark terminals |
 | `emptyBgLight` | `252` | 256-color index for empty bar background in light terminals |
-| `gradientDark` | `[46,82,...,196]` | Bar color gradient for dark terminals (256-color indices) |
-| `gradientLight` | `[28,64,...,88]` | Bar color gradient for light terminals (256-color indices) |
-| `gradient` | — | Shorthand: applies to both modes (overridden by mode-specific fields) |
+| `colorMode` | `"auto"` | Color depth: `"auto"` (detect via `COLORTERM`), `"truecolor"`, or `"256"` |
+| `colors` | — | Array of gradient entries (see below) |
+
+Gradient entries in the `colors` array have these fields:
+
+| Field | Required | Description |
+|---|---|---|
+| `gradient` | Yes | Array of color stops: `[R,G,B]` arrays for truecolor, or integers (0-255) for 256-color |
+| `dark-mode` | No | If set, only matches dark (`true`) or light (`false`) terminals |
+| `true-color` | No | If set, only matches truecolor (`true`) or 256-color (`false`) terminals |
+
+First matching entry wins. Omitted conditions match both modes. Built-in defaults are used when no entry matches.
+Truecolor gradients are smoothly interpolated between stops — 3 stops (green, yellow, red) is enough for a smooth bar.
 
 Check current config:
 
