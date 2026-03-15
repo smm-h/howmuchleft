@@ -30,6 +30,7 @@
   "bugs": {
     "url": "https://github.com/smm-h/howmuchleft/issues"
   },
+  "type": "commonjs",
   "engines": {
     "node": ">=18"
   }
