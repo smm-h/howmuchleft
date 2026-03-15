@@ -25,8 +25,24 @@ function resolveClaudeDir(args) {
   return process.env.CLAUDE_CONFIG_DIR || path.join(os.homedir(), '.claude');
 }
 
+/**
+ * Build the command string for settings.json using absolute paths.
+ * Claude Code spawns statusline as a child process which may not inherit
+ * the user's shell PATH (e.g., ~/.npm-global/bin). Using absolute paths
+ * to both `node` and this script ensures it works regardless of PATH.
+ */
 function getStatuslineCommand(claudeDir) {
-  return `howmuchleft ${claudeDir.replace(os.homedir(), '~')}`;
+  // Resolve the real node binary path. process.execPath may return a versioned
+  // name like /usr/bin/node-22; follow symlinks to find if there's a stable
+  // /usr/bin/node pointing to it, and prefer the stable name.
+  let nodePath = fs.realpathSync(process.execPath);
+  const nodeDir = path.dirname(nodePath);
+  const stableNode = path.join(nodeDir, 'node');
+  try {
+    if (fs.realpathSync(stableNode) === nodePath) nodePath = stableNode;
+  } catch {}
+  const scriptPath = path.resolve(__dirname, 'cli.js');
+  return `${nodePath} ${scriptPath} ${claudeDir.replace(os.homedir(), '~')}`;
 }
 
 function readSettingsJson(claudeDir) {
