@@ -1,5 +1,10 @@
 # HowMuchLeft
 
+[![npm version](https://img.shields.io/npm/v/howmuchleft)](https://www.npmjs.com/package/howmuchleft)
+[![npm downloads](https://img.shields.io/npm/dm/howmuchleft)](https://www.npmjs.com/package/howmuchleft)
+[![license](https://img.shields.io/npm/l/howmuchleft)](https://github.com/smm-h/howmuchleft/blob/main/LICENSE)
+[![node](https://img.shields.io/node/v/howmuchleft)](https://nodejs.org)
+
 Pixel-perfect progress bars showing how much context and usage you have left, right in your Claude Code statusline.
 
 Three bars with sub-cell precision (using Unicode fractional block characters):
