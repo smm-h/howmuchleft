@@ -92,6 +92,7 @@ howmuchleft --install [config-dir]    Add to Claude Code settings
 howmuchleft --uninstall [config-dir]  Remove from Claude Code settings
 howmuchleft --config                  Show config path and current settings
 howmuchleft --demo                    Run a time-lapse demo animation
+howmuchleft --test-colors             Preview gradient colors for your terminal
 howmuchleft --version                 Show version
 howmuchleft --help                    Show help
 ```
