@@ -2,6 +2,7 @@
 
 ## 0.2.0
 
+- `bg` field in `colors` entries for per-condition empty bar background color (replaces `emptyBgDark`/`emptyBgLight`)
 - Truecolor support with auto-detection via `COLORTERM` env var
 - Smooth RGB interpolation between gradient stops
 - New `colors` array config: conditional entries with optional `dark-mode` and `true-color` matching

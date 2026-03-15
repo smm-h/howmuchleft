@@ -38,13 +38,11 @@ The config file supports JSONC (comments and trailing commas).
 ```jsonc
 {
   "progressLength": 12,
-  "emptyBgDark": 236,
-  "emptyBgLight": 252,
   "colorMode": "auto",
   // First matching entry wins. Omit dark-mode/true-color to match both.
   "colors": [
-    { "dark-mode": true, "true-color": true, "gradient": [[0,215,0], [255,255,0], [255,0,0]] },
-    { "dark-mode": true, "true-color": false, "gradient": [46, 226, 196] }
+    { "dark-mode": true, "true-color": true, "bg": [48, 48, 48], "gradient": [[0,215,0], [255,255,0], [255,0,0]] },
+    { "dark-mode": true, "true-color": false, "bg": 236, "gradient": [46, 226, 196] }
   ]
 }
 ```
@@ -52,16 +50,15 @@ The config file supports JSONC (comments and trailing commas).
 | Field | Default | Description |
 |---|---|---|
 | `progressLength` | `12` | Bar width in characters (3-40) |
-| `emptyBgDark` | `236` | 256-color index for empty bar background in dark terminals |
-| `emptyBgLight` | `252` | 256-color index for empty bar background in light terminals |
 | `colorMode` | `"auto"` | Color depth: `"auto"` (detect via `COLORTERM`), `"truecolor"`, or `"256"` |
-| `colors` | — | Array of gradient entries (see below) |
+| `colors` | — | Array of color entries (see below) |
 
-Gradient entries in the `colors` array have these fields:
+Each entry in the `colors` array has these fields:
 
 | Field | Required | Description |
 |---|---|---|
 | `gradient` | Yes | Array of color stops: `[R,G,B]` arrays for truecolor, or integers (0-255) for 256-color |
+| `bg` | No | Empty bar background: `[R,G,B]` for truecolor or integer (0-255) for 256-color |
 | `dark-mode` | No | If set, only matches dark (`true`) or light (`false`) terminals |
 | `true-color` | No | If set, only matches truecolor (`true`) or 256-color (`false`) terminals |
 
