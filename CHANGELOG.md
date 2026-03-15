@@ -8,10 +8,10 @@
 - Separate built-in gradients for dark/light mode and truecolor/256-color
 - `colorMode` config option: `"auto"`, `"truecolor"`, or `"256"`
 - JSONC config file support (comments and trailing commas)
-- `--demo` flag: time-lapse animation with three speed waves
+- `--demo` flag: continuous time-lapse animation with configurable duration
 - TTY detection: helpful message instead of hanging when run directly
 - Configurable 256-color gradient (replaces hardcoded 4-bucket colors)
-- `--test-colors` flag: preview gradient swatch in your terminal
+- `--test-colors` flag: preview gradient swatch at seven sample levels
 - Graceful handling of empty/malformed JSON on stdin
 
 ## 0.1.0 (2026-03-15)
