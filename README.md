@@ -12,42 +12,16 @@ Bars shift from green to yellow to orange to red as usage increases. Stale data 
 
 ## Install
 
-### npm (recommended)
-
 ```bash
 npm install -g howmuchleft
 howmuchleft --install
 ```
 
-For a specific Claude config directory (e.g., multiple subscriptions):
+For multiple Claude Code subscriptions:
 
 ```bash
 howmuchleft --install ~/.claude-work
 howmuchleft --install ~/.claude-personal
-```
-
-### curl
-
-```bash
-bash -c "$(curl -fsSL https://raw.githubusercontent.com/USER/howmuchleft/main/install.sh)"
-```
-
-### Manual (git clone)
-
-```bash
-git clone https://github.com/USER/howmuchleft ~/.howmuchleft
-```
-
-Then add to your Claude Code `settings.json`:
-
-```json
-{
-  "statusLine": {
-    "type": "command",
-    "command": "node ~/.howmuchleft/bin/cli.js ~/.claude",
-    "padding": 0
-  }
-}
 ```
 
 ## Configuration
@@ -87,7 +61,7 @@ Claude Code invokes `howmuchleft` as a child process on each statusline render, 
 ## CLI
 
 ```
-howmuchleft [config-dir]          Run the statusline (called by Claude Code)
+howmuchleft [config-dir]              Run the statusline (called by Claude Code)
 howmuchleft --install [config-dir]    Add to Claude Code settings
 howmuchleft --uninstall [config-dir]  Remove from Claude Code settings
 howmuchleft --config                  Show config path and current settings
@@ -100,13 +74,6 @@ howmuchleft --help                    Show help
 ```bash
 howmuchleft --uninstall
 npm uninstall -g howmuchleft
-```
-
-Or for git clone installs:
-
-```bash
-node ~/.howmuchleft/bin/cli.js --uninstall
-rm -rf ~/.howmuchleft
 ```
 
 ## Requirements

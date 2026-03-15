@@ -25,21 +25,8 @@ function resolveClaudeDir(args) {
   return process.env.CLAUDE_CONFIG_DIR || path.join(os.homedir(), '.claude');
 }
 
-/**
- * Determine the command string to put in settings.json.
- * If howmuchleft is in PATH (npm global install), use the short form.
- * Otherwise, use the full path to this script.
- */
 function getStatuslineCommand(claudeDir) {
-  const shortCmd = `howmuchleft ${claudeDir.replace(os.homedir(), '~')}`;
-  // Check if howmuchleft is in PATH by seeing if we were invoked as a symlink
-  const invokedAs = path.basename(process.argv[1]);
-  if (invokedAs === 'cli.js') {
-    // Invoked directly (git clone install), use full path
-    const scriptPath = path.resolve(__dirname, 'cli.js');
-    return `node ${scriptPath} ${claudeDir.replace(os.homedir(), '~')}`;
-  }
-  return shortCmd;
+  return `howmuchleft ${claudeDir.replace(os.homedir(), '~')}`;
 }
 
 function readSettingsJson(claudeDir) {
@@ -79,15 +66,8 @@ Config file: ${CONFIG_PATH}
   }
 
 Examples:
-  # After npm install -g howmuchleft:
   howmuchleft --install
-
-  # With a custom Claude config dir:
-  howmuchleft --install ~/.claude-work
-
-  # Git clone install:
-  git clone https://github.com/USER/howmuchleft ~/.howmuchleft
-  node ~/.howmuchleft/bin/cli.js --install`);
+  howmuchleft --install ~/.claude-work`);
 }
 
 function showVersion() {
