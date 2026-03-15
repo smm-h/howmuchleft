@@ -7,7 +7,9 @@
 
 Pixel-perfect progress bars for your Claude Code statusline. See how much context and usage you have left at a glance.
 
-![Demo](./assets/demo.gif)
+| Dark | Light |
+|---|---|
+| ![Dark mode demo](./assets/demo-dark.gif) | ![Light mode demo](./assets/demo-light.gif) |
 
 ## What you get
 
@@ -19,7 +21,7 @@ Three bars with sub-cell precision using Unicode fractional block characters:
 | 5-hour usage | Rolling rate limit utilization | Time until reset, git branch/changes, lines added/removed |
 | Weekly usage | Rolling 7-day rate limit utilization | Time until reset, current directory |
 
-Bars shift green → yellow → orange → red as usage increases. Stale data (API unreachable) is prefixed with `~`. Works with Pro, Max 5x, Max 20x, and Team subscriptions. API key users see an "API" label with context bar only.
+Bars shift green to red as usage increases. Stale data (API unreachable) is prefixed with `~`. Works with Pro, Max 5x, Max 20x, and Team subscriptions. API key users see an "API" label with context bar only.
 
 ## Install
 
@@ -37,7 +39,7 @@ howmuchleft --install ~/.claude-personal
 
 ## Configuration
 
-Config file: `~/.config/howmuchleft.json` (JSONC — comments and trailing commas are allowed).
+Config file: `~/.config/howmuchleft.json` (JSONC -- comments and trailing commas are allowed).
 
 ```jsonc
 {
@@ -56,7 +58,7 @@ Config file: `~/.config/howmuchleft.json` (JSONC — comments and trailing comma
 
 | Field | Default | Description |
 |---|---|---|
-| `progressLength` | `12` | Bar width in characters (3–40) |
+| `progressLength` | `12` | Bar width in characters (3--40) |
 | `colorMode` | `"auto"` | `"auto"` (detect via `COLORTERM`), `"truecolor"`, or `"256"` |
 | `colors` | built-in | Array of color entries (see below) |
 
@@ -66,12 +68,12 @@ Each entry in the `colors` array is matched against the current terminal. First 
 
 | Field | Required | Description |
 |---|---|---|
-| `gradient` | Yes | Color stops: `[R,G,B]` arrays for truecolor, or integers (0–255) for 256-color |
-| `bg` | No | Empty bar background: `[R,G,B]` for truecolor, or integer (0–255) for 256-color |
+| `gradient` | Yes | Color stops: `[R,G,B]` arrays for truecolor, or integers (0--255) for 256-color |
+| `bg` | No | Empty bar background: `[R,G,B]` for truecolor, or integer (0--255) for 256-color |
 | `dark-mode` | No | Match dark (`true`) or light (`false`) terminals only |
 | `true-color` | No | Match truecolor (`true`) or 256-color (`false`) terminals only |
 
-Truecolor gradients are smoothly interpolated between stops — 3 stops (green, yellow, red) is enough for a smooth bar. 256-color gradients snap to the nearest stop.
+Truecolor gradients are smoothly interpolated between stops -- 3 stops (green, yellow, red) is enough for a smooth bar. 256-color gradients snap to the nearest stop.
 
 To preview your current gradient: `howmuchleft --test-colors`
 
