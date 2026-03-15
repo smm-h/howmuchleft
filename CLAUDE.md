@@ -9,7 +9,7 @@ bin/cli.js           CLI entry point, flag routing, --install/--uninstall
 lib/statusline.js    Core: stdin parsing, OAuth, usage API, git info, bar rendering
 lib/demo.js          --demo animation (sawtooth waves, standalone)
 config.example.json  JSONC example with all 4 gradient combos
-assets/              demo.cast (asciinema) and demo.gif
+assets/              demo-dark.gif and demo-light.gif (recorded via VHS)
 ```
 
 ## How the statusline protocol works
