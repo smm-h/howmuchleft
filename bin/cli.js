@@ -177,8 +177,13 @@ if (args.includes('--help') || args.includes('-h')) {
   uninstall(args);
 } else if (args.includes('--config')) {
   showConfig();
+} else if (process.stdin.isTTY) {
+  // Running from a terminal, not piped by Claude Code
+  console.log('This command is meant to be called by Claude Code, not run directly.');
+  console.log('Try: howmuchleft --help');
+  process.exit(0);
 } else {
-  // Default: run the statusline
+  // Default: run the statusline (stdin is piped by Claude Code)
   main().catch(err => {
     console.error('Statusline error:', err.message);
     process.exit(1);
