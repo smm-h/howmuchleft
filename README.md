@@ -75,6 +75,7 @@ howmuchleft [config-dir]              Run the statusline (called by Claude Code)
 howmuchleft --install [config-dir]    Add to Claude Code settings
 howmuchleft --uninstall [config-dir]  Remove from Claude Code settings
 howmuchleft --config                  Show config path and current settings
+howmuchleft --demo                    Run a time-lapse demo animation
 howmuchleft --version                 Show version
 howmuchleft --help                    Show help
 ```

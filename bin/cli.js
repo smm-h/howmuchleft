@@ -56,6 +56,7 @@ Usage:
   howmuchleft --install [config-dir]    Add howmuchleft to your Claude Code settings
   howmuchleft --uninstall [config-dir]  Remove howmuchleft from your Claude Code settings
   howmuchleft --config                  Show config file path and current settings
+  howmuchleft --demo                    Run a time-lapse demo animation
   howmuchleft --version                 Show version
 
 Config file: ${CONFIG_PATH}
@@ -177,10 +178,13 @@ if (args.includes('--help') || args.includes('-h')) {
   uninstall(args);
 } else if (args.includes('--config')) {
   showConfig();
+} else if (args.includes('--demo')) {
+  const { runDemo } = require('../lib/demo');
+  runDemo();
 } else if (process.stdin.isTTY) {
   // Running from a terminal, not piped by Claude Code
   console.log('This command is meant to be called by Claude Code, not run directly.');
-  console.log('Try: howmuchleft --help');
+  console.log('Try: howmuchleft --help or howmuchleft --demo');
   process.exit(0);
 } else {
   // Default: run the statusline (stdin is piped by Claude Code)
