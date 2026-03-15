@@ -9,7 +9,7 @@
 const fs = require('fs');
 const path = require('path');
 const os = require('os');
-const { main, CONFIG_PATH } = require('../lib/statusline');
+const { main, CONFIG_PATH, testColors } = require('../lib/statusline');
 
 const VERSION = require('../package.json').version;
 
@@ -57,6 +57,7 @@ Usage:
   howmuchleft --uninstall [config-dir]  Remove howmuchleft from your Claude Code settings
   howmuchleft --config                  Show config file path and current settings
   howmuchleft --demo                    Run a time-lapse demo animation
+  howmuchleft --test-colors             Preview gradient colors for your terminal
   howmuchleft --version                 Show version
 
 Config file: ${CONFIG_PATH}
@@ -178,6 +179,8 @@ if (args.includes('--help') || args.includes('-h')) {
   uninstall(args);
 } else if (args.includes('--config')) {
   showConfig();
+} else if (args.includes('--test-colors')) {
+  testColors();
 } else if (args.includes('--demo')) {
   const { runDemo } = require('../lib/demo');
   runDemo();
