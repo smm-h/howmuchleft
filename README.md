@@ -37,7 +37,8 @@ Config file: `~/.config/howmuchleft.json`
 {
   "progressLength": 12,
   "emptyBgDark": 236,
-  "emptyBgLight": 252
+  "emptyBgLight": 252,
+  "gradient": [46, 82, 118, 154, 190, 226, 220, 214, 208, 202, 196]
 }
 ```
 
@@ -46,6 +47,7 @@ Config file: `~/.config/howmuchleft.json`
 | `progressLength` | `12` | Bar width in characters (3-40) |
 | `emptyBgDark` | `236` | 256-color index for empty bar background in dark terminals |
 | `emptyBgLight` | `252` | 256-color index for empty bar background in light terminals |
+| `gradient` | `[46,82,...,196]` | Array of 256-color indices for the bar color gradient (green to red) |
 
 Check current config:
 

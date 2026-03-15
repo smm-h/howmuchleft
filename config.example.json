@@ -1,5 +1,6 @@
 {
   "progressLength": 12,
   "emptyBgDark": 236,
-  "emptyBgLight": 252
+  "emptyBgLight": 252,
+  "gradient": [46, 82, 118, 154, 190, 226, 220, 214, 208, 202, 196]
 }
