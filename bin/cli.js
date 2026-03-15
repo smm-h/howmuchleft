@@ -56,7 +56,7 @@ Usage:
   howmuchleft --install [config-dir]    Add howmuchleft to your Claude Code settings
   howmuchleft --uninstall [config-dir]  Remove howmuchleft from your Claude Code settings
   howmuchleft --config                  Show config file path and current settings
-  howmuchleft --demo                    Run a time-lapse demo animation
+  howmuchleft --demo [seconds]           Run a time-lapse demo (default 60s)
   howmuchleft --test-colors             Preview gradient colors for your terminal
   howmuchleft --version                 Show version
 
@@ -183,7 +183,9 @@ if (args.includes('--help') || args.includes('-h')) {
   testColors();
 } else if (args.includes('--demo')) {
   const { runDemo } = require('../lib/demo');
-  runDemo();
+  const demoIdx = args.indexOf('--demo');
+  const duration = parseInt(args[demoIdx + 1], 10);
+  runDemo(duration > 0 ? duration : undefined);
 } else if (process.stdin.isTTY) {
   // Running from a terminal, not piped by Claude Code
   console.log('This command is meant to be called by Claude Code, not run directly.');
