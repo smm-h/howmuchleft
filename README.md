@@ -7,9 +7,9 @@
 
 Pixel-perfect progress bars for your Claude Code statusline. See how much context and usage you have left at a glance.
 
-| Dark | Light |
-|---|---|
-| ![Dark mode demo](./assets/demo-dark.gif) | ![Light mode demo](./assets/demo-light.gif) |
+![Dark mode demo](./assets/demo-dark.gif)
+
+![Light mode demo](./assets/demo-light.gif)
 
 ## What you get
 
