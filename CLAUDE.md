@@ -37,7 +37,7 @@ Two color depths: truecolor (RGB) and 256-color (palette indices). Detection is 
 
 ### Progress bars (progressBar function)
 
-Uses Unicode left fractional block characters (U+258F through U+2589) for sub-cell precision. Each cell is either fully filled (bg-colored space), fractional (fg-colored block char on empty bg), or empty (empty bg space).
+Uses Unicode left fractional block characters (U+258F through U+2589) for sub-cell precision. Each cell is either fully filled (bg-colored space), fractional (fg-colored block char on empty bg), or empty (empty bg space). Fractional blocks can be disabled via `partialBlocks` config (`true`/`false`/`"auto"`). Auto-detection disables them on terminals in `PARTIAL_BLOCKS_BLOCKLIST` (Apple Terminal, Linux console).
 
 ### OAuth and usage API
 
