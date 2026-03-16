@@ -1,6 +1,6 @@
 {
   "name": "howmuchleft",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Pixel-perfect progress bars showing how much context and usage you have left, right in your Claude Code statusline",
   "bin": {
     "howmuchleft": "bin/cli.js"
