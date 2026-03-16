@@ -81,3 +81,4 @@ Final frame pins all bars to 100% (`isLast` flag) because sawtooth math `(t * N)
 - `.github/workflows/ci.yml`: smoke tests on Node 18/20/22, triggered on push to main and PRs
 - `.github/workflows/publish.yml`: `npm publish --provenance` triggered on GitHub Release, requires `NPM_TOKEN` repo secret
 - **Never run `npm publish` manually** — always publish by creating a GitHub Release (`gh release create vX.Y.Z --title "vX.Y.Z" --generate-notes`), which triggers the publish workflow
+- **Always update `CHANGELOG.md`** when bumping a version — add an entry for each new version before publishing
