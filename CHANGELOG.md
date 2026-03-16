@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.2.2
+
+- `partialBlocks` config option (`true`/`false`/`"auto"`): disable fractional block characters on terminals with broken rendering
+- Auto-detection disables partial blocks on Apple Terminal and the Linux console
+
+## 0.2.1
+
+- Read OAuth credentials from macOS Keychain when `.credentials.json` lacks them
+- Support both current hashed (`Claude Code-credentials-<hash>`) and legacy service names
+- Merge Keychain OAuth data with file data (preserves mcpOAuth etc.)
+- Per-process credentials cache to avoid repeated Keychain reads
+
 ## 0.2.0
 
 - `bg` field in `colors` entries for per-condition empty bar background color (replaces `emptyBgDark`/`emptyBgLight`)
