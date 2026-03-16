@@ -41,7 +41,10 @@ Uses Unicode left fractional block characters (U+258F through U+2589) for sub-ce
 
 ### OAuth and usage API
 
-- Credentials at `<claude-dir>/.credentials.json`
+- Credentials: file at `<claude-dir>/.credentials.json` first, then macOS Keychain fallback
+  - Keychain service name: `Claude Code-credentials-<sha256(configDir)[:8]>` (current) or `Claude Code-credentials` (legacy)
+  - Keychain data merged with file data (preserves mcpOAuth etc.)
+  - Per-process cache avoids repeated Keychain reads
 - Token refresh via `console.anthropic.com/v1/oauth/token`
 - Usage data from `api.anthropic.com/api/oauth/usage` (beta header required)
 - Cache at `<claude-dir>/.statusline-cache.json` with absolute timestamps
