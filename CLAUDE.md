@@ -23,7 +23,7 @@ Claude Code spawns `howmuchleft` as a child process on every render. It pipes a 
 `main()` is the entry point:
 1. `readStdin()` — parse JSON from stdin, fallback to `{}` on malformed input (logs warning to stderr)
 2. `getUsageData()` and `getGitInfo()` run in parallel via `Promise.all`
-3. Three lines are composed and written to stdout
+3. `renderLines()` composes the 3-line output (shared by main and demo mode)
 
 ### Color system
 
@@ -37,7 +37,12 @@ Two color depths: truecolor (RGB) and 256-color (palette indices). Detection is 
 
 ### Progress bars (progressBar function)
 
-Uses Unicode left fractional block characters (U+258F through U+2589) for sub-cell precision. Each cell is either fully filled (bg-colored space), fractional (fg-colored block char on empty bg), or empty (empty bg space). Fractional blocks can be disabled via `partialBlocks` config (`true`/`false`/`"auto"`). Auto-detection disables them on terminals in `PARTIAL_BLOCKS_BLOCKLIST` (Apple Terminal, Linux console).
+Two orientations controlled by `progressBarOrientation` config:
+
+- **Horizontal** (default): each line has its own bar using left fractional blocks (U+258F–U+2589) for sub-cell precision. Bar width set by `progressLength`.
+- **Vertical**: 3 bar columns (context, 5hr, weekly) span all 3 output lines, filling bottom-to-top using lower fractional blocks (U+2581–U+2587). Each cell has 8 states (empty + 7 levels), 3 rows = 24 discrete levels per bar.
+
+Fractional blocks can be disabled via `partialBlocks` config (`true`/`false`/`"auto"`). Auto-detection disables them on terminals in `PARTIAL_BLOCKS_BLOCKLIST` (Apple Terminal, Linux console).
 
 ### OAuth and usage API
 
