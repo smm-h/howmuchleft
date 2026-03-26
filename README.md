@@ -42,6 +42,8 @@ Config lives at `~/.config/howmuchleft.json` (JSONC -- comments allowed). See [`
 
 - **`progressLength`** -- bar width in characters (default 12)
 - **`colorMode`** -- `"auto"`, `"truecolor"`, or `"256"`
+- **`partialBlocks`** -- `true`, `false`, or `"auto"` (default). Sub-cell fractional block characters. Auto disables on terminals with known rendering issues
+- **`progressBarOrientation`** -- `"horizontal"` (default) or `"vertical"`. Vertical mode renders 3 bar columns filling bottom-to-top across all 3 lines
 - **`colors`** -- custom gradient stops and background colors per theme/color-depth combo
 
 Preview your current gradient: `howmuchleft --test-colors`
