@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.3.0
+
+- `progressBarOrientation` config option (`"horizontal"`/`"vertical"`): vertical mode renders 3 bar columns filling bottom-to-top across all 3 lines (8 states per cell = 24 levels)
+- Extract shared `renderLines()` function for line composition, used by both main output and demo mode
+
 ## 0.2.2
 
 - `partialBlocks` config option (`true`/`false`/`"auto"`): disable fractional block characters on terminals with broken rendering
