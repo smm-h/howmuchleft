@@ -68,6 +68,10 @@ Single continuous animation, default 60s. Three sawtooth waves:
 
 Final frame pins all bars to 100% (`isLast` flag) because sawtooth math `(t * N) % 1` never reaches exactly 1.0.
 
+## Local development
+
+The package is installed globally via `npm link`, so `/usr/local/bin/howmuchleft` is a symlink to `bin/cli.js` in this repo. Code changes are picked up immediately by Claude Code's statusline — no reinstall needed.
+
 ## Patterns and conventions
 
 - All state is computed fresh per invocation (no daemon, no IPC)
