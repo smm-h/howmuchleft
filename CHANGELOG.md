@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.4.0
+
+- Default progress bar orientation changed to vertical
+- Fix usage API endpoint: migrated from api.anthropic.com to platform.claude.com (old endpoint returns 429 unconditionally)
+- Fix error cache preserving stale resetAt timestamps, which bypassed error TTL and caused per-render API hammering
+- Exponential backoff on error cache TTL (5m/10m/20m/40m/60m cap) to reduce API load during prolonged failures
+- Fix stale file credentials shadowing fresh Keychain tokens on macOS (expired token with no refresh token no longer blocks Keychain lookup)
+- Keychain fallback in getValidToken() after refresh failure
+- Credential mtime detection: force-refresh when Claude Code writes fresh credentials mid-session
+
 ## 0.3.0
 
 - `progressBarOrientation` config option (`"horizontal"`/`"vertical"`): vertical mode renders 3 bar columns filling bottom-to-top across all 3 lines (8 states per cell = 24 levels)
