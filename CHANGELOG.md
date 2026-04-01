@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.5.0
+
+- Show session elapsed time (e.g. `1h34m`) on line 1, between context percentage and subscription tier
+- Reads `startedAt` from Claude Code's PID session file by walking the process tree via `/proc`
+
 ## 0.4.0
 
 - Default progress bar orientation changed to vertical
