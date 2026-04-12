@@ -8,6 +8,10 @@
   "partialBlocks": "auto",
   // "vertical" (default) or "horizontal". Block character direction.
   "progressBarOrientation": "horizontal",
+  // Max characters for the cwd display (10–100, default 50)
+  "cwdMaxLength": 50,
+  // Number of trailing path components to keep when truncating (1–10, default 3)
+  "cwdDepth": 3,
   // First matching entry wins. Omit dark-mode/true-color to match both.
   // bg: empty bar background color (integer for 256-color, [R,G,B] for truecolor)
   "colors": [
