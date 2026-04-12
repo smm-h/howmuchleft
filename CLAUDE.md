@@ -25,6 +25,8 @@ Claude Code spawns `howmuchleft` as a child process on every render. It pipes a 
 2. `getUsageData()` and `getGitInfo()` run in parallel via `Promise.all`
 3. `renderLines()` composes the 3-line output (shared by main and demo mode)
 
+Line 1 shows the active profile name (config directory basename) in a color hashed from the full config directory path, placed between elapsed time and subscription tier. Hidden when the directory is the default `.claude`.
+
 ### Color system
 
 Two color depths: truecolor (RGB) and 256-color (palette indices). Detection is via `COLORTERM` env var, overridable with `colorMode` config.
@@ -34,6 +36,7 @@ Two color depths: truecolor (RGB) and 256-color (palette indices). Detection is 
 - Truecolor gradients: `interpolateRgb()` does linear interpolation between `[R,G,B]` stops
 - 256-color gradients: snaps to nearest stop index
 - `bg` field: empty bar background, same format as gradient stops. Formatted to ANSI by `formatBgEscape()`
+- Profile label color: `hashToHue()` (djb2 hash to hue 0-359) and `hueToAnsi()` (HSL to ANSI escape, adapts lightness for dark/light mode, truecolor/256-color fallback)
 
 ### Progress bars (progressBar function)
 
@@ -43,6 +46,8 @@ Two orientations controlled by `progressBarOrientation` config:
 - **Vertical**: 3 bar columns (context, 5hr, weekly) span all 3 output lines, filling bottom-to-top using lower fractional blocks (U+2581–U+2587). Each cell has 8 states (empty + 7 levels), 3 rows = 24 discrete levels per bar.
 
 Fractional blocks can be disabled via `partialBlocks` config (`true`/`false`/`"auto"`). Auto-detection disables them on terminals in `PARTIAL_BLOCKS_BLOCKLIST` (Apple Terminal, Linux console).
+
+`verticalBarCell()` accepts an optional `totalRows` parameter (defaults to 3 for the statusline, 7 in `--test-colors`).
 
 ### OAuth and usage API
 
@@ -63,6 +68,10 @@ Fractional blocks can be disabled via `partialBlocks` config (`true`/`false`/`"a
 ### Config
 
 JSONC file at `~/.config/howmuchleft.json`. Parsed by `stripJsonComments()` + `JSON.parse()`. Config is cached per-process in `_barConfig`.
+
+Notable config options:
+- `cwdMaxLength` (default 50, range 10-100): max characters for cwd display
+- `cwdDepth` (default 3, range 1-10): trailing path segments to keep when truncated
 
 ### Demo mode (lib/demo.js)
 
@@ -89,5 +98,5 @@ The package is installed globally via `npm link`, so `/usr/local/bin/howmuchleft
 
 - `.github/workflows/ci.yml`: smoke tests on Node 18/20/22, triggered on push to main and PRs
 - `.github/workflows/publish.yml`: `npm publish --provenance` triggered on GitHub Release, requires `NPM_TOKEN` repo secret
-- **Never run `npm publish` manually** — always publish by creating a GitHub Release (`gh release create vX.Y.Z --title "vX.Y.Z" --generate-notes`), which triggers the publish workflow
+- **Never run `npm publish` manually** — always publish by creating a GitHub Release via `scripts/release.sh`, which extracts the version's section from CHANGELOG.md as the release body and triggers the publish workflow
 - **Always update `CHANGELOG.md`** when bumping a version — add an entry for each new version before publishing
