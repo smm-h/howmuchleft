@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.6.0
+
+- Show active profile name in statusline (line 1, before subscription tier)
+- Profile label color derived from config directory path hash (unique per profile, adapts to dark/light mode)
+- Fix `progressBarOrientation: "horizontal"` being ignored in config (#1)
+- Fix `--test-colors` using vertical block characters in horizontal bar preview
+- Fix stale comment in config.example.json (default orientation is vertical)
+- `--test-colors` overhaul: wider horizontal bars (13 cells), vertical column preview spanning all 7 rows (2 chars wide), aligned percentage labels
+- `verticalBarCell()` now accepts optional `totalRows` parameter (defaults to 3)
+
 ## 0.5.0
 
 - Show session elapsed time (e.g. `1h34m`) on line 1, between context percentage and subscription tier
