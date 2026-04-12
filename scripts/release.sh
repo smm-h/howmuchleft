@@ -23,7 +23,10 @@ if [ -n "$(git ls-files --others --exclude-standard)" ]; then
   exit 1
 fi
 
-if ! grep -q "## ${version}" CHANGELOG.md; then
+# Extract changelog section for this version (everything between ## X.Y.Z headers)
+notes=$(sed -n "/^## ${version}/,/^## /{/^## ${version}/d;/^## /d;p}" CHANGELOG.md)
+notes=$(echo "$notes" | sed -e '/./,$!d' -e :a -e '/^$/N;/\n$/ba' -e 'P;D')
+if [ -z "${notes}" ]; then
   echo "error: no changelog entry for ${version}" >&2
   exit 1
 fi
@@ -41,5 +44,5 @@ if [ "${local_sha}" != "${remote_sha}" ]; then
 fi
 
 echo "Creating release ${tag}..."
-gh release create "${tag}" --title "${tag}" --generate-notes
+gh release create "${tag}" --title "${tag}" --notes "${notes}"
 echo "Done. Publish workflow will push ${version} to npm."
