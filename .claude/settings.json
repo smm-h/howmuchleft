@@ -1,0 +1,10 @@
+{
+  "hooks": {
+    "ProjectInit": [
+      {
+        "type": "command",
+        "command": "./scripts/check-prs.sh"
+      }
+    ]
+  }
+}
