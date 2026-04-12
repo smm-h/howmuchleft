@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.6.1
+
+- Configurable cwd display: `cwdMaxLength` (default 50) and `cwdDepth` (default 3)
+- `scripts/release.sh` now uses CHANGELOG.md content as GitHub Release notes
+- Updated project guide (CLAUDE.md)
+
 ## 0.6.0
 
 - Show active profile name in statusline (line 1, before subscription tier)
