@@ -6,7 +6,7 @@
   // "auto" disables on terminals with known rendering issues (e.g. Apple Terminal).
   // Set to false if block characters render at the wrong height in your font.
   "partialBlocks": "auto",
-  // "horizontal" (default) or "vertical". Block character direction.
+  // "vertical" (default) or "horizontal". Block character direction.
   "progressBarOrientation": "horizontal",
   // First matching entry wins. Omit dark-mode/true-color to match both.
   // bg: empty bar background color (integer for 256-color, [R,G,B] for truecolor)
