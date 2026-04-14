@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.7.0
+
+- Show extra usage (pay-as-you-go) bar when weekly quota is exhausted
+- 3rd bar contextually swaps from weekly to extra usage when weekly >= 100% and extra usage is enabled
+- Warm amber background on extra usage bar and highlighted percentage for visual distinction
+- Weekly reset countdown preserved on the extra usage line
+- Demo animation shows the weekly-to-extra-usage transition
+
 ## 0.6.1
 
 - Configurable cwd display: `cwdMaxLength` (default 50) and `cwdDepth` (default 3)
