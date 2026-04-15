@@ -1,6 +1,6 @@
 {
   "hooks": {
-    "ProjectInit": [
+    "SessionStart": [
       {
         "type": "command",
         "command": "./scripts/check-prs.sh"
