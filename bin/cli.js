@@ -2,26 +2,27 @@
 /**
  * HowMuchLeft CLI
  *
- * When invoked with no flags (or just a config dir arg), runs the statusline.
- * Flags: --install, --uninstall, --config, --help, --version
+ * Subcommands: profile, demo, config, colors
+ * No subcommand + piped stdin = statusline mode (called by Claude Code)
  */
 
 const fs = require('fs');
 const path = require('path');
 const os = require('os');
-const { main, CONFIG_PATH, testColors } = require('../lib/statusline');
+const { main, CONFIG_PATH, testColors, parseJsonc, writeFileAtomic, discoverProfiles } = require('../lib/statusline');
 
 const VERSION = require('../package.json').version;
 
 // --- Helpers ---
 
+function resolvePath(p) {
+  if (p.startsWith('~')) return path.join(os.homedir(), p.slice(1));
+  return path.resolve(p);
+}
+
 function resolveClaudeDir(args) {
-  // Find the first arg that isn't a flag (the Claude config dir)
   const dir = args.find(a => !a.startsWith('-'));
-  if (dir) {
-    if (dir.startsWith('~')) return path.join(os.homedir(), dir.slice(1));
-    return path.resolve(dir);
-  }
+  if (dir) return resolvePath(dir);
   return process.env.CLAUDE_CONFIG_DIR || path.join(os.homedir(), '.claude');
 }
 
@@ -40,44 +41,45 @@ function readSettingsJson(claudeDir) {
 
 function writeSettingsJson(claudeDir, settings) {
   const settingsPath = path.join(claudeDir, 'settings.json');
-  // Ensure directory exists
   fs.mkdirSync(claudeDir, { recursive: true });
   fs.writeFileSync(settingsPath, JSON.stringify(settings, null, 2) + '\n');
 }
 
-// --- Commands ---
-
-function showHelp() {
-  console.log(`howmuchleft v${VERSION}
-Pixel-perfect progress bars for your Claude Code statusline.
-
-Usage:
-  howmuchleft [claude-config-dir]       Run the statusline (called by Claude Code)
-  howmuchleft --install [config-dir]    Add howmuchleft to your Claude Code settings
-  howmuchleft --uninstall [config-dir]  Remove howmuchleft from your Claude Code settings
-  howmuchleft --config                  Show config file path and current settings
-  howmuchleft --demo [seconds]           Run a time-lapse demo (default 60s)
-  howmuchleft --test-colors             Preview gradient colors for your terminal
-  howmuchleft --version                 Show version
-
-Config file: ${CONFIG_PATH}
-  {
-    "progressLength": 12,       Bar width in characters (3-40, default 12)
-    "colorMode": "auto",        Color depth: "auto", "truecolor", or "256"
-    "colors": [...]             Gradient and bg color entries (see README)
+function registerProfile(claudeDir) {
+  const absDir = path.resolve(claudeDir);
+  let config = {};
+  try {
+    config = parseJsonc(fs.readFileSync(CONFIG_PATH, 'utf8'));
+  } catch {}
+  if (!Array.isArray(config.profiles)) config.profiles = [];
+  if (!config.profiles.includes(absDir)) {
+    config.profiles.push(absDir);
   }
-
-Examples:
-  howmuchleft --install
-  howmuchleft --install ~/.claude-work`);
+  fs.mkdirSync(path.dirname(CONFIG_PATH), { recursive: true });
+  writeFileAtomic(CONFIG_PATH, JSON.stringify(config, null, 2) + '\n');
 }
 
-function showVersion() {
-  console.log(VERSION);
+function unregisterProfile(claudeDir) {
+  const absDir = path.resolve(claudeDir);
+  let config = {};
+  try {
+    config = parseJsonc(fs.readFileSync(CONFIG_PATH, 'utf8'));
+  } catch { return; }
+  if (!Array.isArray(config.profiles)) return;
+  config.profiles = config.profiles.filter(p => p !== absDir);
+  writeFileAtomic(CONFIG_PATH, JSON.stringify(config, null, 2) + '\n');
 }
 
-function install(args) {
-  const claudeDir = resolveClaudeDir(args.filter(a => a !== '--install'));
+// --- Profile subcommands ---
+
+function profileList(args) {
+  const { runDashboard } = require('../lib/dashboard');
+  runDashboard(args.includes('--live'));
+}
+
+function profileInstall(args) {
+  const remaining = args.filter(a => a !== 'profile' && a !== 'install');
+  const claudeDir = resolveClaudeDir(remaining);
   const settingsPath = path.join(claudeDir, 'settings.json');
   const settings = readSettingsJson(claudeDir);
   const command = getStatuslineCommand(claudeDir);
@@ -87,10 +89,9 @@ function install(args) {
     console.log(`  ${JSON.stringify(settings.statusLine)}`);
     console.log();
 
-    // Check if it's already howmuchleft
     if (settings.statusLine.command && settings.statusLine.command.includes('howmuchleft')) {
-      console.log('howmuchleft is already installed. To update the command:');
-      console.log('  howmuchleft --uninstall && howmuchleft --install');
+      console.log('howmuchleft is already installed. To update:');
+      console.log('  howmuchleft profile uninstall && howmuchleft profile install');
       return;
     }
 
@@ -117,14 +118,16 @@ function doInstall(claudeDir, settings, command, settingsPath) {
   };
 
   writeSettingsJson(claudeDir, settings);
+  registerProfile(claudeDir);
   console.log(`Installed. Added to ${settingsPath}:`);
   console.log(`  ${JSON.stringify(settings.statusLine, null, 2).replace(/\n/g, '\n  ')}`);
   console.log();
   console.log('Restart Claude Code to see the statusline.');
 }
 
-function uninstall(args) {
-  const claudeDir = resolveClaudeDir(args.filter(a => a !== '--uninstall'));
+function profileUninstall(args) {
+  const remaining = args.filter(a => a !== 'profile' && a !== 'uninstall');
+  const claudeDir = resolveClaudeDir(remaining);
   const settingsPath = path.join(claudeDir, 'settings.json');
   const settings = readSettingsJson(claudeDir);
 
@@ -142,15 +145,18 @@ function uninstall(args) {
 
   delete settings.statusLine;
   writeSettingsJson(claudeDir, settings);
+  unregisterProfile(claudeDir);
   console.log(`Removed statusLine from ${settingsPath}.`);
   console.log('Restart Claude Code to apply.');
 }
+
+// --- Other commands ---
 
 function showConfig() {
   console.log(`Config file: ${CONFIG_PATH}`);
   console.log();
   try {
-    const config = JSON.parse(fs.readFileSync(CONFIG_PATH, 'utf8'));
+    const config = parseJsonc(fs.readFileSync(CONFIG_PATH, 'utf8'));
     console.log('Current settings:');
     console.log(`  progressLength: ${config.progressLength ?? '(default: 12)'}`);
     console.log(`  colorMode:      ${config.colorMode ?? '(default: auto)'}`);
@@ -159,46 +165,96 @@ function showConfig() {
     } else {
       console.log('  colors:         (using built-in defaults)');
     }
+    console.log();
+    if (Array.isArray(config.profiles) && config.profiles.length > 0) {
+      console.log(`Registered profiles (${config.profiles.length}):`);
+      for (const p of config.profiles) {
+        console.log(`  ${p}`);
+      }
+    } else {
+      console.log('Profiles: (none registered -- run howmuchleft profile install)');
+    }
   } catch {
     console.log('No config file found. Using defaults:');
     console.log('  progressLength: 12');
     console.log('  colorMode:      auto');
     console.log('  colors:         built-in gradients');
+    console.log('  profiles:       (none)');
     console.log();
     console.log(`Create one with: cp ${path.resolve(__dirname, '..', 'config.example.json')} ${CONFIG_PATH}`);
   }
 }
 
+function showHelp() {
+  console.log(`howmuchleft v${VERSION}
+Pixel-perfect progress bars for your Claude Code statusline.
+
+Usage:
+  howmuchleft                            Run the statusline (called by Claude Code)
+  howmuchleft profile list [--live]      Show all profiles' usage
+  howmuchleft profile install [dir]      Add howmuchleft to a Claude Code profile
+  howmuchleft profile uninstall [dir]    Remove howmuchleft from a profile
+  howmuchleft config                     Show config file and current settings
+  howmuchleft demo [seconds]             Run a time-lapse demo (default 60s)
+  howmuchleft colors                     Preview gradient colors for your terminal
+  howmuchleft version                    Show version
+
+Config file: ${CONFIG_PATH}
+
+Examples:
+  howmuchleft profile install
+  howmuchleft profile install ~/.claude-work
+  howmuchleft profile list --live`);
+}
+
 // --- Main ---
 
 const args = process.argv.slice(2);
+const cmd = args[0];
 
-if (args.includes('--help') || args.includes('-h')) {
+if (!cmd && process.stdin.isTTY) {
+  // No args, running from terminal
   showHelp();
-} else if (args.includes('--version') || args.includes('-v')) {
-  showVersion();
-} else if (args.includes('--install')) {
-  install(args);
-} else if (args.includes('--uninstall')) {
-  uninstall(args);
-} else if (args.includes('--config')) {
-  showConfig();
-} else if (args.includes('--test-colors')) {
-  testColors();
-} else if (args.includes('--demo')) {
-  const { runDemo } = require('../lib/demo');
-  const demoIdx = args.indexOf('--demo');
-  const duration = parseInt(args[demoIdx + 1], 10);
-  runDemo(duration > 0 ? duration : undefined);
-} else if (process.stdin.isTTY) {
-  // Running from a terminal, not piped by Claude Code
-  console.log('This command is meant to be called by Claude Code, not run directly.');
-  console.log('Try: howmuchleft --help or howmuchleft --demo');
-  process.exit(0);
-} else {
-  // Default: run the statusline (stdin is piped by Claude Code)
+} else if (!cmd || (cmd.startsWith('-') && !process.stdin.isTTY)) {
+  // No subcommand, stdin piped = statusline mode
   main().catch(err => {
     console.error('Statusline error:', err.message);
     process.exit(1);
   });
+} else if (cmd === 'help' || cmd === '--help' || cmd === '-h') {
+  showHelp();
+} else if (cmd === 'version' || cmd === '--version' || cmd === '-v') {
+  console.log(VERSION);
+} else if (cmd === 'profile') {
+  const sub = args[1];
+  if (sub === 'list' || sub === 'ls') {
+    profileList(args.slice(2));
+  } else if (sub === 'install') {
+    profileInstall(args);
+  } else if (sub === 'uninstall') {
+    profileUninstall(args);
+  } else {
+    // bare "howmuchleft profile" = list
+    profileList(args.slice(1));
+  }
+} else if (cmd === 'config') {
+  showConfig();
+} else if (cmd === 'demo') {
+  const { runDemo } = require('../lib/demo');
+  const duration = parseInt(args[1], 10);
+  runDemo(duration > 0 ? duration : undefined);
+} else if (cmd === 'colors') {
+  testColors();
+} else {
+  // Unknown arg — might be a config dir path for statusline mode
+  if (!process.stdin.isTTY) {
+    main().catch(err => {
+      console.error('Statusline error:', err.message);
+      process.exit(1);
+    });
+  } else {
+    console.log(`Unknown command: ${cmd}`);
+    console.log('Run howmuchleft help for usage.');
+    process.exit(1);
+  }
 }
