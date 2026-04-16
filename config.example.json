@@ -10,6 +10,9 @@
   "progressBarOrientation": "horizontal",
   // Show time-elapsed bars next to 5hr/weekly usage bars in vertical mode (default true)
   "showTimeBars": true,
+  // How much dimmer the time bar background is vs usage bars (0–1, default 0.25).
+  // 0 = same as usage bars, 1 = fully transparent (terminal default).
+  "timeBarDim": 0.25,
   // Max characters for the cwd display (10–100, default 50)
   "cwdMaxLength": 50,
   // Number of trailing path components to keep when truncating (1–10, default 3)
