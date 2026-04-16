@@ -8,6 +8,8 @@
   "partialBlocks": "auto",
   // "vertical" (default) or "horizontal". Block character direction.
   "progressBarOrientation": "horizontal",
+  // Show time-elapsed bars next to 5hr/weekly usage bars in vertical mode (default true)
+  "showTimeBars": true,
   // Max characters for the cwd display (10–100, default 50)
   "cwdMaxLength": 50,
   // Number of trailing path components to keep when truncating (1–10, default 3)
