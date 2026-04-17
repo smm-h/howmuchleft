@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.8.0
+
+- Profile dashboard: `howmuchleft profile list` shows all Claude profiles with usage bars side-by-side; `--live` mode refreshes every 30s; discovers profiles from config or `~/.claude-*` dirs
+- Time-elapsed bars: two new vertical bar columns alongside 5hr and weekly usage bars showing how much of each time window has passed; urgency coloring (gray -> yellow -> red) based on burnrate ratio; configurable via `showTimeBars` (default true) and `timeBarDim` (default 0.25)
+- Demo animation includes time bars
+- Fix: renamed invalid `ProjectInit` hook to `SessionStart`
+
 ## 0.7.0
 
 - Show extra usage (pay-as-you-go) bar when weekly quota is exhausted
