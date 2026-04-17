@@ -2,8 +2,13 @@
   "hooks": {
     "SessionStart": [
       {
-        "type": "command",
-        "command": "./scripts/check-prs.sh"
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "./scripts/check-prs.sh"
+          }
+        ]
       }
     ]
   }
