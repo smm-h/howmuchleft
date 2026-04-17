@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.8.1
+
+- Time-elapsed bars in profile dashboard (`howmuchleft profile list`)
+- More dramatic 5hr urgency in demo animation
+
 ## 0.8.0
 
 - Profile dashboard: `howmuchleft profile list` shows all Claude profiles with usage bars side-by-side; `--live` mode refreshes every 30s; discovers profiles from config or `~/.claude-*` dirs
