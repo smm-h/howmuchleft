@@ -44,7 +44,6 @@ Two orientations controlled by `progressBarOrientation` config:
 
 - **Horizontal** (default): each line has its own bar using left fractional blocks (U+258F–U+2589) for sub-cell precision. Bar width set by `progressLength`.
 - **Vertical**: 3 bar columns (context, 5hr, weekly) span all 3 output lines, filling bottom-to-top using lower fractional blocks (U+2581–U+2587). Each cell has 8 states (empty + 7 levels), 3 rows = 24 discrete levels per bar.
-- **Braille**: left-column braille dots (U+2840–U+2847), 4 levels per character, 12 levels across 3 rows. No background color — unfilled portion shows dim "track" dots. Monochrome: white in dark mode, black in light mode. Controlled by `progressBarStyle` config (`"block"` default, `"braille"`).
 
 Fractional blocks can be disabled via `partialBlocks` config (`true`/`false`/`"auto"`). Auto-detection disables them on terminals in `PARTIAL_BLOCKS_BLOCKLIST` (Apple Terminal, Linux console).
 
@@ -73,7 +72,6 @@ JSONC file at `~/.config/howmuchleft.json`. Parsed by `stripJsonComments()` + `J
 Notable config options:
 - `cwdMaxLength` (default 50, range 10-100): max characters for cwd display
 - `cwdDepth` (default 3, range 1-10): trailing path segments to keep when truncated
-- `progressBarStyle` (default `"block"`, options `"block"` / `"braille"`): bar character style for vertical mode
 
 ### Demo mode (lib/demo.js)
 
