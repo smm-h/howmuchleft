@@ -8,9 +8,6 @@
   "partialBlocks": "auto",
   // "vertical" (default) or "horizontal". Block character direction.
   "progressBarOrientation": "horizontal",
-  // "block" (default) or "braille". Bar character style for vertical mode.
-  // "braille" uses braille dot patterns with no background color.
-  "progressBarStyle": "block",
   // Show time-elapsed bars next to 5hr/weekly usage bars in vertical mode (default true)
   "showTimeBars": true,
   // How much dimmer the time bar background is vs usage bars (0–1, default 0.25).
