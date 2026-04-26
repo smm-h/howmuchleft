@@ -35,9 +35,20 @@ Currently shows branch name and changed file count. Missing: ahead/behind upstre
 
 ### 4. Active GitHub username
 
-Show which GitHub account is currently authenticated. Relevant when switching between personal and work accounts -- the wrong account can cause silent permission failures on private repos.
+Show which GitHub account is currently authenticated. Relevant when switching between personal and work accounts -- the wrong account can cause silent permission failures on private repos. The user already injects `GH_TOKEN` per profile via shell aliases (e.g. `cw`, `cwp`, `c`), so the env var is the cheap, reliable signal -- no need for `gh auth status --active` on the hot path.
 
-- Where: on one of the three lines, near the profile name or git branch
-- Data source: `gh auth status --active` or `GH_TOKEN` + `gh api user`
-- Files likely affected: `lib/statusline.js` (rendering), new GH detection logic
+- Where: line 1, near the profile name (both are identity signals)
+- Trigger: only when `GH_TOKEN` is set in `process.env`; render nothing otherwise
+- Resolution strategy:
+  - Compute `tokenHash = sha256(GH_TOKEN).slice(0, 8)` (one-way, 32 bits stored)
+  - Look up `cache.ghUsers[tokenHash]` in `.statusline-cache.json`
+  - On cache miss, fork `gh api user --jq .login` once (inherits `GH_TOKEN` from env, so the token never enters argv); persist `{tokenHash: username}` and return
+  - Cache is effectively permanent: tokens are stable and bound to one user
+- Security:
+  - Never store the raw token, only the truncated hash
+  - Never use `curl -H "Authorization: token $GH_TOKEN"`-style invocation -- argv is visible in `ps`
+  - Cache file should be mode `0600` (verify existing cache write path enforces this)
+  - Never log the token or full API response on error paths
+- Fallback: if `gh` is not installed or the API call fails, cache a sentinel (e.g. `null` with a short TTL) and render nothing
+- Files likely affected: `lib/statusline.js` (rendering, cache schema, resolver)
 - Effort: Low
