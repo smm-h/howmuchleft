@@ -1,2 +1,16 @@
 node_modules/
 .statusline-cache.json
+
+# Added by share-it-on
+__pycache__/
+*.pyc
+*.log
+.DS_Store
+coverage/
+dist/
+*.egg-info/
+.share-it-on-notes-*.tmp
+.credentials.json
+.*-cache.json
+.env
+.env.local
