@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.8.2
+
+- Migrate release pipeline to share-it-on (replace scripts/release.sh)
+- Add pre-release hook, pre-push changelog enforcement, scaffolding freshness marker
+- Add share-it-on scripts (pre-release.sh, pre-push-hook.sh)
+- Merge security-sensitive patterns into .gitignore
+- Update CLAUDE.md for share-it-on workflow
+
 ## 0.8.1
 
 - Time-elapsed bars in profile dashboard (`howmuchleft profile list`)
