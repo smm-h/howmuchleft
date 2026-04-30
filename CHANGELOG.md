@@ -2,11 +2,11 @@
 
 ## 0.8.2
 
-- Migrate release pipeline to share-it-on (replace scripts/release.sh)
+- Migrate release pipeline to rlsbl (replace scripts/release.sh)
 - Add pre-release hook, pre-push changelog enforcement, scaffolding freshness marker
-- Add share-it-on scripts (pre-release.sh, pre-push-hook.sh)
+- Add rlsbl scripts (pre-release.sh, pre-push-hook.sh)
 - Merge security-sensitive patterns into .gitignore
-- Update CLAUDE.md for share-it-on workflow
+- Update CLAUDE.md for rlsbl workflow
 
 ## 0.8.1
 

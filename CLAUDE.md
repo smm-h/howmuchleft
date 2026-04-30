@@ -98,5 +98,5 @@ The package is installed globally via `npm link`, so `/usr/local/bin/howmuchleft
 
 - `.github/workflows/ci.yml`: smoke tests on Node 18/20/22, triggered on push to main and PRs
 - `.github/workflows/publish.yml`: `npm publish --provenance` triggered on GitHub Release, requires `NPM_TOKEN` repo secret
-- **Never run `npm publish` manually** — always publish via `share-it-on npm release`, which bumps the version, updates CHANGELOG.md, creates a GitHub Release (extracting the version's changelog section as the release body), and triggers the publish workflow. Requires `NPM_TOKEN` repo secret for the publish workflow.
+- **Never run `npm publish` manually** — always publish via `rlsbl npm release`, which bumps the version, updates CHANGELOG.md, creates a GitHub Release (extracting the version's changelog section as the release body), and triggers the publish workflow. Requires `NPM_TOKEN` repo secret for the publish workflow.
 - **Always update `CHANGELOG.md`** when bumping a version — add an entry for each new version before publishing
