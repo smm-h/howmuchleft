@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Pre-release validation hook.
-# Runs before share-it-on creates a release. Exit non-zero to abort.
+# Runs before rlsbl creates a release. Exit non-zero to abort.
 # Add your project-specific checks here (e.g., tests, linting, audit).
 
 set -euo pipefail
