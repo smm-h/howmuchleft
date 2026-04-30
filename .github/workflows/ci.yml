@@ -17,6 +17,9 @@ jobs:
       - uses: actions/setup-node@v5
         with:
           node-version: ${{ matrix.node-version }}
-      - run: node -e "require('./package.json')"
-      - run: npm test --if-present
+      - run: node bin/cli.js --version
+      - run: node bin/cli.js --help
+      - run: node bin/cli.js --test-colors
+      - name: Smoke test stdin handling
+        run: echo '{}' | node bin/cli.js
       - run: npm audit --audit-level=moderate || true
