@@ -1,6 +1,8 @@
 {
-  ".github/workflows/ci.yml": "94f410612087c9ac932c9e9d57faa033f6e675482d29e5175b8687d83f119677",
-  ".github/workflows/publish.yml": "a55b0865ffb68e492332eb4c440f1ba64f31c6eb9366f143420bf5f8ac41f202",
+  ".github/workflows/ci.yml": "e5e6128c8b1ef88f8214be5a840f17a6df0019a2745d5a94ab1e1ceaf664014d",
+  ".github/workflows/publish.yml": "8f9546b9cb1970add9543aa93480860404f68b74249a0494f735d47fac851e08",
   "scripts/check-prs.sh": "a438f046ac169256b859873e6f12b66bf629e12fa4bc1f766ed8484af983383c",
-  "scripts/pre-push-hook.sh": "e15b27c530b3d63825c7cc5c26ac9cb45618b217bb8ef8944159993d06ed933f"
+  "scripts/pre-push-hook.sh": "e15b27c530b3d63825c7cc5c26ac9cb45618b217bb8ef8944159993d06ed933f",
+  ".rlsbl/hooks/pre-release.sh": "1b13062dda97df66792df382312263d704a6cc706d2dd3da921f4c470488276d",
+  ".rlsbl/hooks/post-release.sh": "b455f8511e0b2655509ecf5dcb0ab7da5bb7c961f47910ff8e00cab5bd51f833"
 }

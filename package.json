@@ -18,7 +18,8 @@
     "usage",
     "rate-limit",
     "oauth",
-    "cli"
+    "cli",
+    "rlsbl"
   ],
   "author": "smm-h",
   "license": "MIT",
