@@ -17,6 +17,8 @@
   "cwdMaxLength": 50,
   // Number of trailing path components to keep when truncating (1–10, default 3)
   "cwdDepth": 3,
+  // Don't read profiles from claudewheel's config (default false)
+  "excludeClaudewheel": false,
   // First matching entry wins. Omit dark-mode/true-color to match both.
   // bg: empty bar background color (integer for 256-color, [R,G,B] for truecolor)
   "colors": [
