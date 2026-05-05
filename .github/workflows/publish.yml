@@ -10,16 +10,6 @@ jobs:
   publish:
     runs-on: ubuntu-latest
     steps:
-<<<<<<< /home/m/Projects/howmuchleft/tmptogi7b76.ours
-    - uses: actions/checkout@v6
-    - uses: actions/setup-node@v6
-      with:
-        node-version: 22
-        registry-url: https://registry.npmjs.org
-    - run: npm publish --provenance --access public
-      env:
-        NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-=======
       - uses: actions/checkout@v6
       - uses: actions/setup-node@v6
         with:
@@ -28,4 +18,3 @@ jobs:
       - run: npm publish --provenance --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
->>>>>>> /home/m/Projects/howmuchleft/tmptf00nh2x.theirs
