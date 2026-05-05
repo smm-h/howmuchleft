@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.9.0
+
+- Profile discovery merges claudewheel profiles: when claudewheel's config is present (`~/.claudewheel/` or `~/.claudelauncher/`), its profile list is merged with the local scan and any explicit config entries, deduped by resolved path
+- New config option `excludeClaudewheel` (default false) to opt out of claudewheel integration
+- Update rlsbl scaffold to v0.11
+
 ## 0.8.2
 
 - Migrate release pipeline to rlsbl (replace scripts/release.sh)
