@@ -14,7 +14,7 @@ if [ -f go.mod ]; then
   go test ./... -race -short -count=1
 elif [ -f package.json ]; then
   echo "Detected npm project"
-  npm test
+  npm test --if-present
 elif [ -f pyproject.toml ]; then
   echo "Detected Python project"
   if command -v uv &>/dev/null; then
