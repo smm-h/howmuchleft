@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.10.0
+
+- Show Claude Code version (e.g. `v2.1.129`) on statusline line 1, extracted from `AI_AGENT` env var
+- Reduce error cache TTL from 5min base / 1hr cap to 60s base / 5min cap so a single transient API failure no longer locks the statusline into stale data for minutes
+- Preserve `resetAt` timestamps in error cache entries so countdowns remain accurate and the force-refresh-on-reset bypass can trigger during error states
+- Add 7s combined timeout wrapping token refresh + API call (was 10s worst case with two sequential 5s timeouts)
+
 ## 0.9.0
 
 - Profile discovery merges claudewheel profiles: when claudewheel's config is present (`~/.claudewheel/` or `~/.claudelauncher/`), its profile list is merged with the local scan and any explicit config entries, deduped by resolved path
