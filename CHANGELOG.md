@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.10.1
+
+- Fix cross-session stale data: write stdin `rate_limits` to cache so new sessions see fresh data instead of stale error cache from a previous failed API call
+
 ## 0.10.0
 
 - Show Claude Code version (e.g. `v2.1.129`) on statusline line 1, extracted from `AI_AGENT` env var
