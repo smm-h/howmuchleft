@@ -17,6 +17,16 @@
   "cwdMaxLength": 50,
   // Number of trailing path components to keep when truncating (1–10, default 3)
   "cwdDepth": 3,
+  // Which elements to show on each of the 3 output lines.
+  // Each sub-array lists element names; available elements:
+  //   Line 1: context, elapsed, profile, tier, model, version
+  //   Line 2: usage5h, staleness, age, ghUser, branch
+  //   Line 3: usageWeekly, staleness, age, cwd
+  "lines": [
+    ["context", "elapsed", "profile", "tier", "model", "version"],
+    ["usage5h", "staleness", "age", "ghUser", "branch"],
+    ["usageWeekly", "staleness", "age", "cwd"]
+  ],
   // Don't read profiles from claudewheel's config (default false)
   "excludeClaudewheel": false,
   // First matching entry wins. Omit dark-mode/true-color to match both.
