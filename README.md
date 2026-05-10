@@ -54,6 +54,10 @@ Config lives at `~/.config/howmuchleft/config.toml`, auto-created on first run.
 | `howmuchleft config` | Show config path and values |
 | `howmuchleft version` | Print version |
 
+## Performance
+
+The Go rewrite is 6x faster than the previous Node.js version: 17ms average per invocation vs 101ms. Measured over 50 iterations of the real workload (stdin JSON parsing, git subprocess, config read, ANSI rendering).
+
 ## License
 
 MIT
