@@ -18,6 +18,8 @@
 
 ## 0.8.2
 
+Internal improvements.
+
 ## 0.8.1
 
 - Time-elapsed bars in profile dashboard (`howmuchleft profile list`)
