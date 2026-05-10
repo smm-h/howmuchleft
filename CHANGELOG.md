@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.11.1
+
+- Fix: dark mode detection on Linux (`'default'` gsettings value correctly treated as light mode)
+- Fix: TOML config color values parsed correctly (int64 type handling in gradient/bg arrays)
+
 ## 0.11.0
 
 Complete rewrite in Go. Breaking changes from the Node.js version:
