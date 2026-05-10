@@ -6,6 +6,7 @@ import (
 	"runtime/debug"
 
 	"github.com/smm-h/howmuchleft/internal/cli"
+	"github.com/smm-h/howmuchleft/internal/migrate"
 )
 
 var version string
@@ -19,6 +20,7 @@ func main() {
 		}
 	}
 	cli.SetVersion(version)
+	migrate.SetFS(MigrationsFS)
 
 	if err := cli.RootCmd.Execute(); err != nil {
 		fmt.Fprintln(os.Stderr, err)
