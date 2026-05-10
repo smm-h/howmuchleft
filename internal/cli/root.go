@@ -11,6 +11,7 @@ import (
 	"github.com/smm-h/howmuchleft/internal/demo"
 	"github.com/smm-h/howmuchleft/internal/migrate"
 	"github.com/smm-h/howmuchleft/internal/platform"
+	"github.com/smm-h/howmuchleft/internal/render"
 )
 
 var appVersion string
@@ -69,26 +70,30 @@ var profileCmd = &cobra.Command{
 }
 
 var profileInstallCmd = &cobra.Command{
-	Use:   "install",
-	Short: "Install a profile",
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("profile install (not yet implemented)")
+	Use:   "install [dir]",
+	Short: "Add howmuchleft to a Claude Code profile",
+	Args:  cobra.MaximumNArgs(1),
+	RunE: func(cmd *cobra.Command, args []string) error {
+		claudeDir := resolveClaudeDir(args)
+		return profileInstall(claudeDir)
 	},
 }
 
 var profileUninstallCmd = &cobra.Command{
-	Use:   "uninstall",
-	Short: "Uninstall a profile",
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("profile uninstall (not yet implemented)")
+	Use:   "uninstall [dir]",
+	Short: "Remove howmuchleft from a Claude Code profile",
+	Args:  cobra.MaximumNArgs(1),
+	RunE: func(cmd *cobra.Command, args []string) error {
+		claudeDir := resolveClaudeDir(args)
+		return profileUninstall(claudeDir)
 	},
 }
 
 var profileListCmd = &cobra.Command{
-	Use:   "list",
-	Short: "List profiles",
+	Use:   "list [--live]",
+	Short: "Show all profiles' usage",
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("profile list (not yet implemented)")
+		fmt.Println("profile list (not yet implemented — dashboard comes in Phase 5.3)")
 	},
 }
 
@@ -111,17 +116,22 @@ var demoCmd = &cobra.Command{
 
 var colorsCmd = &cobra.Command{
 	Use:   "colors",
-	Short: "Test color rendering",
+	Short: "Preview gradient colors for your terminal",
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("colors (not yet implemented)")
+		cfg := config.Get()
+		barCfg := buildBarConfig(cfg)
+		// Use a wider bar width for test-colors display
+		testCfg := *barCfg
+		testCfg.Width = 13
+		fmt.Print(render.TestColors(&testCfg))
 	},
 }
 
 var configCmd = &cobra.Command{
 	Use:   "config",
-	Short: "Show or edit configuration",
+	Short: "Show config file and current settings",
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("config (not yet implemented)")
+		showConfig()
 	},
 }
 
