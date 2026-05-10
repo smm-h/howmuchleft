@@ -3,10 +3,12 @@ package cli
 import (
 	"fmt"
 	"os"
+	"strconv"
 
 	"github.com/spf13/cobra"
 
 	"github.com/smm-h/howmuchleft/internal/config"
+	"github.com/smm-h/howmuchleft/internal/demo"
 	"github.com/smm-h/howmuchleft/internal/migrate"
 	"github.com/smm-h/howmuchleft/internal/platform"
 )
@@ -91,10 +93,19 @@ var profileListCmd = &cobra.Command{
 }
 
 var demoCmd = &cobra.Command{
-	Use:   "demo",
+	Use:   "demo [duration_seconds]",
 	Short: "Run demo animation",
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("demo (not yet implemented)")
+	Args:  cobra.MaximumNArgs(1),
+	RunE: func(cmd *cobra.Command, args []string) error {
+		duration := 60
+		if len(args) > 0 {
+			d, err := strconv.Atoi(args[0])
+			if err != nil {
+				return fmt.Errorf("invalid duration: %s", args[0])
+			}
+			duration = d
+		}
+		return demo.Run(duration)
 	},
 }
 
