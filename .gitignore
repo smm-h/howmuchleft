@@ -1,24 +1,16 @@
-node_modules/
-.statusline-cache.json
+# Go
+howmuchleft
+*.exe
 
-# Added by share-it-on
-__pycache__/
-*.pyc
+# Cache
+.*-cache.json
+
+# General
 *.log
 .DS_Store
-coverage/
-dist/
-*.egg-info/
-.share-it-on-notes-*.tmp
-.credentials.json
-.*-cache.json
 .env
 .env.local
 
 # Added by rlsbl
 .rlsbl-notes-*.tmp
 *.local-only
-
-# Go
-howmuchleft
-*.exe
