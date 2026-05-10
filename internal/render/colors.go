@@ -91,12 +91,21 @@ func detectDarkModeLinux() bool {
 	ctx, cancel := context.WithTimeout(context.Background(), 1*time.Second)
 	defer cancel()
 	out, err := exec.CommandContext(ctx, "gsettings",
-		"get", "org.gnome.desktop.interface", "color-scheme").Output()
-	if err != nil {
-		// Failure defaults to dark on Linux
+		"get", "org.gnome.desktop.interface", "color-scheme").CombinedOutput()
+	return parseDarkModeGsettings(string(out), err)
+}
+
+// parseDarkModeGsettings interprets gsettings color-scheme output.
+// If the command failed and produced no output, defaults to dark.
+// Otherwise, dark only if output contains "prefer-dark".
+func parseDarkModeGsettings(out string, err error) bool {
+	if err != nil && len(strings.TrimSpace(out)) == 0 {
+		// Command not found or produced no output: default to dark
 		return true
 	}
-	return strings.Contains(string(out), "prefer-dark")
+	// If we got output (even with a non-zero exit), check for "prefer-dark".
+	// Any other value (e.g. 'default', 'prefer-light') means light mode.
+	return strings.Contains(out, "prefer-dark")
 }
 
 // RgbTo256 converts RGB to nearest 256-color 6x6x6 cube index (16-231).

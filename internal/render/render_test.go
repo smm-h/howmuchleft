@@ -1,6 +1,7 @@
 package render
 
 import (
+	"errors"
 	"os"
 	"strings"
 	"testing"
@@ -269,5 +270,67 @@ func TestFormatBgFromValue(t *testing.T) {
 	got = FormatBgFromValue(rgb, false)
 	if !strings.HasPrefix(got, "\x1b[48;5;") {
 		t.Errorf("FormatBgFromValue RGB 256-color = %q, should use 48;5 format", got)
+	}
+}
+
+func TestParseDarkModeGsettings(t *testing.T) {
+	tests := []struct {
+		name string
+		out  string
+		err  error
+		want bool
+	}{
+		{
+			name: "prefer-dark means dark mode",
+			out:  "'prefer-dark'\n",
+			err:  nil,
+			want: true,
+		},
+		{
+			name: "default means light mode",
+			out:  "'default'\n",
+			err:  nil,
+			want: false,
+		},
+		{
+			name: "prefer-light means light mode",
+			out:  "'prefer-light'\n",
+			err:  nil,
+			want: false,
+		},
+		{
+			name: "command not found (no output) defaults to dark",
+			out:  "",
+			err:  errors.New("exec: not found"),
+			want: true,
+		},
+		{
+			name: "error with output still parses output (default = light)",
+			out:  "'default'\n",
+			err:  errors.New("exit status 1"),
+			want: false,
+		},
+		{
+			name: "error with prefer-dark output still detects dark",
+			out:  "'prefer-dark'\n",
+			err:  errors.New("exit status 1"),
+			want: true,
+		},
+		{
+			name: "error with only whitespace defaults to dark",
+			out:  "  \n",
+			err:  errors.New("exit status 1"),
+			want: true,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := parseDarkModeGsettings(tt.out, tt.err)
+			if got != tt.want {
+				t.Errorf("parseDarkModeGsettings(%q, %v) = %v, want %v",
+					tt.out, tt.err, got, tt.want)
+			}
+		})
 	}
 }
