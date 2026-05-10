@@ -8,6 +8,7 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/smm-h/howmuchleft/internal/config"
+	"github.com/smm-h/howmuchleft/internal/dashboard"
 	"github.com/smm-h/howmuchleft/internal/demo"
 	"github.com/smm-h/howmuchleft/internal/migrate"
 	"github.com/smm-h/howmuchleft/internal/platform"
@@ -90,10 +91,11 @@ var profileUninstallCmd = &cobra.Command{
 }
 
 var profileListCmd = &cobra.Command{
-	Use:   "list [--live]",
+	Use:   "list",
 	Short: "Show all profiles' usage",
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("profile list (not yet implemented — dashboard comes in Phase 5.3)")
+	RunE: func(cmd *cobra.Command, args []string) error {
+		live, _ := cmd.Flags().GetBool("live")
+		return dashboard.Run(live)
 	},
 }
 
@@ -136,6 +138,7 @@ var configCmd = &cobra.Command{
 }
 
 func init() {
+	profileListCmd.Flags().Bool("live", false, "Refresh dashboard every 30s")
 	profileCmd.AddCommand(profileInstallCmd, profileUninstallCmd, profileListCmd)
 	RootCmd.AddCommand(versionCmd, profileCmd, demoCmd, colorsCmd, configCmd)
 }
