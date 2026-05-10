@@ -15,15 +15,8 @@
 
 - Profile discovery merges claudewheel profiles: when claudewheel's config is present (`~/.claudewheel/` or `~/.claudelauncher/`), its profile list is merged with the local scan and any explicit config entries, deduped by resolved path
 - New config option `excludeClaudewheel` (default false) to opt out of claudewheel integration
-- Update rlsbl scaffold to v0.11
 
 ## 0.8.2
-
-- Migrate release pipeline to rlsbl (replace scripts/release.sh)
-- Add pre-release hook, pre-push changelog enforcement, scaffolding freshness marker
-- Add rlsbl scripts (pre-release.sh, pre-push-hook.sh)
-- Merge security-sensitive patterns into .gitignore
-- Update CLAUDE.md for rlsbl workflow
 
 ## 0.8.1
 
@@ -48,8 +41,6 @@
 ## 0.6.1
 
 - Configurable cwd display: `cwdMaxLength` (default 50) and `cwdDepth` (default 3)
-- `scripts/release.sh` now uses CHANGELOG.md content as GitHub Release notes
-- Updated project guide (CLAUDE.md)
 
 ## 0.6.0
 
@@ -79,7 +70,6 @@
 ## 0.3.0
 
 - `progressBarOrientation` config option (`"horizontal"`/`"vertical"`): vertical mode renders 3 bar columns filling bottom-to-top across all 3 lines (8 states per cell = 24 levels)
-- Extract shared `renderLines()` function for line composition, used by both main output and demo mode
 
 ## 0.2.2
 
