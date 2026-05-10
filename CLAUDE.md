@@ -1,102 +1,111 @@
 # HowMuchLeft — Agent Guide
 
-Claude Code statusline tool. Zero dependencies, CommonJS, Node >= 18.
+Claude Code statusline tool. Static Go binary, zero runtime dependencies.
 
 ## File structure
 
 ```
-bin/cli.js           CLI entry point, flag routing, --install/--uninstall
-lib/statusline.js    Core: stdin parsing, OAuth, usage API, git info, bar rendering
-lib/demo.js          --demo animation (sawtooth waves, standalone)
-config.example.json  JSONC example with all 4 gradient combos
+main.go              Entry point: version detection, migration FS setup, cobra execution
+embed.go             Embeds migrations/ directory into the binary
+migrable.toml        Config for the migrable schema migration tool
+migrations/          Embedded TOML migration files (applied on startup)
+internal/
+  cli/               Cobra command definitions, statusline runner, profile install/uninstall
+  config/            TOML config loading, validation, clamping, JSON-to-TOML conversion
+  render/            Progress bars, gradients, color system, ANSI output composition
+  oauth/             OAuth token refresh, usage API client
+  cache/             Atomic file cache with TTL, stale-data fallback
+  git/               Branch name, diff stats via git subprocess
+  platform/          Claude dir resolution, dark/light mode detection, GitHub user lookup
+  demo/              Animated sawtooth-wave demo
+  dashboard/         Multi-profile live dashboard
+  migrate/           Embedded migration runner (wraps migrable)
 assets/              demo-dark.gif and demo-light.gif (recorded via VHS)
 ```
 
 ## How the statusline protocol works
 
-Claude Code spawns `howmuchleft` as a child process on every render. It pipes a JSON object to stdin containing `model`, `context_window`, `cwd`, and `cost`. The script writes 3 lines of ANSI-escaped text to stdout and exits. There is no persistent process.
+Claude Code spawns `howmuchleft` as a child process on every render. It pipes a JSON object to stdin containing `model`, `context_window`, `cwd`, and `cost`. The binary writes 3 lines of ANSI-escaped text to stdout and exits. There is no persistent process.
 
 ## Architecture
 
-### Rendering pipeline (lib/statusline.js)
+### CLI (internal/cli)
 
-`main()` is the entry point:
-1. `readStdin()` — parse JSON from stdin, fallback to `{}` on malformed input (logs warning to stderr)
-2. `getUsageData()` and `getGitInfo()` run in parallel via `Promise.all`
-3. `renderLines()` composes the 3-line output (shared by main and demo mode)
+Uses cobra. `RootCmd` detects stdin pipe vs TTY: pipe triggers statusline mode, TTY shows help. Subcommands: `version`, `profile {install,uninstall,list}`, `demo`, `colors`, `config`. `PersistentPreRunE` runs JSON-to-TOML conversion and embedded migrations on every invocation.
 
-Line 1 shows the active profile name (config directory basename) in a color hashed from the full config directory path, placed between elapsed time and subscription tier. Hidden when the directory is the default `.claude`.
+### Config (internal/config)
 
-### Color system
+TOML file at `~/.config/howmuchleft/config.toml`. Parsed via go-toml-edit. Per-process cache via `sync.Once`. `Config` struct covers: color_mode, progress_length, colors array, partial_blocks, progress_bar_orientation, cwd settings, show_time_bars, time_bar_dim, lines config, profiles list. `validate()` clamps ranges and fills defaults.
 
-Two color depths: truecolor (RGB) and 256-color (palette indices). Detection is via `COLORTERM` env var, overridable with `colorMode` config.
+`convert.go` handles one-time JSON-to-TOML migration from the old `~/.config/howmuchleft.json`.
 
-`colors` array entries have optional `dark-mode` and `true-color` conditions. `findColorMatch()` returns the first entry whose conditions match. Builtins cover all 4 combos (dark/light x truecolor/256).
+### Render (internal/render)
 
-- Truecolor gradients: `interpolateRgb()` does linear interpolation between `[R,G,B]` stops
-- 256-color gradients: snaps to nearest stop index
-- `bg` field: empty bar background, same format as gradient stops. Formatted to ANSI by `formatBgEscape()`
-- Profile label color: `hashToHue()` (djb2 hash to hue 0-359) and `hueToAnsi()` (HSL to ANSI escape, adapts lightness for dark/light mode, truecolor/256-color fallback)
+- `compose.go`: `RenderLines()` takes usage data and produces 3-line ANSI output. Configurable line elements via `[lines]` table.
+- `bar.go`: `ProgressBar()` with horizontal (fractional left blocks U+258F-U+2589) and vertical (lower blocks U+2581-U+2587) orientations.
+- `gradient.go`: truecolor RGB interpolation and 256-color palette snapping.
+- `colors.go`: builtin gradients for 4 combos (dark/light x truecolor/256). Condition matching via `FindColorMatch()`.
+- `hash.go`: djb2 hash to hue for profile label coloring.
+- `config_bridge.go`: converts `config.Config` to render-internal `BarConfig`.
 
-### Progress bars (progressBar function)
+### OAuth (internal/oauth)
 
-Two orientations controlled by `progressBarOrientation` config:
+Credentials from `<claude-dir>/.credentials.json`, macOS Keychain fallback. Token refresh via `console.anthropic.com/v1/oauth/token`. Usage data from the platform API.
 
-- **Horizontal** (default): each line has its own bar using left fractional blocks (U+258F–U+2589) for sub-cell precision. Bar width set by `progressLength`.
-- **Vertical**: 3 bar columns (context, 5hr, weekly) span all 3 output lines, filling bottom-to-top using lower fractional blocks (U+2581–U+2587). Each cell has 8 states (empty + 7 levels), 3 rows = 24 discrete levels per bar.
+### Cache (internal/cache)
 
-Fractional blocks can be disabled via `partialBlocks` config (`true`/`false`/`"auto"`). Auto-detection disables them on terminals in `PARTIAL_BLOCKS_BLOCKLIST` (Apple Terminal, Linux console).
+File-based at `<claude-dir>/.statusline-cache.json`. Atomic writes (tmpfile + rename). 60s TTL for success, 5min for errors. Force-refresh when reset time passes. Stale-data fallback shows last-known-good with `~` prefix.
 
-`verticalBarCell()` accepts an optional `totalRows` parameter (defaults to 3 for the statusline, 7 in `--test-colors`).
+### Git (internal/git)
 
-### OAuth and usage API
+Subprocess calls with `--no-optional-locks`. Returns branch name, lines added/removed, file change count.
 
-- Credentials: file at `<claude-dir>/.credentials.json` first, then macOS Keychain fallback
-  - Keychain service name: `Claude Code-credentials-<sha256(configDir)[:8]>` (current) or `Claude Code-credentials` (legacy)
-  - Keychain data merged with file data (preserves mcpOAuth etc.)
-  - Per-process cache avoids repeated Keychain reads
-- Token refresh via `console.anthropic.com/v1/oauth/token`
-- Usage data from `api.anthropic.com/api/oauth/usage` (beta header required)
-- Cache at `<claude-dir>/.statusline-cache.json` with absolute timestamps
-- 60s TTL for success, 5min for errors, force-refresh when reset time passes
-- Stale-data fallback: last-known-good data shown with `~` prefix
+### Platform (internal/platform)
 
-### Dark/light mode detection
+- `GetClaudeDir()`: resolves Claude Code config directory
+- `IsDarkMode()`: macOS (`defaults read -g AppleInterfaceStyle`), Linux (`gsettings` color-scheme query)
+- `ghuser.go`: GitHub username from `gh` CLI auth status
 
-`isDarkMode()`: macOS uses `defaults read -g AppleInterfaceStyle`, Linux uses `gsettings get org.gnome.desktop.interface color-scheme`. Cached per-process.
+### Demo (internal/demo)
 
-### Config
+Sawtooth waves: weekly 1 cycle, 5-hour 8 cycles, context 15 cycles. Default 60s duration. Final frame pins all bars to 100%.
 
-JSONC file at `~/.config/howmuchleft.json`. Parsed by `stripJsonComments()` + `JSON.parse()`. Config is cached per-process in `_barConfig`.
+### Dashboard (internal/dashboard)
 
-Notable config options:
-- `cwdMaxLength` (default 50, range 10-100): max characters for cwd display
-- `cwdDepth` (default 3, range 1-10): trailing path segments to keep when truncated
+`profile list` renders all discovered profiles side-by-side. `--live` refreshes every 30s.
 
-### Demo mode (lib/demo.js)
+### Migrate (internal/migrate)
 
-Single continuous animation, default 60s. Three sawtooth waves:
-- Weekly: 1 cycle (0→100%)
-- 5-hour: 8 cycles
-- Context: 15 cycles
+Wraps the migrable library. `SetFS()` receives the embedded migrations filesystem. `RunEmbedded()` applies pending migrations to the config file.
 
-Final frame pins all bars to 100% (`isLast` flag) because sawtooth math `(t * N) % 1` never reaches exactly 1.0.
+## Dependencies
+
+- `github.com/spf13/cobra` -- CLI framework
+- `github.com/smm-h/go-toml-edit` -- TOML parsing/editing (preserves comments and formatting)
+- `github.com/smm-h/migrable` -- Embedded schema migrations for config files
+- `github.com/google/cel-go` -- CEL expressions (used by migrable for migration conditions)
 
 ## Local development
 
-The package is installed globally via `npm link`, so `/usr/local/bin/howmuchleft` is a symlink to `bin/cli.js` in this repo. Code changes are picked up immediately by Claude Code's statusline — no reinstall needed.
+```bash
+go build -o howmuchleft .
+./howmuchleft version
+echo '{"model":"claude-sonnet-4-20250514","context_window":200000}' | ./howmuchleft
+```
+
+The version is injected via `-ldflags "-X main.version=..."` at build time. Without ldflags, it falls back to `debug.ReadBuildInfo()` or `"dev"`.
 
 ## Patterns and conventions
 
 - All state is computed fresh per invocation (no daemon, no IPC)
-- Atomic file writes via tmpfile + `rename(2)` for cache and credentials
+- Atomic file writes via tmpfile + rename for cache
 - `--no-optional-locks` on git commands to avoid blocking concurrent git operations
-- No test framework — CI runs smoke tests: `--version`, `--help`, `--test-colors`, stdin pipe
-- npm package includes only `bin/`, `lib/`, `config.example.json`
+- Tests use `go test ./... -race`
+- Model aliases: O4.6 (opus), S4.6 (sonnet), H4.5 (haiku)
 
 ## CI/CD
 
-- `.github/workflows/ci.yml`: smoke tests on Node 18/20/22, triggered on push to main and PRs
-- `.github/workflows/publish.yml`: `npm publish --provenance` triggered on GitHub Release, requires `NPM_TOKEN` repo secret
-- **Never run `npm publish` manually** — always publish via `rlsbl release`, which bumps the version, validates CHANGELOG.md, creates a GitHub Release (extracting the version's changelog section as the release body), and triggers the publish workflow. Requires `NPM_TOKEN` repo secret for the publish workflow.
-- **Always update `CHANGELOG.md`** when bumping a version — add an entry for each new version before publishing
+- `.github/workflows/ci.yml`: `go test ./... -race` on Go latest, triggered on push to main and PRs
+- `.github/workflows/publish.yml`: goreleaser triggered on GitHub Release
+- **Never publish manually** -- always use `rlsbl release`, which bumps the version, validates CHANGELOG.md, creates a GitHub Release, and triggers goreleaser
+- **Always update `CHANGELOG.md`** when bumping a version

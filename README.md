@@ -1,10 +1,6 @@
 # HowMuchLeft
 
-[![npm version](https://img.shields.io/npm/v/howmuchleft)](https://www.npmjs.com/package/howmuchleft)
-[![npm downloads](https://img.shields.io/npm/dm/howmuchleft)](https://www.npmjs.com/package/howmuchleft)
-[![license](https://img.shields.io/npm/l/howmuchleft)](https://github.com/smm-h/howmuchleft/blob/main/LICENSE)
-
-**Know exactly how much context and usage you have left, right in your Claude Code statusline.**
+Pixel-perfect progress bars for your Claude Code statusline.
 
 ![Dark mode demo](./assets/demo-dark.gif)
 
@@ -22,28 +18,42 @@ Works with Pro, Max 5x, Max 20x, and Team subscriptions. API key users see conte
 
 ## Install
 
-Two commands and you're done:
+```bash
+go install github.com/smm-h/howmuchleft@latest
+```
+
+Pre-built binaries for all platforms are available on [GitHub Releases](https://github.com/smm-h/howmuchleft/releases).
+
+## Setup
 
 ```bash
-npm install -g howmuchleft
-howmuchleft --install
+howmuchleft profile install
 ```
+
+This registers the binary with Claude Code's settings.json.
 
 ## Uninstall
 
 ```bash
-howmuchleft --uninstall
-npm uninstall -g howmuchleft
+howmuchleft profile uninstall
 ```
 
-## Customize
+## Config
 
-Config lives at `~/.config/howmuchleft.json` (JSONC -- comments allowed). See [`config.example.json`](./config.example.json) for all options.
+Config lives at `~/.config/howmuchleft/config.toml`, auto-created on first run.
 
-- **`progressLength`** -- bar width in characters (default 12)
-- **`colorMode`** -- `"auto"`, `"truecolor"`, or `"256"`
-- **`partialBlocks`** -- `true`, `false`, or `"auto"` (default). Sub-cell fractional block characters. Auto disables on terminals with known rendering issues
-- **`progressBarOrientation`** -- `"horizontal"` (default) or `"vertical"`. Vertical mode renders 3 bar columns filling bottom-to-top across all 3 lines
-- **`colors`** -- custom gradient stops and background colors per theme/color-depth combo
+## Commands
 
-Preview your current gradient: `howmuchleft --test-colors`
+| Command | Purpose |
+|---------|---------|
+| `howmuchleft profile install` | Register with Claude Code |
+| `howmuchleft profile uninstall` | Remove from Claude Code |
+| `howmuchleft profile list [--live]` | Multi-profile dashboard |
+| `howmuchleft demo` | Animated demo of all bars |
+| `howmuchleft colors` | Preview current gradient |
+| `howmuchleft config` | Show config path and values |
+| `howmuchleft version` | Print version |
+
+## License
+
+MIT

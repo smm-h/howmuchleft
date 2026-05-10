@@ -1,5 +1,23 @@
 # Changelog
 
+## 0.11.0
+
+Complete rewrite in Go. Breaking changes from the Node.js version:
+
+- Config format changed from JSONC to TOML (auto-converted on first run)
+- Config location changed to `~/.config/howmuchleft/config.toml`
+- CLI restructured: `howmuchleft profile install` replaces `--install`
+- Requires `howmuchleft` binary in PATH (no longer npm-based)
+
+New features:
+- Model name aliases (O4.6, S4.6, H4.5)
+- Configurable line elements via `[lines]` config table
+- GitHub user display moved to line 2 (after branch)
+- Embedded config migrations via migrable
+- Multi-profile dashboard (`howmuchleft profile list --live`)
+- ~20x faster startup (2ms vs 35ms)
+- Static binary with zero runtime dependencies
+
 ## 0.10.1
 
 - Fix cross-session stale data: write stdin `rate_limits` to cache so new sessions see fresh data instead of stale error cache from a previous failed API call
