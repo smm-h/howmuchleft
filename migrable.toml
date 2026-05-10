@@ -1,0 +1,4 @@
+migrations_dir = "migrations"
+
+[files]
+config = "$HOME/.config/howmuchleft/config.toml"

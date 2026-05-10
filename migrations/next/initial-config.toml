@@ -1,0 +1,80 @@
+description = "Initialize default configuration"
+
+[[structure]]
+op = "add_field"
+path = "color_mode"
+type = "string"
+default = "auto"
+down = { op = "remove_field", path = "color_mode" }
+
+[[structure]]
+op = "add_field"
+path = "progress_length"
+type = "integer"
+default = 12
+down = { op = "remove_field", path = "progress_length" }
+
+[[structure]]
+op = "add_field"
+path = "partial_blocks"
+type = "string"
+default = "auto"
+down = { op = "remove_field", path = "partial_blocks" }
+
+[[structure]]
+op = "add_field"
+path = "progress_bar_orientation"
+type = "string"
+default = "vertical"
+down = { op = "remove_field", path = "progress_bar_orientation" }
+
+[[structure]]
+op = "add_field"
+path = "cwd_max_length"
+type = "integer"
+default = 50
+down = { op = "remove_field", path = "cwd_max_length" }
+
+[[structure]]
+op = "add_field"
+path = "cwd_depth"
+type = "integer"
+default = 3
+down = { op = "remove_field", path = "cwd_depth" }
+
+[[structure]]
+op = "add_field"
+path = "show_time_bars"
+type = "boolean"
+default = true
+down = { op = "remove_field", path = "show_time_bars" }
+
+[[structure]]
+op = "add_field"
+path = "time_bar_dim"
+type = "float"
+default = 0.25
+down = { op = "remove_field", path = "time_bar_dim" }
+
+[[structure]]
+op = "add_collection"
+path = "lines"
+down = { op = "drop_collection", path = "lines" }
+
+[[data]]
+op = "set_value"
+path = "lines.line1"
+value = ["context", "elapsed", "profile", "tier", "model", "version"]
+down = { op = "remove_field", path = "lines.line1" }
+
+[[data]]
+op = "set_value"
+path = "lines.line2"
+value = ["usage5h", "staleness", "age", "ghUser", "branch"]
+down = { op = "remove_field", path = "lines.line2" }
+
+[[data]]
+op = "set_value"
+path = "lines.line3"
+value = ["usageWeekly", "staleness", "age", "cwd"]
+down = { op = "remove_field", path = "lines.line3" }
