@@ -27,7 +27,6 @@ type ghUserCacheEntry struct {
 var (
 	ghUserOnce   sync.Once
 	ghUserResult string
-	ghUserDone   bool
 )
 
 // GetActiveGhUser returns the GitHub username for the current GH_TOKEN, or ""
@@ -36,7 +35,6 @@ var (
 func GetActiveGhUser(claudeDir string) string {
 	ghUserOnce.Do(func() {
 		ghUserResult = resolveGhUser(claudeDir)
-		ghUserDone = true
 	})
 	return ghUserResult
 }
@@ -45,7 +43,6 @@ func GetActiveGhUser(claudeDir string) string {
 func ResetGhUserCache() {
 	ghUserOnce = sync.Once{}
 	ghUserResult = ""
-	ghUserDone = false
 }
 
 func resolveGhUser(claudeDir string) string {

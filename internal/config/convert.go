@@ -6,6 +6,8 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+
+	"github.com/smm-h/howmuchleft/internal/oauth"
 )
 
 // OldConfigPath returns the path to the legacy JSON config file.
@@ -51,7 +53,7 @@ func ConvertJSONToTOML() error {
 		return fmt.Errorf("creating config directory: %w", err)
 	}
 
-	if err := os.WriteFile(newPath, []byte(toml), 0644); err != nil {
+	if err := oauth.WriteFileAtomic(newPath, []byte(toml)); err != nil {
 		return fmt.Errorf("writing TOML config: %w", err)
 	}
 

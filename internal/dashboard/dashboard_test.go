@@ -188,3 +188,104 @@ func TestResolvePath(t *testing.T) {
 		}
 	}
 }
+
+func TestDiscoverProfiles_WithTempDirs(t *testing.T) {
+	// Create a temp directory simulating a home dir with .claude and .claude-work
+	tmpHome := t.TempDir()
+	defaultDir := filepath.Join(tmpHome, ".claude")
+	workDir := filepath.Join(tmpHome, ".claude-work")
+
+	if err := os.MkdirAll(defaultDir, 0755); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.MkdirAll(workDir, 0755); err != nil {
+		t.Fatal(err)
+	}
+
+	// Put a .credentials.json in workDir so it's discovered via source 3
+	credPath := filepath.Join(workDir, ".credentials.json")
+	if err := os.WriteFile(credPath, []byte(`{}`), 0644); err != nil {
+		t.Fatal(err)
+	}
+
+	// Override HOME so DiscoverProfiles sees our temp dirs
+	origHome := os.Getenv("HOME")
+	os.Setenv("HOME", tmpHome)
+	t.Cleanup(func() { os.Setenv("HOME", origHome) })
+
+	dirs := DiscoverProfiles()
+
+	// Should include the default dir
+	foundDefault := false
+	foundWork := false
+	for _, d := range dirs {
+		if d == defaultDir {
+			foundDefault = true
+		}
+		if d == workDir {
+			foundWork = true
+		}
+	}
+	if !foundDefault {
+		t.Errorf("DiscoverProfiles() missing default dir %s; got %v", defaultDir, dirs)
+	}
+	if !foundWork {
+		t.Errorf("DiscoverProfiles() missing work dir %s; got %v", workDir, dirs)
+	}
+}
+
+func TestFetchAndRender_MissingCredentials(t *testing.T) {
+	// FetchAndRender should return an error (not panic) when credentials are absent
+	tmpDir := t.TempDir()
+
+	barCfg := &render.BarConfig{
+		Width:         3,
+		EmptyBg:       "\x1b[48;5;236m",
+		Gradient:      render.BuiltinColors[2].Gradient,
+		Truecolor:     false,
+		IsRgb:         false,
+		PartialBlocks: true,
+	}
+
+	output, err := FetchAndRender(tmpDir, barCfg)
+	if err == nil {
+		t.Error("FetchAndRender with no credentials should return error, got nil")
+	}
+	if output != "" {
+		t.Errorf("FetchAndRender with no credentials should return empty output, got %q", output)
+	}
+	if !strings.Contains(err.Error(), "no credentials") {
+		t.Errorf("FetchAndRender error should mention credentials; got %q", err.Error())
+	}
+}
+
+func TestRenderProfileRows_NonEmpty(t *testing.T) {
+	barCfg := &render.BarConfig{
+		Width:         3,
+		EmptyBg:       "\x1b[48;5;236m",
+		Gradient:      render.BuiltinColors[2].Gradient,
+		Truecolor:     false,
+		IsRgb:         false,
+		PartialBlocks: true,
+	}
+
+	usage := &cache.UsageResult{
+		FiveHour: &cache.WindowResult{Percent: 50, ResetIn: 3600000},
+		Weekly:   &cache.WindowResult{Percent: 30, ResetIn: 172800000},
+	}
+
+	output := renderProfileRows("myprofile", render.Cyan, "Pro", usage, barCfg)
+	if output == "" {
+		t.Error("renderProfileRows should produce non-empty output")
+	}
+	// Should contain all three lines
+	lines := strings.Split(output, "\n")
+	if len(lines) != 3 {
+		t.Errorf("expected 3 lines, got %d", len(lines))
+	}
+	for i, line := range lines {
+		if line == "" {
+			t.Errorf("line %d is empty", i)
+		}
+	}
+}

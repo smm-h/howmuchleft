@@ -8,6 +8,8 @@ import (
 	"strings"
 
 	tomledit "github.com/smm-h/go-toml-edit"
+
+	"github.com/smm-h/howmuchleft/internal/oauth"
 )
 
 // resolveClaudeDir resolves the Claude configuration directory.
@@ -164,7 +166,7 @@ func readSettingsJSON(path string) (map[string]interface{}, error) {
 }
 
 // writeSettingsJSON writes settings to a Claude Code settings.json file.
-// Creates parent directories if needed.
+// Creates parent directories if needed. Uses atomic write (tmpfile + rename).
 func writeSettingsJSON(path string, settings map[string]interface{}) error {
 	dir := filepath.Dir(path)
 	if err := os.MkdirAll(dir, 0755); err != nil {
@@ -174,7 +176,7 @@ func writeSettingsJSON(path string, settings map[string]interface{}) error {
 	if err != nil {
 		return err
 	}
-	return os.WriteFile(path, append(data, '\n'), 0644)
+	return oauth.WriteFileAtomic(path, append(data, '\n'))
 }
 
 // registerProfile adds a claude directory to the profiles list in config.toml.
@@ -220,11 +222,11 @@ func registerProfile(claudeDir string) error {
 		return fmt.Errorf("setting profiles: %w", err)
 	}
 
-	// Write back
+	// Write back atomically
 	if err := os.MkdirAll(filepath.Dir(configPath), 0755); err != nil {
 		return err
 	}
-	return os.WriteFile(configPath, doc.Format(), 0644)
+	return oauth.WriteFileAtomic(configPath, doc.Format())
 }
 
 // unregisterProfile removes a claude directory from the profiles list in config.toml.
@@ -272,7 +274,7 @@ func unregisterProfile(claudeDir string) error {
 		}
 	}
 
-	return os.WriteFile(configPath, doc.Format(), 0644)
+	return oauth.WriteFileAtomic(configPath, doc.Format())
 }
 
 // getProfilesFromDoc extracts the profiles string array from a parsed TOML doc.
