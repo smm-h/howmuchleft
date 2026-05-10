@@ -38,6 +38,12 @@ func ParseGradientStops(g interface{}) []GradientStop {
 		case float64:
 			// 256-color index
 			stops = append(stops, NewIndexStop(int(v)))
+		case int64:
+			// 256-color index (TOML integers are int64)
+			stops = append(stops, NewIndexStop(int(v)))
+		case int:
+			// 256-color index
+			stops = append(stops, NewIndexStop(v))
 		}
 	}
 	return stops
@@ -52,19 +58,40 @@ func ParseBgValue(bg interface{}) BgValue {
 		}
 	case float64:
 		return NewBgIndex(int(v))
+	case int64:
+		return NewBgIndex(int(v))
+	case int:
+		return NewBgIndex(v)
 	}
 	return BgValue{}
 }
 
 func toUint8(v interface{}) uint8 {
-	if f, ok := v.(float64); ok {
-		if f < 0 {
+	switch n := v.(type) {
+	case float64:
+		if n < 0 {
 			return 0
 		}
-		if f > 255 {
+		if n > 255 {
 			return 255
 		}
-		return uint8(f)
+		return uint8(n)
+	case int64:
+		if n < 0 {
+			return 0
+		}
+		if n > 255 {
+			return 255
+		}
+		return uint8(n)
+	case int:
+		if n < 0 {
+			return 0
+		}
+		if n > 255 {
+			return 255
+		}
+		return uint8(n)
 	}
 	return 0
 }
