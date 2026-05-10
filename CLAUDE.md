@@ -4,6 +4,7 @@ Claude Code statusline tool. Static Go binary, zero runtime dependencies.
 
 ## File structure
 
+<<<<<<< /home/m/Projects/howmuchleft/tmpiq2m7uhz.ours
 ```
 main.go              Entry point: version detection, migration FS setup, cobra execution
 embed.go             Embeds migrations/ directory into the binary
@@ -22,6 +23,14 @@ internal/
   migrate/           Embedded migration runner (wraps migrable)
 assets/              demo-dark.gif and demo-light.gif (recorded via VHS)
 ```
+=======
+- Update CHANGELOG.md with a `## X.Y.Z` entry describing changes
+- Run `rlsbl release [patch|minor|major]` to bump version and create a GitHub Release
+- CI handles publishing automatically via the publish workflow
+- Never publish manually — always use `rlsbl release`
+- GoReleaser handles binary publishing via GitHub Actions (no secrets needed)
+- Use `rlsbl release --dry-run` to preview a release without making changes
+>>>>>>> /home/m/Projects/howmuchleft/tmpdlevezwn.theirs
 
 ## How the statusline protocol works
 
