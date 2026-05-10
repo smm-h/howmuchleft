@@ -405,7 +405,7 @@ func buildDashboardBarConfig(cfg *config.Config) *render.BarConfig {
 	// Resolve color entry
 	var userEntries []render.ColorEntry
 	for _, ce := range cfg.Colors {
-		entry := configColorToRenderColor(ce)
+		entry := render.ConfigColorToRenderColor(ce)
 		if entry != nil {
 			userEntries = append(userEntries, *entry)
 		}
@@ -446,64 +446,3 @@ func buildDashboardBarConfig(cfg *config.Config) *render.BarConfig {
 	}
 }
 
-// configColorToRenderColor converts a config.ColorEntry to a render.ColorEntry.
-func configColorToRenderColor(ce config.ColorEntry) *render.ColorEntry {
-	entry := &render.ColorEntry{
-		DarkMode:  ce.DarkMode,
-		TrueColor: ce.TrueColor,
-	}
-
-	entry.Gradient = parseGradientStops(ce.Gradient)
-	if len(entry.Gradient) == 0 {
-		return nil
-	}
-
-	entry.Bg = parseBgValue(ce.Bg)
-	return entry
-}
-
-func parseGradientStops(g interface{}) []render.GradientStop {
-	arr, ok := g.([]interface{})
-	if !ok {
-		return nil
-	}
-
-	var stops []render.GradientStop
-	for _, item := range arr {
-		switch v := item.(type) {
-		case []interface{}:
-			if len(v) == 3 {
-				r, b, gb := toUint8(v[0]), toUint8(v[1]), toUint8(v[2])
-				stops = append(stops, render.NewRgbStop(r, b, gb))
-			}
-		case float64:
-			stops = append(stops, render.NewIndexStop(int(v)))
-		}
-	}
-	return stops
-}
-
-func parseBgValue(bg interface{}) render.BgValue {
-	switch v := bg.(type) {
-	case []interface{}:
-		if len(v) == 3 {
-			return render.NewBgRgb(toUint8(v[0]), toUint8(v[1]), toUint8(v[2]))
-		}
-	case float64:
-		return render.NewBgIndex(int(v))
-	}
-	return render.BgValue{}
-}
-
-func toUint8(v interface{}) uint8 {
-	if f, ok := v.(float64); ok {
-		if f < 0 {
-			return 0
-		}
-		if f > 255 {
-			return 255
-		}
-		return uint8(f)
-	}
-	return 0
-}

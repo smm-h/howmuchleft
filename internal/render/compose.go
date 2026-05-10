@@ -352,10 +352,6 @@ func RenderLines(data *RenderData, barCfg *BarConfig, lineElements *config.Lines
 
 	var lines [3]string
 
-	orientation := "vertical"
-	// Check orientation from the bar config width - if EmptyBg is set we use vertical by default
-	// The orientation is determined by the caller; for now we check barCfg fields
-
 	if barCfg.Width <= 0 {
 		// No bars, just text
 		lines[0] = BuildLineText(line1Elements, lineElements.Line1)
@@ -364,66 +360,92 @@ func RenderLines(data *RenderData, barCfg *BarConfig, lineElements *config.Lines
 		return strings.Join(lines[:], "\n")
 	}
 
-	// Determine orientation from BarConfig
-	// BarConfig doesn't carry orientation, so we use a heuristic:
-	// If orientation field exists we'd use it. Since BarConfig has no orientation field,
-	// we default to vertical. The caller can set Width=0 to get horizontal behavior,
-	// or we extend BarConfig. For now, use the Orientation field we'll add.
-	_ = orientation
+	orientation := barCfg.Orientation
+	if orientation == "" {
+		orientation = "vertical"
+	}
 
-	// Vertical orientation: 3 bars (context, 5hr, weekly/extra) as columns spanning 3 rows
 	fiveHourPct := float64(0)
 	if data.FiveHour.Percent != nil {
 		fiveHourPct = *data.FiveHour.Percent
 	}
-	percents := [3]float64{data.Context, fiveHourPct, thirdPercent}
 
-	for row := 0; row < 3; row++ {
-		var barStr strings.Builder
-		for i := 0; i < 3; i++ {
-			if i > 0 {
-				barStr.WriteString(Reset + " ")
-			}
-			bgOverride := ""
-			if i == 2 && warmBg != "" {
-				bgOverride = warmBg
-			}
-			barStr.WriteString(VerticalBarCell(percents[i], row, 3, bgOverride, barCfg))
-
-			// Time bars after 5hr (i=1) and weekly (i=2)
-			if showTimeBars && (i == 1 || i == 2) {
-				var timePct float64
-				var usagePct float64
-				if i == 1 && data.FiveHourTimePercent != nil {
-					timePct = *data.FiveHourTimePercent
-					usagePct = fiveHourPct
-				} else if i == 2 && data.WeeklyTimePercent != nil {
-					timePct = *data.WeeklyTimePercent
-					if showExtraUsage {
-						usagePct = data.ExtraUsage.Percent
-					} else {
-						usagePct = thirdPercent
-					}
-				}
-				barStr.WriteString(TimeBarCell(timePct, usagePct, row, 3, barCfg))
-			}
-		}
-		barStr.WriteString(Reset)
-
-		var text string
-		switch row {
-		case 0:
-			text = BuildLineText(line1Elements, lineElements.Line1)
-		case 1:
-			text = BuildLineText(line2Elements, lineElements.Line2)
-		case 2:
-			text = BuildLineText(line3Elements, lineElements.Line3)
-		}
-
-		if text != "" {
-			lines[row] = barStr.String() + " " + text
+	if orientation == "horizontal" {
+		// Horizontal: each line has its own progress bar
+		contextBar := HorizontalBar(data.Context, barCfg, "")
+		text1 := BuildLineText(line1Elements, lineElements.Line1)
+		if text1 != "" {
+			lines[0] = contextBar + " " + text1
 		} else {
-			lines[row] = barStr.String()
+			lines[0] = contextBar
+		}
+
+		fiveHourBar := HorizontalBar(fiveHourPct, barCfg, "")
+		text2 := BuildLineText(line2Elements, lineElements.Line2)
+		if text2 != "" {
+			lines[1] = fiveHourBar + " " + text2
+		} else {
+			lines[1] = fiveHourBar
+		}
+
+		thirdBar := HorizontalBar(thirdPercent, barCfg, warmBg)
+		text3 := BuildLineText(line3Elements, lineElements.Line3)
+		if text3 != "" {
+			lines[2] = thirdBar + " " + text3
+		} else {
+			lines[2] = thirdBar
+		}
+	} else {
+		// Vertical orientation: 3 bars (context, 5hr, weekly/extra) as columns spanning 3 rows
+		percents := [3]float64{data.Context, fiveHourPct, thirdPercent}
+
+		for row := 0; row < 3; row++ {
+			var barStr strings.Builder
+			for i := 0; i < 3; i++ {
+				if i > 0 {
+					barStr.WriteString(Reset + " ")
+				}
+				bgOverride := ""
+				if i == 2 && warmBg != "" {
+					bgOverride = warmBg
+				}
+				barStr.WriteString(VerticalBarCell(percents[i], row, 3, bgOverride, barCfg))
+
+				// Time bars after 5hr (i=1) and weekly (i=2)
+				if showTimeBars && (i == 1 || i == 2) {
+					var timePct float64
+					var usagePct float64
+					if i == 1 && data.FiveHourTimePercent != nil {
+						timePct = *data.FiveHourTimePercent
+						usagePct = fiveHourPct
+					} else if i == 2 && data.WeeklyTimePercent != nil {
+						timePct = *data.WeeklyTimePercent
+						if showExtraUsage {
+							usagePct = data.ExtraUsage.Percent
+						} else {
+							usagePct = thirdPercent
+						}
+					}
+					barStr.WriteString(TimeBarCell(timePct, usagePct, row, 3, barCfg))
+				}
+			}
+			barStr.WriteString(Reset)
+
+			var text string
+			switch row {
+			case 0:
+				text = BuildLineText(line1Elements, lineElements.Line1)
+			case 1:
+				text = BuildLineText(line2Elements, lineElements.Line2)
+			case 2:
+				text = BuildLineText(line3Elements, lineElements.Line3)
+			}
+
+			if text != "" {
+				lines[row] = barStr.String() + " " + text
+			} else {
+				lines[row] = barStr.String()
+			}
 		}
 	}
 

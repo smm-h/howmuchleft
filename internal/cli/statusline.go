@@ -184,7 +184,7 @@ func buildBarConfig(cfg *config.Config) *render.BarConfig {
 	// Resolve color entry: user config colors first, then builtins
 	var userEntries []render.ColorEntry
 	for _, ce := range cfg.Colors {
-		entry := configColorToRenderColor(ce)
+		entry := render.ConfigColorToRenderColor(ce)
 		if entry != nil {
 			userEntries = append(userEntries, *entry)
 		}
@@ -236,6 +236,7 @@ func buildBarConfig(cfg *config.Config) *render.BarConfig {
 		IsRgb:         isRgb,
 		PartialBlocks: render.ShouldUsePartialBlocks(cfg.PartialBlocks),
 		TimeBarBg:     timeBarBg,
+		Orientation:   cfg.ProgressBarOrientation,
 	}
 }
 
@@ -265,75 +266,6 @@ func computeTimeBarBg(bg render.BgValue, isDark bool, truecolor bool, blend floa
 	return fmt.Sprintf("\x1b[48;5;%dm", mid)
 }
 
-// configColorToRenderColor converts a config.ColorEntry to a render.ColorEntry.
-// Returns nil if the entry has no valid gradient.
-func configColorToRenderColor(ce config.ColorEntry) *render.ColorEntry {
-	entry := &render.ColorEntry{
-		DarkMode:  ce.DarkMode,
-		TrueColor: ce.TrueColor,
-	}
-
-	// Parse gradient
-	entry.Gradient = parseGradientStops(ce.Gradient)
-	if len(entry.Gradient) == 0 {
-		return nil
-	}
-
-	// Parse bg
-	entry.Bg = parseBgValue(ce.Bg)
-
-	return entry
-}
-
-// parseGradientStops converts the generic gradient interface to typed stops.
-func parseGradientStops(g interface{}) []render.GradientStop {
-	arr, ok := g.([]interface{})
-	if !ok {
-		return nil
-	}
-
-	var stops []render.GradientStop
-	for _, item := range arr {
-		switch v := item.(type) {
-		case []interface{}:
-			// RGB triplet [R, G, B]
-			if len(v) == 3 {
-				r, g, b := toUint8(v[0]), toUint8(v[1]), toUint8(v[2])
-				stops = append(stops, render.NewRgbStop(r, g, b))
-			}
-		case float64:
-			// 256-color index
-			stops = append(stops, render.NewIndexStop(int(v)))
-		}
-	}
-	return stops
-}
-
-// parseBgValue converts the generic bg interface to a BgValue.
-func parseBgValue(bg interface{}) render.BgValue {
-	switch v := bg.(type) {
-	case []interface{}:
-		if len(v) == 3 {
-			return render.NewBgRgb(toUint8(v[0]), toUint8(v[1]), toUint8(v[2]))
-		}
-	case float64:
-		return render.NewBgIndex(int(v))
-	}
-	return render.BgValue{}
-}
-
-func toUint8(v interface{}) uint8 {
-	if f, ok := v.(float64); ok {
-		if f < 0 {
-			return 0
-		}
-		if f > 255 {
-			return 255
-		}
-		return uint8(f)
-	}
-	return 0
-}
 
 // runStatusline is the main statusline pipeline.
 func runStatusline() error {
