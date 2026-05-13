@@ -4,5 +4,4 @@ Track remaining work across your projects.
 
 ## API Reference
 
-:::module .
-:::
+:-: ref path="."
