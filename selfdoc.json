@@ -1,4 +1,5 @@
 {
+  "base_url": "https://howmuchleft.smmh.dev",
   "language": "go",
   "source": ["."],
   "docs": "docs/",
