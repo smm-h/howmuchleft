@@ -4,8 +4,7 @@ import (
 	"fmt"
 	"os"
 	"strconv"
-
-	"github.com/spf13/cobra"
+	"sync"
 
 	"github.com/smm-h/howmuchleft/internal/config"
 	"github.com/smm-h/howmuchleft/internal/dashboard"
@@ -13,6 +12,7 @@ import (
 	"github.com/smm-h/howmuchleft/internal/migrate"
 	"github.com/smm-h/howmuchleft/internal/platform"
 	"github.com/smm-h/howmuchleft/internal/render"
+	"github.com/smm-h/strictcli/go/strictcli"
 )
 
 var appVersion string
@@ -22,137 +22,149 @@ func SetVersion(v string) {
 	appVersion = v
 }
 
-// RootCmd is the top-level cobra command.
-var RootCmd = &cobra.Command{
-	Use:   "howmuchleft",
-	Short: "Claude Code statusline tool",
-	PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
-		// Phase 1.3: startup migration flow
-		// 1. Convert old JSON config to TOML if needed
+var migrateOnce sync.Once
+
+// runMigrations runs JSON-to-TOML conversion and embedded schema migrations.
+// Safe to call multiple times; work is done only once.
+func runMigrations() {
+	migrateOnce.Do(func() {
 		if err := config.ConvertJSONToTOML(); err != nil {
 			fmt.Fprintf(os.Stderr, "howmuchleft: warning: JSON to TOML conversion failed: %v\n", err)
 		}
-
-		// 2. Run embedded schema migrations
 		configDir := resolveConfigDir()
 		if _, err := migrate.RunEmbedded(configDir); err != nil {
 			fmt.Fprintf(os.Stderr, "howmuchleft: warning: migration failed: %v\n", err)
 		}
-
-		return nil
-	},
-	RunE: func(cmd *cobra.Command, args []string) error {
-		fi, err := os.Stdin.Stat()
-		if err != nil {
-			return err
-		}
-		if (fi.Mode() & os.ModeCharDevice) == 0 {
-			// stdin is a pipe — statusline mode
-			return runStatusline()
-		}
-		// TTY — show help
-		return cmd.Help()
-	},
-	SilenceUsage:  true,
-	SilenceErrors: true,
+	})
 }
 
-var versionCmd = &cobra.Command{
-	Use:   "version",
-	Short: "Print the version",
-	Run: func(cmd *cobra.Command, args []string) {
+// RunStatuslineDirect checks if stdin is piped and runs the statusline.
+// Returns true if it handled the invocation (caller should exit), false otherwise.
+func RunStatuslineDirect() bool {
+	fi, err := os.Stdin.Stat()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "howmuchleft: %v\n", err)
+		os.Exit(1)
+	}
+	if (fi.Mode() & os.ModeCharDevice) == 0 {
+		// stdin is a pipe -- statusline mode
+		runMigrations()
+		if err := runStatusline(); err != nil {
+			fmt.Fprintf(os.Stderr, "howmuchleft: %v\n", err)
+			os.Exit(1)
+		}
+		return true
+	}
+	return false
+}
+
+// NewApp builds and returns the strictcli application.
+func NewApp() *strictcli.App {
+	app := strictcli.NewApp("howmuchleft", appVersion, "Claude Code statusline tool")
+
+	// version
+	app.Command("version", "Print the version", func(kwargs map[string]interface{}) int {
+		runMigrations()
 		fmt.Println(appVersion)
-	},
-}
+		return 0
+	})
 
-var profileCmd = &cobra.Command{
-	Use:   "profile",
-	Short: "Manage profiles",
-}
+	// profile group
+	profileGrp := app.Group("profile", "Manage profiles")
 
-var profileInstallCmd = &cobra.Command{
-	Use:   "install [dir]",
-	Short: "Add howmuchleft to a Claude Code profile",
-	Args:  cobra.MaximumNArgs(1),
-	RunE: func(cmd *cobra.Command, args []string) error {
+	profileGrp.Command("install", "Add howmuchleft to a Claude Code profile", func(kwargs map[string]interface{}) int {
+		runMigrations()
+		var args []string
+		if dir := kwargs["dir"]; dir != nil {
+			args = append(args, dir.(string))
+		}
 		claudeDir := resolveClaudeDir(args)
-		return profileInstall(claudeDir)
-	},
-}
+		if err := profileInstall(claudeDir); err != nil {
+			fmt.Fprintf(os.Stderr, "howmuchleft: %v\n", err)
+			return 1
+		}
+		return 0
+	}, strictcli.WithArgs(
+		strictcli.NewArg("dir", "Claude Code profile directory", strictcli.ArgRequired(false)),
+	))
 
-var profileUninstallCmd = &cobra.Command{
-	Use:   "uninstall [dir]",
-	Short: "Remove howmuchleft from a Claude Code profile",
-	Args:  cobra.MaximumNArgs(1),
-	RunE: func(cmd *cobra.Command, args []string) error {
+	profileGrp.Command("uninstall", "Remove howmuchleft from a Claude Code profile", func(kwargs map[string]interface{}) int {
+		runMigrations()
+		var args []string
+		if dir := kwargs["dir"]; dir != nil {
+			args = append(args, dir.(string))
+		}
 		claudeDir := resolveClaudeDir(args)
-		return profileUninstall(claudeDir)
-	},
-}
+		if err := profileUninstall(claudeDir); err != nil {
+			fmt.Fprintf(os.Stderr, "howmuchleft: %v\n", err)
+			return 1
+		}
+		return 0
+	}, strictcli.WithArgs(
+		strictcli.NewArg("dir", "Claude Code profile directory", strictcli.ArgRequired(false)),
+	))
 
-var profileListCmd = &cobra.Command{
-	Use:   "list",
-	Short: "Show all profiles' usage",
-	RunE: func(cmd *cobra.Command, args []string) error {
-		live, _ := cmd.Flags().GetBool("live")
-		return dashboard.Run(live)
-	},
-}
+	profileGrp.Command("list", "Show all profiles' usage", func(kwargs map[string]interface{}) int {
+		runMigrations()
+		live := kwargs["live"].(bool)
+		if err := dashboard.Run(live); err != nil {
+			fmt.Fprintf(os.Stderr, "howmuchleft: %v\n", err)
+			return 1
+		}
+		return 0
+	}, strictcli.WithFlags(
+		strictcli.BoolFlag("live", "Refresh dashboard every 30s"),
+	))
 
-var demoCmd = &cobra.Command{
-	Use:   "demo [duration_seconds]",
-	Short: "Run demo animation",
-	Args:  cobra.MaximumNArgs(1),
-	RunE: func(cmd *cobra.Command, args []string) error {
+	// demo
+	app.Command("demo", "Run demo animation", func(kwargs map[string]interface{}) int {
+		runMigrations()
 		duration := 60
-		if len(args) > 0 {
-			d, err := strconv.Atoi(args[0])
+		if ds := kwargs["duration_seconds"]; ds != nil {
+			d, err := strconv.Atoi(ds.(string))
 			if err != nil {
-				return fmt.Errorf("invalid duration: %s", args[0])
+				fmt.Fprintf(os.Stderr, "howmuchleft: invalid duration: %s\n", ds.(string))
+				return 1
 			}
 			duration = d
 		}
-		return demo.Run(duration)
-	},
-}
+		if err := demo.Run(duration); err != nil {
+			fmt.Fprintf(os.Stderr, "howmuchleft: %v\n", err)
+			return 1
+		}
+		return 0
+	}, strictcli.WithArgs(
+		strictcli.NewArg("duration_seconds", "Duration in seconds", strictcli.ArgRequired(false)),
+	))
 
-var colorsCmd = &cobra.Command{
-	Use:   "colors",
-	Short: "Preview gradient colors for your terminal",
-	Run: func(cmd *cobra.Command, args []string) {
+	// colors
+	app.Command("colors", "Preview gradient colors for your terminal", func(kwargs map[string]interface{}) int {
+		runMigrations()
 		cfg := config.Get()
 		barCfg := buildBarConfig(cfg)
-		// Use a wider bar width for test-colors display
 		testCfg := *barCfg
 		testCfg.Width = 13
 		fmt.Print(render.TestColors(&testCfg))
-	},
-}
+		return 0
+	})
 
-var configCmd = &cobra.Command{
-	Use:   "config",
-	Short: "Show config file and current settings",
-	Run: func(cmd *cobra.Command, args []string) {
+	// config
+	app.Command("config", "Show config file and current settings", func(kwargs map[string]interface{}) int {
+		runMigrations()
 		showConfig()
-	},
-}
+		return 0
+	})
 
-func init() {
-	profileListCmd.Flags().Bool("live", false, "Refresh dashboard every 30s")
-	profileCmd.AddCommand(profileInstallCmd, profileUninstallCmd, profileListCmd)
-	RootCmd.AddCommand(versionCmd, profileCmd, demoCmd, colorsCmd, configCmd)
+	return app
 }
 
 // resolveConfigDir returns the howmuchleft config directory path.
-// Uses the Claude dir's parent structure to find the right location.
 func resolveConfigDir() string {
 	claudeDir := platform.GetClaudeDir()
-	// The migrate package expects the config directory where config.toml lives.
-	// That's ~/.config/howmuchleft/ (the TOML config dir, not the claude dir).
 	home, err := os.UserHomeDir()
 	if err != nil {
 		home = os.Getenv("HOME")
 	}
-	_ = claudeDir // claudeDir is for Claude state, config dir is separate
+	_ = claudeDir
 	return home + "/.config/howmuchleft"
 }

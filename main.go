@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"os"
 	"runtime/debug"
 
@@ -22,8 +21,13 @@ func main() {
 	cli.SetVersion(version)
 	migrate.SetFS(MigrationsFS)
 
-	if err := cli.RootCmd.Execute(); err != nil {
-		fmt.Fprintln(os.Stderr, err)
-		os.Exit(1)
+	// If stdin is piped and no subcommand args, run statusline directly.
+	if len(os.Args) == 1 {
+		if cli.RunStatuslineDirect() {
+			return
+		}
 	}
+
+	app := cli.NewApp()
+	app.Run()
 }
