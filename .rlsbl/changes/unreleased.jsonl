@@ -1,0 +1,1 @@
+{"commits":["274d87839975041294a374a255c2b26d3d0ff5ec"],"user_facing":true,"description":"**Breaking.** CLI migrated from Cobra to go-strictcli. No user-facing command changes, but the underlying framework is now strictcli.","type":"breaking"}
