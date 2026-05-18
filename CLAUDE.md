@@ -5,12 +5,12 @@ Claude Code statusline tool. Static Go binary, zero runtime dependencies.
 ## File structure
 
 ```
-main.go              Entry point: version detection, migration FS setup, cobra execution
+main.go              Entry point: version detection, migration FS setup, strictcli app
 embed.go             Embeds migrations/ directory into the binary
 migrable.toml        Config for the migrable schema migration tool
 migrations/          Embedded TOML migration files (applied on startup)
 internal/
-  cli/               Cobra command definitions, statusline runner, profile install/uninstall
+  cli/               strictcli command definitions, statusline runner, profile install/uninstall
   config/            TOML config loading, validation, clamping, JSON-to-TOML conversion
   render/            Progress bars, gradients, color system, ANSI output composition
   oauth/             OAuth token refresh, usage API client
@@ -31,7 +31,7 @@ Claude Code spawns `howmuchleft` as a child process on every render. It pipes a 
 
 ### CLI (internal/cli)
 
-Uses cobra. `RootCmd` detects stdin pipe vs TTY: pipe triggers statusline mode, TTY shows help. Subcommands: `version`, `profile {install,uninstall,list}`, `demo`, `colors`, `config`. `PersistentPreRunE` runs JSON-to-TOML conversion and embedded migrations on every invocation.
+Uses go-strictcli. `NewApp()` builds a `strictcli.App` with subcommands: `version`, `profile {install,uninstall,list}`, `demo`, `colors`, `config`. Pipe detection is handled separately by `RunStatuslineDirect()` in `main.go` before the app is built. Each command calls `runMigrations()` (sync.Once-wrapped) for JSON-to-TOML conversion and embedded schema migrations.
 
 ### Config (internal/config)
 
@@ -80,7 +80,7 @@ Wraps the migrable library. `SetFS()` receives the embedded migrations filesyste
 
 ## Dependencies
 
-- `github.com/spf13/cobra` -- CLI framework
+- `github.com/smm-h/strictcli/go` -- CLI framework
 - `github.com/smm-h/go-toml-edit` -- TOML parsing/editing (preserves comments and formatting)
 - `github.com/smm-h/migrable` -- Embedded schema migrations for config files
 - `github.com/google/cel-go` -- CEL expressions (used by migrable for migration conditions)
