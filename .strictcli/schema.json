@@ -1,0 +1,104 @@
+{
+  "commands": {
+    "colors": {
+      "args": [],
+      "flags": [],
+      "help": "Preview gradient colors for your terminal",
+      "name": "colors",
+      "passthrough": false
+    },
+    "config": {
+      "args": [],
+      "flags": [],
+      "help": "Show config file and current settings",
+      "name": "config",
+      "passthrough": false
+    },
+    "demo": {
+      "args": [
+        {
+          "help": "Duration in seconds",
+          "name": "duration_seconds",
+          "required": false,
+          "variadic": false
+        }
+      ],
+      "flags": [],
+      "help": "Run demo animation",
+      "name": "demo",
+      "passthrough": false
+    },
+    "version": {
+      "args": [],
+      "flags": [],
+      "help": "Print the version",
+      "name": "version",
+      "passthrough": false
+    }
+  },
+  "config": false,
+  "deprecated": {},
+  "env_prefix": null,
+  "global_flags": [],
+  "groups": {
+    "profile": {
+      "commands": {
+        "install": {
+          "args": [
+            {
+              "help": "Claude Code profile directory",
+              "name": "dir",
+              "required": false,
+              "variadic": false
+            }
+          ],
+          "flags": [],
+          "help": "Add howmuchleft to a Claude Code profile",
+          "name": "install",
+          "passthrough": false
+        },
+        "list": {
+          "args": [],
+          "flags": [
+            {
+              "choices": null,
+              "default": false,
+              "env": null,
+              "help": "Refresh dashboard every 30s",
+              "hidden": false,
+              "name": "live",
+              "negatable": true,
+              "repeatable": false,
+              "short": null,
+              "type": "bool"
+            }
+          ],
+          "help": "Show all profiles' usage",
+          "name": "list",
+          "passthrough": false
+        },
+        "uninstall": {
+          "args": [
+            {
+              "help": "Claude Code profile directory",
+              "name": "dir",
+              "required": false,
+              "variadic": false
+            }
+          ],
+          "flags": [],
+          "help": "Remove howmuchleft from a Claude Code profile",
+          "name": "uninstall",
+          "passthrough": false
+        }
+      },
+      "deprecated": {},
+      "groups": {},
+      "help": "Manage profiles",
+      "name": "profile"
+    }
+  },
+  "help": "Claude Code statusline tool",
+  "name": "howmuchleft",
+  "version": "(devel)"
+}
