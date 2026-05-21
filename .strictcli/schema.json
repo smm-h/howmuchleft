@@ -100,5 +100,5 @@
   },
   "help": "Claude Code statusline tool",
   "name": "howmuchleft",
-  "version": "(devel)"
+  "version": "v0.12.1-0.20260520145610-b5985c222dae+dirty"
 }
