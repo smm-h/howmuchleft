@@ -4,6 +4,8 @@
   "source": ["."],
   "docs": "docs/",
   "output": "docs/_build/",
+  "versions": [{"version": "0.12.0", "indexed": true}],
+  "locales": [{"code": "en", "label": "English", "default": true}],
   "deploy": {
     "provider": "cloudflare-pages",
     "project": "howmuchleft"
