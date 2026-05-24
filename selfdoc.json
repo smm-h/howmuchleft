@@ -1,4 +1,5 @@
 {
+  "version": "0.12.0",
   "base_url": "https://howmuchleft.smmh.dev",
   "language": "go",
   "source": ["."],
