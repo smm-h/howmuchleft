@@ -3,6 +3,7 @@ name: Publish
 on:
   release:
     types: [published]
+  workflow_dispatch:
 
 permissions:
   contents: write
@@ -23,3 +24,5 @@ jobs:
           args: release --clean
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+

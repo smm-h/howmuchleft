@@ -20,3 +20,10 @@ dist/
 # Selfdoc / Cloudflare
 docs/_build/
 .wrangler/
+
+node_modules/
+__pycache__/
+*.pyc
+*.egg-info/
+.rlsbl/lock
+.credentials.json
