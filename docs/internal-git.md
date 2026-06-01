@@ -1,6 +1,6 @@
 ---
 title: internal/git
-description: "API reference for the internal/git module — auto-generated documentation covering public functions, classes, and type signatures."
+description: "Runs git status with a timeout and parses porcelain v2 output for branch name, ahead/behind counts, and working tree changes."
 generated: true
 nav_group: "API Reference"
 nav_order: 7

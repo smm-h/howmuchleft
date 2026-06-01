@@ -1,6 +1,6 @@
 ---
 title: internal/demo
-description: "API reference for the internal/demo module — auto-generated documentation covering public functions, classes, and type signatures."
+description: "Runs a terminal animation showing sawtooth-wave simulated usage across context window, 5-hour, weekly, and extra usage bars."
 generated: true
 nav_group: "API Reference"
 nav_order: 6

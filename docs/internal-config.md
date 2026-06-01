@@ -1,6 +1,6 @@
 ---
 title: internal/config
-description: "API reference for the internal/config module — auto-generated documentation covering public functions, classes, and type signatures."
+description: "Loads, validates, and caches TOML configuration for progress bar appearance, color gradients, line layout, and profile directories."
 generated: true
 nav_group: "API Reference"
 nav_order: 4

@@ -1,6 +1,6 @@
 ---
 title: internal/migrate
-description: "API reference for the internal/migrate module — auto-generated documentation covering public functions, classes, and type signatures."
+description: "Applies embedded TOML schema migrations to the howmuchleft config file using the migrable engine."
 generated: true
 nav_group: "API Reference"
 nav_order: 8

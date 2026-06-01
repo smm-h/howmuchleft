@@ -1,6 +1,6 @@
 ---
 title: internal/cli
-description: "API reference for the internal/cli module — auto-generated documentation covering public functions, classes, and type signatures."
+description: "Defines the strictcli application with subcommands for version, profile management, demo animation, color preview, and config display."
 generated: true
 nav_group: "API Reference"
 nav_order: 3

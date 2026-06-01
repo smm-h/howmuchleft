@@ -1,6 +1,6 @@
 ---
 title: internal/render
-description: "API reference for the internal/render module — auto-generated documentation covering public functions, classes, and type signatures."
+description: "Renders gradient-colored horizontal and vertical progress bars, ANSI color output, model name shortening, and multi-line statusline composition."
 generated: true
 nav_group: "API Reference"
 nav_order: 11

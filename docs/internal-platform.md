@@ -1,6 +1,6 @@
 ---
 title: internal/platform
-description: "API reference for the internal/platform module — auto-generated documentation covering public functions, classes, and type signatures."
+description: "Detects the Claude Code session directory, profile name, Claude Code version from environment, and active GitHub username via gh CLI."
 generated: true
 nav_group: "API Reference"
 nav_order: 10

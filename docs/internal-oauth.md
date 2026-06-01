@@ -1,6 +1,6 @@
 ---
 title: internal/oauth
-description: "API reference for the internal/oauth module — auto-generated documentation covering public functions, classes, and type signatures."
+description: "Manages Claude OAuth credentials including token refresh, macOS Keychain fallback, atomic file writes, and subscription tier detection."
 generated: true
 nav_group: "API Reference"
 nav_order: 9

@@ -1,6 +1,6 @@
 ---
 title: internal/dashboard
-description: "API reference for the internal/dashboard module — auto-generated documentation covering public functions, classes, and type signatures."
+description: "Discovers Claude Code profiles, fetches usage data in parallel, and renders a multi-profile dashboard with progress bars and tier labels."
 generated: true
 nav_group: "API Reference"
 nav_order: 5

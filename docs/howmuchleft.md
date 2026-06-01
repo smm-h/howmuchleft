@@ -1,6 +1,6 @@
 ---
 title: howmuchleft
-description: "API reference for the howmuchleft module — auto-generated documentation covering public functions, classes, and type signatures."
+description: "Entry point that initializes version, embedded migrations filesystem, and delegates to the CLI or piped statusline mode."
 generated: true
 nav_group: "API Reference"
 nav_order: 1

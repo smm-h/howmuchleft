@@ -1,6 +1,6 @@
 ---
 title: internal/cache
-description: "API reference for the internal/cache module — auto-generated documentation covering public functions, classes, and type signatures."
+description: "Fetches Claude API usage data, caches responses with TTL and exponential backoff, and converts between API, cache, and display formats."
 generated: true
 nav_group: "API Reference"
 nav_order: 2
