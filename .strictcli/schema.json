@@ -1,45 +1,62 @@
 {
   "commands": {
     "colors": {
-      "args": [],
-      "flags": [],
       "help": "Preview gradient colors for your terminal",
-      "name": "colors",
-      "passthrough": false
+      "name": "colors"
     },
     "config": {
-      "args": [],
-      "flags": [],
       "help": "Show config file and current settings",
-      "name": "config",
-      "passthrough": false
+      "name": "config"
     },
     "demo": {
       "args": [
         {
           "help": "Duration in seconds",
           "name": "duration_seconds",
-          "required": false,
-          "variadic": false
+          "required": false
         }
       ],
-      "flags": [],
       "help": "Run demo animation",
-      "name": "demo",
-      "passthrough": false
+      "name": "demo"
     },
     "version": {
-      "args": [],
-      "flags": [],
       "help": "Print the version",
-      "name": "version",
-      "passthrough": false
+      "name": "version"
     }
   },
-  "config": false,
-  "deprecated": {},
-  "env_prefix": null,
-  "global_flags": [],
+  "defaults": {
+    "app": {
+      "commands": {},
+      "config": false,
+      "deprecated": {},
+      "env_prefix": null,
+      "global_flags": [],
+      "groups": {}
+    },
+    "arg": {
+      "required": true,
+      "variadic": false
+    },
+    "command": {
+      "args": [],
+      "flags": [],
+      "passthrough": false
+    },
+    "flag": {
+      "choices": null,
+      "default": null,
+      "env": null,
+      "hidden": false,
+      "negatable": null,
+      "repeatable": false,
+      "short": null
+    },
+    "group": {
+      "commands": {},
+      "deprecated": {},
+      "groups": {}
+    }
+  },
   "groups": {
     "profile": {
       "commands": {
@@ -48,57 +65,43 @@
             {
               "help": "Claude Code profile directory",
               "name": "dir",
-              "required": false,
-              "variadic": false
+              "required": false
             }
           ],
-          "flags": [],
           "help": "Add howmuchleft to a Claude Code profile",
-          "name": "install",
-          "passthrough": false
+          "name": "install"
         },
         "list": {
-          "args": [],
           "flags": [
             {
-              "choices": null,
               "default": false,
-              "env": null,
               "help": "Refresh dashboard every 30s",
-              "hidden": false,
               "name": "live",
               "negatable": true,
-              "repeatable": false,
-              "short": null,
               "type": "bool"
             }
           ],
           "help": "Show all profiles' usage",
-          "name": "list",
-          "passthrough": false
+          "name": "list"
         },
         "uninstall": {
           "args": [
             {
               "help": "Claude Code profile directory",
               "name": "dir",
-              "required": false,
-              "variadic": false
+              "required": false
             }
           ],
-          "flags": [],
           "help": "Remove howmuchleft from a Claude Code profile",
-          "name": "uninstall",
-          "passthrough": false
+          "name": "uninstall"
         }
       },
-      "deprecated": {},
-      "groups": {},
       "help": "Manage profiles",
       "name": "profile"
     }
   },
   "help": "Claude Code statusline tool",
   "name": "howmuchleft",
-  "version": "v0.12.1-0.20260520145610-b5985c222dae+dirty"
+  "project_id": "github.com/smm-h/howmuchleft",
+  "version": "v0.12.1-0.20260529221629-34ecfbaefb1d+dirty"
 }
