@@ -1,8 +1,7 @@
 {
   "version": "0.12.0",
   "base_url": "https://howmuchleft.smmh.dev",
-  "language": "go",
-  "source": ["."],
+  "source": [{"path": ".", "language": "go"}],
   "docs": "docs/",
   "output": "docs/_build/",
   "versions": [{"version": "0.12.0", "indexed": true}],
