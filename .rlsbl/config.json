@@ -3,5 +3,11 @@
     "go"
   ],
   "private": false,
-  "push_timeout": 120
+  "push_timeout": 120,
+  "pipelines": {
+    "go": {
+      "type": "go",
+      "local": false
+    }
+  }
 }
