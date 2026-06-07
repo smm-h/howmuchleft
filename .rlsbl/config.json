@@ -7,7 +7,7 @@
   "pipelines": {
     "go": {
       "type": "go",
-      "local": false
+      "local": true
     }
   }
 }
