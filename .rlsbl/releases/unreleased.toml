@@ -1,0 +1,8 @@
+# Version bump type: patch, minor, or major
+bump = "patch"
+# Short description of this release (required)
+description = "Fix subscription tier detection for claudewheel-launched sessions"
+# Optional context explaining why these changes were made
+context = "When claudewheel launches Claude Code, it sets CLAUDE_CODE_OAUTH_TOKEN instead of writing .credentials.json. howmuchleft now checks this env var as a fallback, showing 'OAuth' instead of incorrectly displaying 'API'."
+include = ["go"]
+exclude = []
