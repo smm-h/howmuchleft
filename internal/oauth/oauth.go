@@ -160,6 +160,9 @@ func ReadKeychainCredentials(claudeDir string) *OAuthData {
 // GetAuthInfo determines auth type and subscription display name from OAuth data.
 func GetAuthInfo(oauth *OAuthData) AuthInfo {
 	if oauth == nil || oauth.AccessToken == "" {
+		if os.Getenv("CLAUDE_CODE_OAUTH_TOKEN") != "" {
+			return AuthInfo{IsOAuth: true, SubscriptionName: "OAuth"}
+		}
 		return AuthInfo{IsOAuth: false, SubscriptionName: "API"}
 	}
 
