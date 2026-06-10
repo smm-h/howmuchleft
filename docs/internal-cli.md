@@ -9,4 +9,4 @@ nav_order: 3
 
 # internal/cli
 
-:-: ref path="internal/cli"
+:-: ref path="internal/cli" lang="go"

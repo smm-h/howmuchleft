@@ -9,4 +9,4 @@ nav_order: 4
 
 # internal/config
 
-:-: ref path="internal/config"
+:-: ref path="internal/config" lang="go"

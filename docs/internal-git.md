@@ -9,4 +9,4 @@ nav_order: 7
 
 # internal/git
 
-:-: ref path="internal/git"
+:-: ref path="internal/git" lang="go"

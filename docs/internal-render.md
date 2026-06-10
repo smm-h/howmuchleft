@@ -9,4 +9,4 @@ nav_order: 11
 
 # internal/render
 
-:-: ref path="internal/render"
+:-: ref path="internal/render" lang="go"

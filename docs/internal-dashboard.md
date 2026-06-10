@@ -9,4 +9,4 @@ nav_order: 5
 
 # internal/dashboard
 
-:-: ref path="internal/dashboard"
+:-: ref path="internal/dashboard" lang="go"

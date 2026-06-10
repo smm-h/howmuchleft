@@ -9,4 +9,4 @@ nav_order: 9
 
 # internal/oauth
 
-:-: ref path="internal/oauth"
+:-: ref path="internal/oauth" lang="go"

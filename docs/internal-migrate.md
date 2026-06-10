@@ -9,4 +9,4 @@ nav_order: 8
 
 # internal/migrate
 
-:-: ref path="internal/migrate"
+:-: ref path="internal/migrate" lang="go"

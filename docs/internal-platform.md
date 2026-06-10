@@ -9,4 +9,4 @@ nav_order: 10
 
 # internal/platform
 
-:-: ref path="internal/platform"
+:-: ref path="internal/platform" lang="go"

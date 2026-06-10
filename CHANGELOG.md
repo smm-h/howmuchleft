@@ -2,6 +2,21 @@
 
 # Changelog
 
+## 0.12.1
+
+Fix subscription tier detection for claudewheel-launched sessions
+
+<details>
+<summary>Context</summary>
+
+When claudewheel launches Claude Code, it sets CLAUDE_CODE_OAUTH_TOKEN instead of writing .credentials.json. howmuchleft now checks this env var as a fallback, showing 'OAuth' instead of incorrectly displaying 'API'.
+
+</details>
+
+### Fixes
+
+- **Fix.** Detect OAuth authentication from `CLAUDE_CODE_OAUTH_TOKEN` env var when `.credentials.json` is absent, showing "OAuth" instead of "API" for claudewheel-launched sessions.
+
 ## 0.12.0
 
 ### Breaking

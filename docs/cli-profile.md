@@ -18,7 +18,7 @@ Add howmuchleft to a Claude Code profile
 ### Arguments
 
 | Name | Required | Description |
-|------|----------|-------------|
+| --- | --- | --- |
 | `dir` | no | Claude Code profile directory |
 
 ## profile list
@@ -28,7 +28,7 @@ Show all profiles' usage
 ### Flags
 
 | Name | Short | Type | Default | Env | Description |
-|------|-------|------|---------|-----|-------------|
+| --- | --- | --- | --- | --- | --- |
 | `--live` |  | bool |  |  | Refresh dashboard every 30s |
 
 ## profile uninstall
@@ -38,5 +38,5 @@ Remove howmuchleft from a Claude Code profile
 ### Arguments
 
 | Name | Required | Description |
-|------|----------|-------------|
+| --- | --- | --- |
 | `dir` | no | Claude Code profile directory |

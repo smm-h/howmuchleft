@@ -9,4 +9,4 @@ nav_order: 2
 
 # internal/cache
 
-:-: ref path="internal/cache"
+:-: ref path="internal/cache" lang="go"
