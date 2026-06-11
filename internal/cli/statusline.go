@@ -340,6 +340,9 @@ func runStatusline() error {
 		oauthData = credFile.ClaudeAiOauth
 	}
 	authInfo := oauth.GetAuthInfo(oauthData)
+	if hasStdin && !authInfo.IsOAuth {
+		authInfo = oauth.AuthInfo{IsOAuth: true, SubscriptionName: "OAuth"}
+	}
 
 	// Time percentages
 	var fiveHourTimePercent *float64
