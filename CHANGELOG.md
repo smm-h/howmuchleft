@@ -2,16 +2,22 @@
 
 # Changelog
 
-## 0.12.1
+## 0.12.2
 
-Fix subscription tier detection for claudewheel-launched sessions
+Fix OAuth detection to use stdin rate_limits
 
 <details>
 <summary>Context</summary>
 
-When claudewheel launches Claude Code, it sets CLAUDE_CODE_OAUTH_TOKEN instead of writing .credentials.json. howmuchleft now checks this env var as a fallback, showing 'OAuth' instead of incorrectly displaying 'API'.
+v0.12.1 checked CLAUDE_CODE_OAUTH_TOKEN env var, but Claude Code doesn't pass it to statusline subprocesses. Now uses the presence of rate_limits in stdin instead, which is reliable and requires no external files or env vars.
 
 </details>
+
+### Fixes
+
+- **Fix.** Detect OAuth from stdin `rate_limits` instead of relying on env var or credentials file, fixing tier display for claudewheel-launched sessions.
+
+## 0.12.1
 
 ### Fixes
 
