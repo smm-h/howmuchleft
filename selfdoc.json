@@ -25,5 +25,14 @@
   "deploy": {
     "provider": "cloudflare-pages",
     "project": "howmuchleft"
+  },
+  "topology": {
+    "slug": "howmuchleft",
+    "docs_base": "https://docs.smmh.dev",
+    "posts_base": "https://blog.smmh.dev",
+    "assembly": "smm-h/selfdoc-cache"
+  },
+  "assembly": {
+    "repo": "smm-h/selfdoc-cache"
   }
 }
