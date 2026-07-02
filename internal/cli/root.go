@@ -113,7 +113,7 @@ func NewApp() *strictcli.App {
 		}
 		return 0
 	}, strictcli.WithFlags(
-		strictcli.BoolFlag("live", "Refresh dashboard every 30s"),
+		strictcli.BoolFlag("live", "Refresh dashboard every 30s", strictcli.Default(false)),
 	))
 
 	// demo
