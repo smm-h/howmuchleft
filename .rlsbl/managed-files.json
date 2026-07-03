@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "files": {
+    "VERSION": "f482d06e4ee83158e42999dcf951d5909861dad7e03317deb2b1e2ddd5c46274",
+    ".github/workflows/ci.yml": "a4eb37a8927ffda2aa646e45ac6f849648a53ea7fb4efe0df4fda3c9946c28f9",
+    ".goreleaser.yml": "a028e8e5c368c11dd22915732bdc4f914674cc6bd478db248ee0cf65983b9a63",
+    ".github/workflows/publish.yml": "f1f707e4efdb4e837546ebb5d11385cb6ae2b1538207b2c40c14de8efac3ec97",
+    "CHANGELOG.md": "7d7ba273bec2f72b11845800146b9bf4762fbbfa1338c2f070931ca05880c305",
+    ".gitignore": "1c0820097f3cc42582eb317629f9b861eddb40d401cdf29870d5e6d44b92af06",
+    ".rlsbl/changes/unreleased.jsonl": "0a3dab978ab59eaf10cd912fa1919c4bfa4e9c842b96c70d9a05ee64f0e66b7a",
+    ".rlsbl/lint/go.toml": "807d5cf760baad6d571a5bfd43cb163efe356f7462ba9f1918d72de45f62339f"
+  }
+}
