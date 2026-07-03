@@ -3,3 +3,4 @@
 {"commits":["273a9771deec4a72476497b0fd9aa305adc1eaa1"],"user_facing":true,"description":"**Breaking.** Upgrade go-strictcli to v0.17.0: `--live` BoolFlag now has explicit default.","type":"breaking"}
 {"commits":["093b73aa808fcbf070b6f738a274ae439e3bf470","2ea361b09a8cc0c5ab34b5e73242903c52353c4e","3624c1a31beaa220eb083864621ef2fe1540ae70","4d272318230b2a23273e90645912f6fcbacc48e5","569286653df3046aeeed9b90d6be33e0f8b9aa1d"],"user_facing":false}
 {"commits":["a03fbd7525f45abe5428b2a9e77dce831f7c0dca","a8846ce932396bda7e857646923cb6bb9919446b","db6c5cc7a71b94327b547ea167dae9182719564b"],"user_facing":false}
+{"commits":["1f6713f4b0190aab319176e690b461cdb83101fd"],"user_facing":false}
