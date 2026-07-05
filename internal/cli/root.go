@@ -141,7 +141,7 @@ func NewApp() *strictcli.App {
 	app.Command("colors", "Preview gradient colors for your terminal", func(kwargs map[string]interface{}) int {
 		runMigrations()
 		cfg := config.Get()
-		barCfg := buildBarConfig(cfg)
+		barCfg := render.BuildBarConfig(cfg)
 		testCfg := *barCfg
 		testCfg.Width = 13
 		fmt.Print(render.TestColors(&testCfg))

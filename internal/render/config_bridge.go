@@ -1,6 +1,8 @@
 package render
 
-import "github.com/smm-h/howmuchleft/internal/config"
+import (
+	"github.com/smm-h/howmuchleft/internal/config"
+)
 
 // ConfigColorToRenderColor converts a config.ColorEntry to a render.ColorEntry.
 // Returns nil if the entry has no valid gradient.
@@ -94,4 +96,82 @@ func toUint8(v interface{}) uint8 {
 		return uint8(n)
 	}
 	return 0
+}
+
+// BuildBarConfig creates a BarConfig from the user's config. It resolves color
+// mode, selects user or builtin gradients, computes time bar background, and
+// sets orientation. This is the single authoritative source for bar
+// configuration used by the statusline, demo, dashboard, and colors commands.
+func BuildBarConfig(cfg *config.Config) *BarConfig {
+	isDark := IsDarkMode()
+
+	// Determine truecolor mode
+	truecolor := false
+	switch cfg.ColorMode {
+	case "truecolor":
+		truecolor = true
+	case "256":
+		truecolor = false
+	default: // "auto"
+		truecolor = IsTruecolorSupported()
+	}
+
+	// Resolve color entry: user config colors first, then builtins
+	var userEntries []ColorEntry
+	for _, ce := range cfg.Colors {
+		entry := ConfigColorToRenderColor(ce)
+		if entry != nil {
+			userEntries = append(userEntries, *entry)
+		}
+	}
+
+	userMatch := FindColorMatch(userEntries, isDark, truecolor)
+	builtinMatch := FindColorMatch(BuiltinColors, isDark, truecolor)
+
+	var gradient []GradientStop
+	var isRgb bool
+	var bgValue BgValue
+
+	if userMatch != nil {
+		gradient = userMatch.Gradient
+		isRgb = len(gradient) > 0 && gradient[0].IsRgb
+		bgValue = userMatch.Bg
+	} else if builtinMatch != nil {
+		gradient = builtinMatch.Gradient
+		isRgb = len(gradient) > 0 && gradient[0].IsRgb
+		bgValue = builtinMatch.Bg
+	} else {
+		// Hardcoded fallback
+		if isDark {
+			bgValue = NewBgIndex(236)
+		} else {
+			bgValue = NewBgIndex(252)
+		}
+	}
+
+	emptyBg := FormatBgFromValue(bgValue, truecolor)
+
+	// Compute time bar bg
+	showTimeBars := cfg.ShowTimeBars != nil && *cfg.ShowTimeBars
+	timeBarDim := 0.25
+	if cfg.TimeBarDim != nil {
+		timeBarDim = *cfg.TimeBarDim
+	}
+
+	var timeBarBg string
+	if showTimeBars {
+		timeBarBg = ComputeTimeBarBg(bgValue, isDark, truecolor, timeBarDim)
+	}
+
+	return &BarConfig{
+		Width:         cfg.ProgressLength,
+		EmptyBg:       emptyBg,
+		Gradient:      gradient,
+		Truecolor:     truecolor,
+		IsRgb:         isRgb,
+		PartialBlocks: ShouldUsePartialBlocks(cfg.PartialBlocks),
+		TimeBarBg:     timeBarBg,
+		Orientation:   cfg.ProgressBarOrientation,
+		IsDark:        isDark,
+	}
 }

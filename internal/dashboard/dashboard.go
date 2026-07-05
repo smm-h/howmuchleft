@@ -140,7 +140,7 @@ func FetchAndRender(dir string, barCfg *render.BarConfig) (string, error) {
 // RenderDashboard fetches all profiles in parallel and returns the complete output.
 func RenderDashboard(dirs []string) string {
 	cfg := config.Get()
-	barCfg := buildDashboardBarConfig(cfg)
+	barCfg := render.BuildBarConfig(cfg)
 
 	results := make([]ProfileResult, len(dirs))
 	var wg sync.WaitGroup
@@ -375,62 +375,4 @@ func formatResetTime(window *cache.WindowResult) string {
 	return ""
 }
 
-// buildDashboardBarConfig creates a BarConfig for dashboard rendering.
-// Uses the same logic as the statusline but without time bars.
-func buildDashboardBarConfig(cfg *config.Config) *render.BarConfig {
-	isDark := render.IsDarkMode()
-
-	truecolor := false
-	switch cfg.ColorMode {
-	case "truecolor":
-		truecolor = true
-	case "256":
-		truecolor = false
-	default:
-		truecolor = render.IsTruecolorSupported()
-	}
-
-	// Resolve color entry
-	var userEntries []render.ColorEntry
-	for _, ce := range cfg.Colors {
-		entry := render.ConfigColorToRenderColor(ce)
-		if entry != nil {
-			userEntries = append(userEntries, *entry)
-		}
-	}
-
-	userMatch := render.FindColorMatch(userEntries, isDark, truecolor)
-	builtinMatch := render.FindColorMatch(render.BuiltinColors, isDark, truecolor)
-
-	var gradient []render.GradientStop
-	var isRgb bool
-	var bgValue render.BgValue
-
-	if userMatch != nil {
-		gradient = userMatch.Gradient
-		isRgb = len(gradient) > 0 && gradient[0].IsRgb
-		bgValue = userMatch.Bg
-	} else if builtinMatch != nil {
-		gradient = builtinMatch.Gradient
-		isRgb = len(gradient) > 0 && gradient[0].IsRgb
-		bgValue = builtinMatch.Bg
-	} else {
-		if isDark {
-			bgValue = render.NewBgIndex(236)
-		} else {
-			bgValue = render.NewBgIndex(252)
-		}
-	}
-
-	emptyBg := render.FormatBgFromValue(bgValue, truecolor)
-
-	return &render.BarConfig{
-		Width:         cfg.ProgressLength,
-		EmptyBg:       emptyBg,
-		Gradient:      gradient,
-		Truecolor:     truecolor,
-		IsRgb:         isRgb,
-		PartialBlocks: render.ShouldUsePartialBlocks(cfg.PartialBlocks),
-	}
-}
 

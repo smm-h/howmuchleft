@@ -115,7 +115,7 @@ func Run(durationSec int) error {
 		}
 	}
 
-	barCfg := buildBarConfig(cfg)
+	barCfg := render.BuildBarConfig(cfg)
 
 	// Profile color: fixed hue from "work" profile path
 	profileColor := render.HueToAnsi(render.HashToHue("/home/user/.claude"), render.IsDarkMode())
@@ -252,61 +252,4 @@ func splitLines(s string) []string {
 	return result
 }
 
-// buildBarConfig creates a render.BarConfig from the loaded config.
-// Mirrors the logic in internal/cli/statusline.go.
-func buildBarConfig(cfg *config.Config) *render.BarConfig {
-	isDark := render.IsDarkMode()
-
-	truecolor := false
-	switch cfg.ColorMode {
-	case "truecolor":
-		truecolor = true
-	case "256":
-		truecolor = false
-	default:
-		truecolor = render.IsTruecolorSupported()
-	}
-
-	builtinMatch := render.FindColorMatch(render.BuiltinColors, isDark, truecolor)
-
-	var gradient []render.GradientStop
-	var isRgb bool
-	var bgValue render.BgValue
-
-	if builtinMatch != nil {
-		gradient = builtinMatch.Gradient
-		isRgb = len(gradient) > 0 && gradient[0].IsRgb
-		bgValue = builtinMatch.Bg
-	} else {
-		if isDark {
-			bgValue = render.NewBgIndex(236)
-		} else {
-			bgValue = render.NewBgIndex(252)
-		}
-	}
-
-	emptyBg := render.FormatBgFromValue(bgValue, truecolor)
-
-	// Compute time bar bg
-	showTimeBars := cfg.ShowTimeBars != nil && *cfg.ShowTimeBars
-	timeBarDim := 0.25
-	if cfg.TimeBarDim != nil {
-		timeBarDim = *cfg.TimeBarDim
-	}
-
-	var timeBarBg string
-	if showTimeBars {
-		timeBarBg = render.ComputeTimeBarBg(bgValue, isDark, truecolor, timeBarDim)
-	}
-
-	return &render.BarConfig{
-		Width:         cfg.ProgressLength,
-		EmptyBg:       emptyBg,
-		Gradient:      gradient,
-		Truecolor:     truecolor,
-		IsRgb:         isRgb,
-		PartialBlocks: render.ShouldUsePartialBlocks(cfg.PartialBlocks),
-		TimeBarBg:     timeBarBg,
-	}
-}
 

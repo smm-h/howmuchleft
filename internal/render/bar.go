@@ -31,6 +31,7 @@ type BarConfig struct {
 	PartialBlocks bool
 	TimeBarBg     string // Pre-formatted ANSI background escape for time bar empty cells
 	Orientation   string // "vertical" (default) or "horizontal"
+	IsDark        bool   // Whether the terminal is in dark mode
 }
 
 // GradientResult holds the foreground and background ANSI escape sequences

@@ -165,79 +165,7 @@ func usageFromStdinRateLimits(rateLimits map[string]interface{}) *cache.UsageRes
 	return result
 }
 
-// buildBarConfig creates a render.BarConfig from the loaded config.
-func buildBarConfig(cfg *config.Config) *render.BarConfig {
-	isDark := render.IsDarkMode()
 
-	// Determine truecolor mode
-	truecolor := false
-	switch cfg.ColorMode {
-	case "truecolor":
-		truecolor = true
-	case "256":
-		truecolor = false
-	default: // "auto"
-		truecolor = render.IsTruecolorSupported()
-	}
-
-	// Resolve color entry: user config colors first, then builtins
-	var userEntries []render.ColorEntry
-	for _, ce := range cfg.Colors {
-		entry := render.ConfigColorToRenderColor(ce)
-		if entry != nil {
-			userEntries = append(userEntries, *entry)
-		}
-	}
-
-	userMatch := render.FindColorMatch(userEntries, isDark, truecolor)
-	builtinMatch := render.FindColorMatch(render.BuiltinColors, isDark, truecolor)
-
-	var gradient []render.GradientStop
-	var isRgb bool
-	var bgValue render.BgValue
-
-	if userMatch != nil {
-		gradient = userMatch.Gradient
-		isRgb = len(gradient) > 0 && gradient[0].IsRgb
-		bgValue = userMatch.Bg
-	} else if builtinMatch != nil {
-		gradient = builtinMatch.Gradient
-		isRgb = len(gradient) > 0 && gradient[0].IsRgb
-		bgValue = builtinMatch.Bg
-	} else {
-		// Hardcoded fallback
-		if isDark {
-			bgValue = render.NewBgIndex(236)
-		} else {
-			bgValue = render.NewBgIndex(252)
-		}
-	}
-
-	emptyBg := render.FormatBgFromValue(bgValue, truecolor)
-
-	// Compute time bar bg
-	showTimeBars := cfg.ShowTimeBars != nil && *cfg.ShowTimeBars
-	timeBarDim := 0.25
-	if cfg.TimeBarDim != nil {
-		timeBarDim = *cfg.TimeBarDim
-	}
-
-	var timeBarBg string
-	if showTimeBars {
-		timeBarBg = render.ComputeTimeBarBg(bgValue, isDark, truecolor, timeBarDim)
-	}
-
-	return &render.BarConfig{
-		Width:         cfg.ProgressLength,
-		EmptyBg:       emptyBg,
-		Gradient:      gradient,
-		Truecolor:     truecolor,
-		IsRgb:         isRgb,
-		PartialBlocks: render.ShouldUsePartialBlocks(cfg.PartialBlocks),
-		TimeBarBg:     timeBarBg,
-		Orientation:   cfg.ProgressBarOrientation,
-	}
-}
 
 
 // runStatusline is the main statusline pipeline.
@@ -344,7 +272,7 @@ func runStatusline() error {
 	}
 
 	// Build bar config
-	barCfg := buildBarConfig(cfg)
+	barCfg := render.BuildBarConfig(cfg)
 
 	// Build usage data for render
 	var fiveHourData render.UsageData
