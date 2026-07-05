@@ -150,6 +150,13 @@ func BuildLineText(elements map[string]func() string, order []string) string {
 	return strings.Join(parts, " ")
 }
 
+// ComputeTimePercent computes the elapsed time percentage for a usage window.
+// resetInMs is milliseconds until the window resets, windowDurationMs is the
+// total window duration. Returns a value clamped to [0, 100].
+func ComputeTimePercent(resetInMs, windowDurationMs int64) float64 {
+	return math.Max(0, math.Min(100, (1.0-float64(resetInMs)/float64(windowDurationMs))*100))
+}
+
 // UsageData holds percentage and reset time for a usage window.
 type UsageData struct {
 	Percent *float64

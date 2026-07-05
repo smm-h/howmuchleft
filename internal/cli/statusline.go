@@ -349,11 +349,11 @@ func runStatusline() error {
 	var weeklyTimePercent *float64
 
 	if usage.FiveHour != nil && usage.FiveHour.ResetIn > 0 {
-		pct := math.Max(0, math.Min(100, (1.0-float64(usage.FiveHour.ResetIn)/float64(fiveHourMs))*100))
+		pct := render.ComputeTimePercent(usage.FiveHour.ResetIn, fiveHourMs)
 		fiveHourTimePercent = &pct
 	}
 	if usage.Weekly != nil && usage.Weekly.ResetIn > 0 {
-		pct := math.Max(0, math.Min(100, (1.0-float64(usage.Weekly.ResetIn)/float64(sevenDayMs))*100))
+		pct := render.ComputeTimePercent(usage.Weekly.ResetIn, sevenDayMs)
 		weeklyTimePercent = &pct
 	}
 
