@@ -18,7 +18,6 @@ const (
 	fiveHourCycles = 8
 	weeklyFillT    = 0.7 // weekly hits 100% at this fraction of total time
 
-	model   = "claude-sonnet-4-6-20250514"
 	tier    = "Max 5x"
 	branch  = "feature/auth"
 	cwd     = "~/Projects/myapp"
