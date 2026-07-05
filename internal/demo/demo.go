@@ -108,11 +108,7 @@ func Run(durationSec int) error {
 
 	lineElements := cfg.Lines
 	if lineElements == nil {
-		lineElements = &config.LinesConfig{
-			Line1: []string{"context", "elapsed", "profile", "tier", "model", "version"},
-			Line2: []string{"usage5h", "staleness", "age", "ghUser", "branch"},
-			Line3: []string{"usageWeekly", "staleness", "age", "cwd"},
-		}
+		lineElements = config.DefaultLines()
 	}
 
 	barCfg := render.BuildBarConfig(cfg)

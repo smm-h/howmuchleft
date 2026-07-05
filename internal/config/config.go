@@ -53,6 +53,16 @@ type LinesConfig struct {
 	Line3 []string `toml:"line3"`
 }
 
+// DefaultLines returns the default line element configuration used when the
+// user has not customized [lines] in their config.
+func DefaultLines() *LinesConfig {
+	return &LinesConfig{
+		Line1: []string{"context", "elapsed", "profile", "tier", "model", "version"},
+		Line2: []string{"usage5h", "staleness", "age", "ghUser", "branch"},
+		Line3: []string{"usageWeekly", "staleness", "age", "cwd"},
+	}
+}
+
 // Default returns a Config with all default values filled in.
 func Default() *Config {
 	showTimeBars := true
