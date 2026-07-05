@@ -38,6 +38,9 @@ type WaveState struct {
 	WeeklyTimePercent    float64
 	ExtraUsage           float64
 	ExtraUsageEnabled    bool
+	FableWeekly            float64
+	FableWeeklyResetIn     int64
+	FableWeeklyTimePercent float64
 }
 
 // ComputeWaves calculates the sawtooth wave values at time fraction t (0-1).
@@ -48,15 +51,18 @@ func ComputeWaves(t float64, isLast bool) WaveState {
 
 	if isLast {
 		return WaveState{
-			Context:             100,
-			FiveHour:            100,
-			FiveHourResetIn:     0,
-			FiveHourTimePercent: 100,
-			Weekly:              100,
-			WeeklyResetIn:       0,
-			WeeklyTimePercent:   100,
-			ExtraUsage:          100,
-			ExtraUsageEnabled:   true,
+			Context:                100,
+			FiveHour:               100,
+			FiveHourResetIn:        0,
+			FiveHourTimePercent:    100,
+			Weekly:                 100,
+			WeeklyResetIn:          0,
+			WeeklyTimePercent:      100,
+			ExtraUsage:             100,
+			ExtraUsageEnabled:      true,
+			FableWeekly:            100,
+			FableWeeklyResetIn:     0,
+			FableWeeklyTimePercent: 100,
 		}
 	}
 
@@ -80,20 +86,29 @@ func ComputeWaves(t float64, isLast bool) WaveState {
 		extraUsage = extraT * 100
 	}
 
+	// Fable: 4 sawtooth cycles, linear ramp
+	fableCycleT := math.Mod(t*4, 1.0)
+	fableWeekly := fableCycleT * 100
+	fableWeeklyResetIn := int64((1.0 - fableCycleT) * float64(sevenDayMs))
+	fableWeeklyTimePercent := fableCycleT * 100
+
 	// Context: 15 sawtooth cycles
 	ctxCycleT := math.Mod(t*contextCycles, 1)
 	context := ctxCycleT * 100
 
 	return WaveState{
-		Context:             context,
-		FiveHour:            fiveHour,
-		FiveHourResetIn:     fiveHourResetIn,
-		FiveHourTimePercent: fiveHourTimePercent,
-		Weekly:              weekly,
-		WeeklyResetIn:       weeklyResetIn,
-		WeeklyTimePercent:   weeklyTimePercent,
-		ExtraUsage:          extraUsage,
-		ExtraUsageEnabled:   extraEnabled,
+		Context:                context,
+		FiveHour:               fiveHour,
+		FiveHourResetIn:        fiveHourResetIn,
+		FiveHourTimePercent:    fiveHourTimePercent,
+		Weekly:                 weekly,
+		WeeklyResetIn:          weeklyResetIn,
+		WeeklyTimePercent:      weeklyTimePercent,
+		ExtraUsage:             extraUsage,
+		ExtraUsageEnabled:      extraEnabled,
+		FableWeekly:            fableWeekly,
+		FableWeeklyResetIn:     fableWeeklyResetIn,
+		FableWeeklyTimePercent: fableWeeklyTimePercent,
 	}
 }
 
@@ -173,6 +188,8 @@ func Run(durationSec int) error {
 		weeklyPct := waves.Weekly
 		fiveHourTimePct := waves.FiveHourTimePercent
 		weeklyTimePct := waves.WeeklyTimePercent
+		fableWeeklyPct := waves.FableWeekly
+		fableWeeklyTimePct := waves.FableWeeklyTimePercent
 
 		var extraUsage *render.ExtraUsageData
 		if waves.ExtraUsageEnabled {
@@ -186,25 +203,43 @@ func Run(durationSec int) error {
 		removed := linesRemoved
 
 		renderData := &render.RenderData{
-			Context:             waves.Context,
-			Model:               model,
-			Tier:                tier,
-			Elapsed:             &elapsed,
-			Profile:             profile,
-			ProfileColor:        profileColor,
-			FiveHour:            render.UsageData{Percent: &fiveHourPct, ResetIn: waves.FiveHourResetIn},
-			Weekly:              render.UsageData{Percent: &weeklyPct, ResetIn: waves.WeeklyResetIn},
-			ExtraUsage:          extraUsage,
-			Stale:               false,
-			Git:                 render.GitInfo{HasGit: true, Branch: branch, Changes: changes},
-			LineChanges:         render.LineChangeInfo{Added: &added, Removed: &removed},
-			Cwd:                 cwd,
-			FiveHourTimePercent: &fiveHourTimePct,
-			WeeklyTimePercent:   &weeklyTimePct,
-			CcVersion:           ccVersion,
+			Context:                waves.Context,
+			Model:                  "claude-fable-5",
+			Tier:                   tier,
+			Elapsed:                &elapsed,
+			Profile:                profile,
+			ProfileColor:           profileColor,
+			FiveHour:               render.UsageData{Percent: &fiveHourPct, ResetIn: waves.FiveHourResetIn},
+			Weekly:                 render.UsageData{Percent: &weeklyPct, ResetIn: waves.WeeklyResetIn},
+			FableWeekly:            render.UsageData{Percent: &fableWeeklyPct, ResetIn: waves.FableWeeklyResetIn},
+			ExtraUsage:             extraUsage,
+			Stale:                  false,
+			Git:                    render.GitInfo{HasGit: true, Branch: branch, Changes: changes},
+			LineChanges:            render.LineChangeInfo{Added: &added, Removed: &removed},
+			Cwd:                    cwd,
+			FiveHourTimePercent:    &fiveHourTimePct,
+			WeeklyTimePercent:      &weeklyTimePct,
+			FableWeeklyTimePercent: &fableWeeklyTimePct,
+			CcVersion:              ccVersion,
 		}
 
-		output := render.RenderLines(renderData, barCfg, lineElements, nil)
+		// Build 4-column bar layout: context, 5hr, weekly/extra, fable
+		var weeklyOrExtra float64
+		var warmBg string
+		if waves.ExtraUsageEnabled {
+			weeklyOrExtra = waves.ExtraUsage
+			_, warmBg = render.WarmBgColors(render.IsDarkMode(), barCfg.Truecolor)
+		} else {
+			weeklyOrExtra = waves.Weekly
+		}
+		columns := []render.BarColumn{
+			{Percent: waves.Context},
+			{Percent: waves.FiveHour, TimeBar: &render.TimeBarInfo{TimePercent: waves.FiveHourTimePercent, UsagePercent: waves.FiveHour}},
+			{Percent: weeklyOrExtra, BgOverride: warmBg, TimeBar: &render.TimeBarInfo{TimePercent: waves.WeeklyTimePercent, UsagePercent: weeklyOrExtra}},
+			{Percent: waves.FableWeekly, TimeBar: &render.TimeBarInfo{TimePercent: waves.FableWeeklyTimePercent, UsagePercent: waves.FableWeekly}},
+		}
+
+		output := render.RenderLines(renderData, barCfg, lineElements, columns)
 
 		// Frame rendering: first frame prints, subsequent frames overwrite
 		if frame == 0 {

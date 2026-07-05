@@ -29,6 +29,12 @@ func TestComputeWaves_AtZero(t *testing.T) {
 	if w.WeeklyTimePercent != 0 {
 		t.Errorf("WeeklyTimePercent at t=0: got %f, want 0", w.WeeklyTimePercent)
 	}
+	if w.FableWeekly != 0 {
+		t.Errorf("FableWeekly at t=0: got %f, want 0", w.FableWeekly)
+	}
+	if w.FableWeeklyTimePercent != 0 {
+		t.Errorf("FableWeeklyTimePercent at t=0: got %f, want 0", w.FableWeeklyTimePercent)
+	}
 }
 
 func TestComputeWaves_AtHalf(t *testing.T) {
@@ -56,6 +62,46 @@ func TestComputeWaves_AtHalf(t *testing.T) {
 	// Extra usage not yet enabled at t=0.5 (weekly < 100%)
 	if w.ExtraUsageEnabled {
 		t.Error("ExtraUsageEnabled at t=0.5: got true, want false (weekly < 100%)")
+	}
+
+	// Fable: 0.5 * 4 = 2.0, mod 1 = 0 -> 0%
+	// At exactly t=0.5, fableCycleT = mod(2.0, 1.0) = 0, so FableWeekly = 0
+	// Use t=0.51 to get a non-zero value
+}
+
+func TestComputeWaves_FableWave(t *testing.T) {
+	// At t=0.51: fableCycleT = mod(0.51*4, 1) = mod(2.04, 1) = 0.04 -> 4%
+	w := ComputeWaves(0.51, false)
+	if w.FableWeekly <= 0 {
+		t.Errorf("FableWeekly at t=0.51: got %f, want > 0", w.FableWeekly)
+	}
+	if w.FableWeeklyTimePercent <= 0 {
+		t.Errorf("FableWeeklyTimePercent at t=0.51: got %f, want > 0", w.FableWeeklyTimePercent)
+	}
+	if w.FableWeeklyResetIn <= 0 {
+		t.Errorf("FableWeeklyResetIn at t=0.51: got %d, want > 0", w.FableWeeklyResetIn)
+	}
+
+	// Verify exact values: fableCycleT = mod(2.04, 1) = 0.04
+	expectFable := math.Mod(0.51*4, 1.0) * 100
+	if math.Abs(w.FableWeekly-expectFable) > 0.01 {
+		t.Errorf("FableWeekly at t=0.51: got %f, want %f", w.FableWeekly, expectFable)
+	}
+	expectTimePct := math.Mod(0.51*4, 1.0) * 100
+	if math.Abs(w.FableWeeklyTimePercent-expectTimePct) > 0.01 {
+		t.Errorf("FableWeeklyTimePercent at t=0.51: got %f, want %f", w.FableWeeklyTimePercent, expectTimePct)
+	}
+
+	// isLast pins to 100%
+	wLast := ComputeWaves(0.51, true)
+	if wLast.FableWeekly != 100 {
+		t.Errorf("FableWeekly isLast: got %f, want 100", wLast.FableWeekly)
+	}
+	if wLast.FableWeeklyResetIn != 0 {
+		t.Errorf("FableWeeklyResetIn isLast: got %d, want 0", wLast.FableWeeklyResetIn)
+	}
+	if wLast.FableWeeklyTimePercent != 100 {
+		t.Errorf("FableWeeklyTimePercent isLast: got %f, want 100", wLast.FableWeeklyTimePercent)
 	}
 }
 
@@ -88,6 +134,15 @@ func TestComputeWaves_IsLast(t *testing.T) {
 	}
 	if w.WeeklyResetIn != 0 {
 		t.Errorf("WeeklyResetIn isLast: got %d, want 0", w.WeeklyResetIn)
+	}
+	if w.FableWeekly != 100 {
+		t.Errorf("FableWeekly isLast: got %f, want 100", w.FableWeekly)
+	}
+	if w.FableWeeklyResetIn != 0 {
+		t.Errorf("FableWeeklyResetIn isLast: got %d, want 0", w.FableWeeklyResetIn)
+	}
+	if w.FableWeeklyTimePercent != 100 {
+		t.Errorf("FableWeeklyTimePercent isLast: got %f, want 100", w.FableWeeklyTimePercent)
 	}
 }
 
