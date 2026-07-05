@@ -204,7 +204,7 @@ func Run(durationSec int) error {
 			CcVersion:           ccVersion,
 		}
 
-		output := render.RenderLines(renderData, barCfg, lineElements)
+		output := render.RenderLines(renderData, barCfg, lineElements, nil)
 
 		// Frame rendering: first frame prints, subsequent frames overwrite
 		if frame == 0 {

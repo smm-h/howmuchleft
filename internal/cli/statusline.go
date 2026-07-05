@@ -258,6 +258,12 @@ func runStatusline() error {
 		weeklyTimePercent = &pct
 	}
 
+	var fableWeeklyTimePercent *float64
+	if usage.FableWeekly != nil && usage.FableWeekly.ResetIn > 0 {
+		pct := render.ComputeTimePercent(usage.FableWeekly.ResetIn, sevenDayMs)
+		fableWeeklyTimePercent = &pct
+	}
+
 	// Load config
 	cfg := config.Get()
 
@@ -281,6 +287,12 @@ func runStatusline() error {
 	if usage.Weekly != nil {
 		pct := usage.Weekly.Percent
 		weeklyData = render.UsageData{Percent: &pct, ResetIn: usage.Weekly.ResetIn}
+	}
+
+	var fableWeeklyData render.UsageData
+	if usage.FableWeekly != nil {
+		pct := usage.FableWeekly.Percent
+		fableWeeklyData = render.UsageData{Percent: &pct, ResetIn: usage.FableWeekly.ResetIn}
 	}
 
 	var extraUsage *render.ExtraUsageData
@@ -314,27 +326,29 @@ func runStatusline() error {
 	}
 
 	renderData := &render.RenderData{
-		Context:             contextPercent,
-		Model:               model,
-		Tier:                authInfo.SubscriptionName,
-		Elapsed:             elapsed,
-		Profile:             profile,
-		ProfileColor:        profileColor,
-		GhUser:              ghUser,
-		FiveHour:            fiveHourData,
-		Weekly:              weeklyData,
-		ExtraUsage:          extraUsage,
-		Stale:               usage.Stale,
-		LastSuccessTs:       usage.LastSuccessTs,
-		Git:                 gitRender,
-		LineChanges:         lineChanges,
-		Cwd:                 render.ShortenPath(cwd, cfg.CwdMaxLength, cfg.CwdDepth),
-		FiveHourTimePercent: fiveHourTimePercent,
-		WeeklyTimePercent:   weeklyTimePercent,
-		CcVersion:           ccVersion,
+		Context:                contextPercent,
+		Model:                  model,
+		Tier:                   authInfo.SubscriptionName,
+		Elapsed:                elapsed,
+		Profile:                profile,
+		ProfileColor:           profileColor,
+		GhUser:                 ghUser,
+		FiveHour:               fiveHourData,
+		Weekly:                 weeklyData,
+		FableWeekly:            fableWeeklyData,
+		ExtraUsage:             extraUsage,
+		Stale:                  usage.Stale,
+		LastSuccessTs:          usage.LastSuccessTs,
+		Git:                    gitRender,
+		LineChanges:            lineChanges,
+		Cwd:                    render.ShortenPath(cwd, cfg.CwdMaxLength, cfg.CwdDepth),
+		FiveHourTimePercent:    fiveHourTimePercent,
+		WeeklyTimePercent:      weeklyTimePercent,
+		FableWeeklyTimePercent: fableWeeklyTimePercent,
+		CcVersion:              ccVersion,
 	}
 
-	output := render.RenderLines(renderData, barCfg, lineElements)
+	output := render.RenderLines(renderData, barCfg, lineElements, nil)
 	fmt.Println(output)
 	return nil
 }

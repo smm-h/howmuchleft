@@ -207,7 +207,7 @@ func TestRenderLines_NilConfig(t *testing.T) {
 	}
 
 	// nil lineElements should produce 3 empty lines
-	result := RenderLines(data, barCfg, nil)
+	result := RenderLines(data, barCfg, nil, nil)
 	if result != "\n\n" {
 		t.Errorf("RenderLines with nil lineElements = %q, want %q", result, "\n\n")
 	}
@@ -257,7 +257,7 @@ func TestRenderLines_ProducesThreeLines(t *testing.T) {
 		Line3: []string{"usageWeekly", "age", "cwd"},
 	}
 
-	result := RenderLines(data, barCfg, lineElements)
+	result := RenderLines(data, barCfg, lineElements, nil)
 	lineCount := strings.Count(result, "\n") + 1
 	if lineCount != 3 {
 		t.Errorf("RenderLines produced %d lines, want 3. Output: %q", lineCount, result)
@@ -308,7 +308,7 @@ func TestRenderLines_ZeroWidth(t *testing.T) {
 		Line3: []string{"cwd"},
 	}
 
-	result := RenderLines(data, barCfg, lineElements)
+	result := RenderLines(data, barCfg, lineElements, nil)
 	parts := strings.Split(result, "\n")
 	if len(parts) != 3 {
 		t.Fatalf("RenderLines zero-width produced %d lines, want 3", len(parts))

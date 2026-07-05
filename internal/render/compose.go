@@ -221,6 +221,19 @@ type LineChangeInfo struct {
 	Removed *int
 }
 
+// BarColumn describes a single progress bar column for RenderLines.
+type BarColumn struct {
+	Percent    float64
+	BgOverride string
+	TimeBar    *TimeBarInfo
+}
+
+// TimeBarInfo holds the time and usage percentages for a time-progress bar.
+type TimeBarInfo struct {
+	TimePercent  float64
+	UsagePercent float64
+}
+
 // RenderData contains all data needed to render the 3-line statusline output.
 type RenderData struct {
 	Context      float64
@@ -232,20 +245,23 @@ type RenderData struct {
 	GhUser       string
 	FiveHour     UsageData
 	Weekly       UsageData
+	FableWeekly  UsageData
 	ExtraUsage   *ExtraUsageData
 	Stale        bool
 	LastSuccessTs int64
 	Git          GitInfo
 	LineChanges  LineChangeInfo
 	Cwd          string
-	FiveHourTimePercent *float64
-	WeeklyTimePercent   *float64
+	FiveHourTimePercent    *float64
+	WeeklyTimePercent      *float64
+	FableWeeklyTimePercent *float64
 	CcVersion    string
 }
 
 // RenderLines composes the 3-line statusline output from RenderData.
 // If lineElements is nil, returns "\n\n" (3 empty lines).
-func RenderLines(data *RenderData, barCfg *BarConfig, lineElements *config.LinesConfig) string {
+// columns is reserved for future use (Phase 3); pass nil for now.
+func RenderLines(data *RenderData, barCfg *BarConfig, lineElements *config.LinesConfig, columns []BarColumn) string {
 	if lineElements == nil {
 		return "\n\n"
 	}
