@@ -1,0 +1,108 @@
+{
+  "schema_version": 1,
+  "name": "howmuchleft",
+  "slug": "howmuchleft",
+  "version": "0.12.2",
+  "description": "",
+  "language": "go",
+  "base_url": "https://howmuchleft.smmh.dev",
+  "pages": [
+    {
+      "path": "cli-colors.md",
+      "title": "howmuchleft colors",
+      "type": "doc"
+    },
+    {
+      "path": "cli-config.md",
+      "title": "howmuchleft config",
+      "type": "doc"
+    },
+    {
+      "path": "cli-demo.md",
+      "title": "howmuchleft demo",
+      "type": "doc"
+    },
+    {
+      "path": "cli-index.md",
+      "title": "howmuchleft CLI Reference",
+      "type": "doc"
+    },
+    {
+      "path": "cli-profile.md",
+      "title": "howmuchleft profile",
+      "type": "doc"
+    },
+    {
+      "path": "cli-version.md",
+      "title": "howmuchleft version",
+      "type": "doc"
+    },
+    {
+      "path": "gen-index.md",
+      "title": "API Reference",
+      "type": "doc"
+    },
+    {
+      "path": "howmuchleft.md",
+      "title": "howmuchleft",
+      "type": "doc"
+    },
+    {
+      "path": "index.md",
+      "title": "howmuchleft",
+      "type": "doc"
+    },
+    {
+      "path": "internal-cache.md",
+      "title": "internal/cache",
+      "type": "doc"
+    },
+    {
+      "path": "internal-cli.md",
+      "title": "internal/cli",
+      "type": "doc"
+    },
+    {
+      "path": "internal-config.md",
+      "title": "internal/config",
+      "type": "doc"
+    },
+    {
+      "path": "internal-dashboard.md",
+      "title": "internal/dashboard",
+      "type": "doc"
+    },
+    {
+      "path": "internal-demo.md",
+      "title": "internal/demo",
+      "type": "doc"
+    },
+    {
+      "path": "internal-git.md",
+      "title": "internal/git",
+      "type": "doc"
+    },
+    {
+      "path": "internal-migrate.md",
+      "title": "internal/migrate",
+      "type": "doc"
+    },
+    {
+      "path": "internal-oauth.md",
+      "title": "internal/oauth",
+      "type": "doc"
+    },
+    {
+      "path": "internal-platform.md",
+      "title": "internal/platform",
+      "type": "doc"
+    },
+    {
+      "path": "internal-render.md",
+      "title": "internal/render",
+      "type": "doc"
+    }
+  ],
+  "posts": [],
+  "last_gen": "2026-07-05T18:28:14.875318+00:00"
+}

@@ -12,7 +12,7 @@ order: 91
 
 Claude Code statusline tool
 
-Version: v0.12.1-0.20260529221629-34ecfbaefb1d+dirty
+Version: (devel)
 
 ## Commands
 
