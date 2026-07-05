@@ -459,14 +459,12 @@ func WriteUsageFromStdin(claudeDir string, rateLimits map[string]interface{}) er
 	// Parse five_hour from rate_limits.
 	if fh, ok := rateLimits["five_hour"].(map[string]interface{}); ok {
 		cw := &CachedWindow{}
-		if p, ok := fh["utilization"].(float64); ok {
+		if p, ok := fh["used_percentage"].(float64); ok {
 			cw.Percent = &p
 		}
-		if ra, ok := fh["resets_at"].(string); ok && ra != "" {
-			if t, err := time.Parse(time.RFC3339, ra); err == nil {
-				resetAt := t.UnixMilli()
-				cw.ResetAt = &resetAt
-			}
+		if ra, ok := fh["resets_at"].(float64); ok && ra > 0 {
+			resetAt := int64(ra) * 1000
+			cw.ResetAt = &resetAt
 		}
 		if cw.Percent != nil {
 			entry.FiveHour = cw
@@ -476,14 +474,12 @@ func WriteUsageFromStdin(claudeDir string, rateLimits map[string]interface{}) er
 	// Parse seven_day (weekly) from rate_limits.
 	if sd, ok := rateLimits["seven_day"].(map[string]interface{}); ok {
 		cw := &CachedWindow{}
-		if p, ok := sd["utilization"].(float64); ok {
+		if p, ok := sd["used_percentage"].(float64); ok {
 			cw.Percent = &p
 		}
-		if ra, ok := sd["resets_at"].(string); ok && ra != "" {
-			if t, err := time.Parse(time.RFC3339, ra); err == nil {
-				resetAt := t.UnixMilli()
-				cw.ResetAt = &resetAt
-			}
+		if ra, ok := sd["resets_at"].(float64); ok && ra > 0 {
+			resetAt := int64(ra) * 1000
+			cw.ResetAt = &resetAt
 		}
 		if cw.Percent != nil {
 			entry.Weekly = cw

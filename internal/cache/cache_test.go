@@ -319,14 +319,18 @@ func TestWriteUsageFromStdin(t *testing.T) {
 	NowMs = func() int64 { return 1700000000000 }
 	defer func() { NowMs = origNow }()
 
+	// Stdin sends used_percentage (float64) and resets_at (float64 unix seconds).
+	fhResetSec := 1705320000.0 // 2024-01-15T12:00:00Z as unix seconds
+	sdResetSec := 1705708800.0 // 2024-01-20T00:00:00Z as unix seconds
+
 	rateLimits := map[string]interface{}{
 		"five_hour": map[string]interface{}{
-			"utilization": 0.65,
-			"resets_at":   "2024-01-15T12:00:00Z",
+			"used_percentage": 0.65,
+			"resets_at":       fhResetSec,
 		},
 		"seven_day": map[string]interface{}{
-			"utilization": 0.30,
-			"resets_at":   "2024-01-20T00:00:00Z",
+			"used_percentage": 0.30,
+			"resets_at":       sdResetSec,
 		},
 		"extra_usage": map[string]interface{}{
 			"is_enabled":  true,
@@ -346,12 +350,38 @@ func TestWriteUsageFromStdin(t *testing.T) {
 	if cache.Status != "ok" {
 		t.Errorf("status: got %q, want %q", cache.Status, "ok")
 	}
-	if cache.FiveHour == nil || cache.FiveHour.Percent == nil || *cache.FiveHour.Percent != 0.65 {
+
+	// FiveHour: percent and resetAt.
+	if cache.FiveHour == nil {
+		t.Fatal("fiveHour is nil")
+	}
+	if cache.FiveHour.Percent == nil || *cache.FiveHour.Percent != 0.65 {
 		t.Error("fiveHour percent mismatch")
 	}
-	if cache.Weekly == nil || cache.Weekly.Percent == nil || *cache.Weekly.Percent != 0.30 {
+	if cache.FiveHour.ResetAt == nil {
+		t.Fatal("fiveHour resetAt is nil")
+	}
+	wantFhResetMs := int64(fhResetSec) * 1000
+	if *cache.FiveHour.ResetAt != wantFhResetMs {
+		t.Errorf("fiveHour resetAt: got %d, want %d", *cache.FiveHour.ResetAt, wantFhResetMs)
+	}
+
+	// Weekly: percent and resetAt.
+	if cache.Weekly == nil {
+		t.Fatal("weekly is nil")
+	}
+	if cache.Weekly.Percent == nil || *cache.Weekly.Percent != 0.30 {
 		t.Error("weekly percent mismatch")
 	}
+	if cache.Weekly.ResetAt == nil {
+		t.Fatal("weekly resetAt is nil")
+	}
+	wantSdResetMs := int64(sdResetSec) * 1000
+	if *cache.Weekly.ResetAt != wantSdResetMs {
+		t.Errorf("weekly resetAt: got %d, want %d", *cache.Weekly.ResetAt, wantSdResetMs)
+	}
+
+	// Extra usage.
 	if cache.Extra == nil || !cache.Extra.Enabled {
 		t.Error("extra usage enabled mismatch")
 	}
@@ -367,10 +397,10 @@ func TestWriteUsageFromStdinPartial(t *testing.T) {
 	NowMs = func() int64 { return 1700000000000 }
 	defer func() { NowMs = origNow }()
 
-	// Only five_hour present.
+	// Only five_hour present (stdin uses used_percentage, not utilization).
 	rateLimits := map[string]interface{}{
 		"five_hour": map[string]interface{}{
-			"utilization": 0.9,
+			"used_percentage": 0.9,
 		},
 	}
 
