@@ -29,9 +29,10 @@ var ErrAuth = errors.New("authentication error (401/403)")
 
 // UsageResponse is the parsed JSON from the usage API.
 type UsageResponse struct {
-	FiveHour WindowUsage `json:"five_hour"`
-	Weekly   WindowUsage `json:"seven_day"`
-	Extra    *ExtraUsage `json:"extra_usage"`
+	FiveHour    WindowUsage `json:"five_hour"`
+	Weekly      WindowUsage `json:"seven_day"`
+	FableWeekly WindowUsage `json:"seven_day_overage_included"`
+	Extra       *ExtraUsage `json:"extra_usage"`
 }
 
 // WindowUsage represents a single usage window from the API.
@@ -50,13 +51,14 @@ type ExtraUsage struct {
 
 // CacheData is persisted to .statusline-cache.json.
 type CacheData struct {
-	Status           string       `json:"status"`           // "ok" or "error"
-	Ts               int64        `json:"timestamp"`        // unix ms when cached
-	ErrorCount       int          `json:"consecutiveErrors"`
+	Status           string        `json:"status"`           // "ok" or "error"
+	Ts               int64         `json:"timestamp"`        // unix ms when cached
+	ErrorCount       int           `json:"consecutiveErrors"`
 	FiveHour         *CachedWindow `json:"fiveHour"`
 	Weekly           *CachedWindow `json:"weekly"`
+	FableWeekly      *CachedWindow `json:"fableWeekly"`
 	Extra            *CachedExtra  `json:"extraUsage"`
-	LastSuccessTs    *int64       `json:"lastSuccessTs"`
+	LastSuccessTs    *int64        `json:"lastSuccessTs"`
 }
 
 // CachedWindow stores a usage window in the cache.
