@@ -225,6 +225,23 @@ func IsCacheValid(cache *CacheData, now int64, forceRefresh bool) bool {
 	return ageMs < ttl.Milliseconds()
 }
 
+// windowCacheToResult converts a CachedWindow to a WindowResult, computing
+// ResetIn as max(0, ResetAt - now). Returns nil if cw is nil.
+func windowCacheToResult(cw *CachedWindow, now int64) *WindowResult {
+	if cw == nil || cw.Percent == nil {
+		return nil
+	}
+	wr := &WindowResult{Percent: *cw.Percent}
+	if cw.ResetAt != nil {
+		resetIn := *cw.ResetAt - now
+		if resetIn < 0 {
+			resetIn = 0
+		}
+		wr.ResetIn = resetIn
+	}
+	return wr
+}
+
 // cacheToResult converts cached data to UsageResult.
 func cacheToResult(cache *CacheData, now int64, stale bool) *UsageResult {
 	result := &UsageResult{
@@ -235,29 +252,8 @@ func cacheToResult(cache *CacheData, now int64, stale bool) *UsageResult {
 		result.LastSuccessTs = *cache.LastSuccessTs
 	}
 
-	if cache.FiveHour != nil && cache.FiveHour.Percent != nil {
-		wr := &WindowResult{Percent: *cache.FiveHour.Percent}
-		if cache.FiveHour.ResetAt != nil {
-			resetIn := *cache.FiveHour.ResetAt - now
-			if resetIn < 0 {
-				resetIn = 0
-			}
-			wr.ResetIn = resetIn
-		}
-		result.FiveHour = wr
-	}
-
-	if cache.Weekly != nil && cache.Weekly.Percent != nil {
-		wr := &WindowResult{Percent: *cache.Weekly.Percent}
-		if cache.Weekly.ResetAt != nil {
-			resetIn := *cache.Weekly.ResetAt - now
-			if resetIn < 0 {
-				resetIn = 0
-			}
-			wr.ResetIn = resetIn
-		}
-		result.Weekly = wr
-	}
+	result.FiveHour = windowCacheToResult(cache.FiveHour, now)
+	result.Weekly = windowCacheToResult(cache.Weekly, now)
 
 	if cache.Extra != nil {
 		result.Extra = &ExtraResult{
