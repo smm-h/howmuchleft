@@ -12,7 +12,7 @@ import (
 )
 
 // modelRegex matches Claude model name patterns for shortening.
-var modelRegex = regexp.MustCompile(`^claude-(opus|sonnet|haiku)-(\d+)-(\d+)(?:-(\d{1,2}))?(?:-\d{8})?$`)
+var modelRegex = regexp.MustCompile(`^claude-(opus|sonnet|haiku|fable)-(\d+)(?:-(\d{1,2}))?(?:-(\d{1,2}))?(?:-\d{8})?$`)
 
 // ShortenModelName abbreviates a Claude model name to a compact form.
 // e.g. "claude-sonnet-4-5-20250514" -> "S4.5"
@@ -23,6 +23,9 @@ func ShortenModelName(model string) string {
 		return model
 	}
 	initial := strings.ToUpper(m[1][:1])
+	if m[3] == "" {
+		return initial + m[2]
+	}
 	patch := ""
 	if m[4] != "" && m[4] != "0" {
 		patch = "." + m[4]

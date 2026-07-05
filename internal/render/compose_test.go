@@ -22,6 +22,11 @@ func TestShortenModelName(t *testing.T) {
 		{"claude-haiku-3-5-0", "H3.5"},   // patch "0" is omitted
 		{"claude-sonnet-4-5", "S4.5"},     // no date suffix
 		{"claude-opus-4-6", "O4.6"},       // no date suffix
+		// Fable (no minor version)
+		{"claude-fable-5", "F5"},
+		{"claude-fable-5-20260101", "F5"},   // with date suffix
+		{"claude-fable-5-1", "F5.1"},        // with minor version
+		{"claude-fable-5-1-20260101", "F5.1"}, // with minor and date
 		// Unknown passthrough
 		{"gpt-4", "gpt-4"},
 		{"some-random-model", "some-random-model"},
