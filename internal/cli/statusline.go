@@ -18,8 +18,9 @@ import (
 
 // Time window durations in milliseconds.
 const (
-	fiveHourMs = 5 * 60 * 60 * 1000
-	sevenDayMs = 7 * 24 * 60 * 60 * 1000
+	fiveHourMs      = 5 * 60 * 60 * 1000
+	sevenDayMs      = 7 * 24 * 60 * 60 * 1000
+	fableWeeklyMs   = sevenDayMs // seven_day_overage_included is assumed to be a 7-day window
 )
 
 // stdinData represents the JSON structure piped from Claude Code.
@@ -265,7 +266,7 @@ func runStatusline() error {
 
 	var fableWeeklyTimePercent *float64
 	if usage.FableWeekly != nil && usage.FableWeekly.ResetIn > 0 {
-		pct := render.ComputeTimePercent(usage.FableWeekly.ResetIn, sevenDayMs)
+		pct := render.ComputeTimePercent(usage.FableWeekly.ResetIn, fableWeeklyMs)
 		fableWeeklyTimePercent = &pct
 	}
 
