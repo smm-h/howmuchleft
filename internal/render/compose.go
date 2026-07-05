@@ -260,7 +260,8 @@ type RenderData struct {
 
 // RenderLines composes the 3-line statusline output from RenderData.
 // If lineElements is nil, returns "\n\n" (3 empty lines).
-// columns is reserved for future use (Phase 3); pass nil for now.
+// columns describes the bar columns to render. Pass nil for the default
+// 3-column layout (context, 5hr, weekly/extra).
 func RenderLines(data *RenderData, barCfg *BarConfig, lineElements *config.LinesConfig, columns []BarColumn) string {
 	if lineElements == nil {
 		return "\n\n"
@@ -398,9 +399,6 @@ func RenderLines(data *RenderData, barCfg *BarConfig, lineElements *config.Lines
 		thirdPercent = *data.Weekly.Percent
 	}
 
-	// Show time bars when enabled and time data is available
-	showTimeBars := barCfg.TimeBarBg != "" && data.FiveHourTimePercent != nil
-
 	var lines [3]string
 
 	if barCfg.Width <= 0 {
@@ -421,63 +419,67 @@ func RenderLines(data *RenderData, barCfg *BarConfig, lineElements *config.Lines
 		fiveHourPct = *data.FiveHour.Percent
 	}
 
+	// Build default columns from RenderData when none were provided
+	if len(columns) == 0 {
+		columns = []BarColumn{
+			{Percent: data.Context},
+			{Percent: fiveHourPct},
+			{Percent: thirdPercent, BgOverride: warmBg},
+		}
+		// Attach time bars when time data is available and time bars are configured
+		if barCfg.TimeBarBg != "" {
+			if data.FiveHourTimePercent != nil {
+				columns[1].TimeBar = &TimeBarInfo{
+					TimePercent:  *data.FiveHourTimePercent,
+					UsagePercent: fiveHourPct,
+				}
+			}
+			if data.WeeklyTimePercent != nil {
+				columns[2].TimeBar = &TimeBarInfo{
+					TimePercent:  *data.WeeklyTimePercent,
+					UsagePercent: thirdPercent,
+				}
+			}
+		}
+	}
+
 	if orientation == "horizontal" {
-		// Horizontal: each line has its own progress bar
-		contextBar := HorizontalBar(data.Context, barCfg, "")
-		text1 := BuildLineText(line1Elements, lineElements.Line1)
-		if text1 != "" {
-			lines[0] = contextBar + " " + text1
-		} else {
-			lines[0] = contextBar
+		// Horizontal: each line has its own progress bar, capped at 3
+		nBars := len(columns)
+		if nBars > 3 {
+			nBars = 3
 		}
 
-		fiveHourBar := HorizontalBar(fiveHourPct, barCfg, "")
-		text2 := BuildLineText(line2Elements, lineElements.Line2)
-		if text2 != "" {
-			lines[1] = fiveHourBar + " " + text2
-		} else {
-			lines[1] = fiveHourBar
+		lineTexts := [3]string{
+			BuildLineText(line1Elements, lineElements.Line1),
+			BuildLineText(line2Elements, lineElements.Line2),
+			BuildLineText(line3Elements, lineElements.Line3),
 		}
 
-		thirdBar := HorizontalBar(thirdPercent, barCfg, warmBg)
-		text3 := BuildLineText(line3Elements, lineElements.Line3)
-		if text3 != "" {
-			lines[2] = thirdBar + " " + text3
-		} else {
-			lines[2] = thirdBar
+		for i := 0; i < 3; i++ {
+			if i < nBars {
+				bar := HorizontalBar(columns[i].Percent, barCfg, columns[i].BgOverride)
+				if lineTexts[i] != "" {
+					lines[i] = bar + " " + lineTexts[i]
+				} else {
+					lines[i] = bar
+				}
+			} else {
+				lines[i] = lineTexts[i]
+			}
 		}
 	} else {
-		// Vertical orientation: 3 bars (context, 5hr, weekly/extra) as columns spanning 3 rows
-		percents := [3]float64{data.Context, fiveHourPct, thirdPercent}
-
+		// Vertical orientation: columns as side-by-side bars spanning 3 rows
 		for row := 0; row < 3; row++ {
 			var barStr strings.Builder
-			for i := 0; i < 3; i++ {
+			for i, col := range columns {
 				if i > 0 {
 					barStr.WriteString(Reset + " ")
 				}
-				bgOverride := ""
-				if i == 2 && warmBg != "" {
-					bgOverride = warmBg
-				}
-				barStr.WriteString(VerticalBarCell(percents[i], row, 3, bgOverride, barCfg))
+				barStr.WriteString(VerticalBarCell(col.Percent, row, 3, col.BgOverride, barCfg))
 
-				// Time bars after 5hr (i=1) and weekly (i=2)
-				if showTimeBars && (i == 1 || i == 2) {
-					var timePct float64
-					var usagePct float64
-					if i == 1 && data.FiveHourTimePercent != nil {
-						timePct = *data.FiveHourTimePercent
-						usagePct = fiveHourPct
-					} else if i == 2 && data.WeeklyTimePercent != nil {
-						timePct = *data.WeeklyTimePercent
-						if showExtraUsage {
-							usagePct = data.ExtraUsage.Percent
-						} else {
-							usagePct = thirdPercent
-						}
-					}
-					barStr.WriteString(TimeBarCell(timePct, usagePct, row, 3, barCfg))
+				if col.TimeBar != nil {
+					barStr.WriteString(TimeBarCell(col.TimeBar.TimePercent, col.TimeBar.UsagePercent, row, 3, barCfg))
 				}
 			}
 			barStr.WriteString(Reset)
