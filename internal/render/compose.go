@@ -47,20 +47,7 @@ func FormatPercent(percent *float64, stale bool) string {
 
 // FormatExtraPercent formats extra usage percentage with a warm amber background.
 func FormatExtraPercent(percent float64, stale bool, isDark bool, truecolor bool) string {
-	var warmBg string
-	if truecolor {
-		if isDark {
-			warmBg = "\x1b[48;2;100;60;0m"
-		} else {
-			warmBg = "\x1b[48;2;255;210;140m"
-		}
-	} else {
-		if isDark {
-			warmBg = "\x1b[48;5;94m"
-		} else {
-			warmBg = "\x1b[48;5;223m"
-		}
-	}
+	warmBg, _ := WarmBgColors(isDark, truecolor)
 	var val string
 	if stale {
 		val = fmt.Sprintf("~%d%%", int(math.Round(percent)))
@@ -148,6 +135,30 @@ func BuildLineText(elements map[string]func() string, order []string) string {
 		}
 	}
 	return strings.Join(parts, " ")
+}
+
+// WarmBgColors returns the ANSI background escape sequences for extra-usage
+// warm amber coloring. textBg is used for percentage labels, barBg is used for
+// bar cell backgrounds. Both adapt to dark/light mode and truecolor/256-color.
+func WarmBgColors(isDark, truecolor bool) (textBg, barBg string) {
+	if truecolor {
+		if isDark {
+			textBg = "\x1b[48;2;100;60;0m"
+			barBg = "\x1b[48;2;80;50;0m"
+		} else {
+			textBg = "\x1b[48;2;255;210;140m"
+			barBg = "\x1b[48;2;255;220;160m"
+		}
+	} else {
+		if isDark {
+			textBg = "\x1b[48;5;94m"
+			barBg = "\x1b[48;5;94m"
+		} else {
+			textBg = "\x1b[48;5;223m"
+			barBg = "\x1b[48;5;223m"
+		}
+	}
+	return
 }
 
 // ComputeTimeBarBg blends the bar background toward the terminal default.
@@ -360,19 +371,7 @@ func RenderLines(data *RenderData, barCfg *BarConfig, lineElements *config.Lines
 	// Determine warm bg for extra usage bar
 	var warmBg string
 	if showExtraUsage {
-		if truecolor {
-			if isDark {
-				warmBg = "\x1b[48;2;80;50;0m"
-			} else {
-				warmBg = "\x1b[48;2;255;220;160m"
-			}
-		} else {
-			if isDark {
-				warmBg = "\x1b[48;5;94m"
-			} else {
-				warmBg = "\x1b[48;5;223m"
-			}
-		}
+		_, warmBg = WarmBgColors(isDark, truecolor)
 	}
 
 	// Determine third bar percent

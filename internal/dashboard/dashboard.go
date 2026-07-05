@@ -296,19 +296,7 @@ func renderProfileRows(name, nameColor, tier string, usage *cache.UsageResult, b
 	// Warm bg for extra usage bar
 	var warmBg string
 	if showExtra {
-		if truecolor {
-			if isDark {
-				warmBg = "\x1b[48;2;80;50;0m"
-			} else {
-				warmBg = "\x1b[48;2;255;220;160m"
-			}
-		} else {
-			if isDark {
-				warmBg = "\x1b[48;5;94m"
-			} else {
-				warmBg = "\x1b[48;5;223m"
-			}
-		}
+		_, warmBg = render.WarmBgColors(isDark, truecolor)
 	}
 
 	// Bar percents: [5hr, weekly/extra]
