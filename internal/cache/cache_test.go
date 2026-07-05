@@ -476,6 +476,106 @@ func TestCacheJSONFieldNames(t *testing.T) {
 	}
 }
 
+func TestFableWeeklyRoundTripThroughWriteSuccessCache(t *testing.T) {
+	dir := t.TempDir()
+
+	resp := &UsageResponse{
+		FableWeekly: WindowUsage{
+			Utilization: 0.55,
+			ResetsAt:    "2025-01-15T12:00:00Z",
+		},
+	}
+
+	now := int64(1736935200000) // 2025-01-15T10:00:00Z in ms
+
+	result := writeSuccessCache(dir, nil, resp, now)
+	if result.FableWeekly == nil {
+		t.Fatal("writeSuccessCache returned nil FableWeekly")
+	}
+	if result.FableWeekly.Percent != 0.55 {
+		t.Errorf("FableWeekly percent: got %f, want 0.55", result.FableWeekly.Percent)
+	}
+
+	// Read from disk and verify round-trip
+	cache := ReadCache(dir)
+	if cache == nil {
+		t.Fatal("ReadCache returned nil")
+	}
+	if cache.FableWeekly == nil {
+		t.Fatal("cached FableWeekly is nil")
+	}
+	if cache.FableWeekly.Percent == nil || *cache.FableWeekly.Percent != 0.55 {
+		t.Errorf("cached FableWeekly percent mismatch")
+	}
+	if cache.FableWeekly.ResetAt == nil {
+		t.Fatal("cached FableWeekly resetAt is nil")
+	}
+	// 2025-01-15T12:00:00Z = 1736942400 seconds = 1736942400000 ms
+	wantResetAt := int64(1736942400000)
+	if *cache.FableWeekly.ResetAt != wantResetAt {
+		t.Errorf("cached FableWeekly resetAt: got %d, want %d", *cache.FableWeekly.ResetAt, wantResetAt)
+	}
+}
+
+func TestIsCacheValidFableWeeklyResetPassed(t *testing.T) {
+	now := int64(1700000100000)
+	resetAt := int64(1700000050000) // already passed
+
+	cache := &CacheData{
+		Status: "ok",
+		Ts:     now - 10000, // fresh
+		FableWeekly: &CachedWindow{
+			Percent: ptrFloat(0.4),
+			ResetAt: &resetAt,
+		},
+	}
+	if IsCacheValid(cache, now, false) {
+		t.Error("expected cache to be invalid when FableWeekly resetAt has passed")
+	}
+}
+
+func TestHasUsableDataFableWeeklyOnly(t *testing.T) {
+	cache := &CacheData{
+		FableWeekly: &CachedWindow{Percent: ptrFloat(0.3)},
+	}
+	if !hasUsableData(cache) {
+		t.Error("cache with only FableWeekly percent should have usable data")
+	}
+}
+
+func TestWriteErrorCachePreservesFableWeekly(t *testing.T) {
+	dir := t.TempDir()
+
+	fablePercent := 0.65
+	fableResetAt := int64(1700000200000)
+	oldCache := &CacheData{
+		Status:     "ok",
+		Ts:         1700000000000,
+		ErrorCount: 0,
+		FableWeekly: &CachedWindow{
+			Percent: &fablePercent,
+			ResetAt: &fableResetAt,
+		},
+	}
+
+	now := int64(1700000100000)
+	writeErrorCache(dir, oldCache, now)
+
+	cache := ReadCache(dir)
+	if cache == nil {
+		t.Fatal("ReadCache returned nil after writeErrorCache")
+	}
+	if cache.FableWeekly == nil {
+		t.Fatal("FableWeekly not preserved in error cache")
+	}
+	if cache.FableWeekly.Percent == nil || *cache.FableWeekly.Percent != 0.65 {
+		t.Errorf("FableWeekly percent not preserved: got %v", cache.FableWeekly.Percent)
+	}
+	if cache.FableWeekly.ResetAt == nil || *cache.FableWeekly.ResetAt != fableResetAt {
+		t.Errorf("FableWeekly resetAt not preserved")
+	}
+}
+
 // ptrFloat is a helper to create a *float64.
 func ptrFloat(f float64) *float64 {
 	return &f

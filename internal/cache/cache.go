@@ -79,6 +79,7 @@ type CachedExtra struct {
 type UsageResult struct {
 	FiveHour      *WindowResult
 	Weekly        *WindowResult
+	FableWeekly   *WindowResult
 	Extra         *ExtraResult
 	Stale         bool
 	LastSuccessTs int64 // 0 means unknown
@@ -216,6 +217,9 @@ func IsCacheValid(cache *CacheData, now int64, forceRefresh bool) bool {
 	if cache.Weekly != nil && cache.Weekly.ResetAt != nil && now >= *cache.Weekly.ResetAt {
 		return false
 	}
+	if cache.FableWeekly != nil && cache.FableWeekly.ResetAt != nil && now >= *cache.FableWeekly.ResetAt {
+		return false
+	}
 
 	var ttl time.Duration
 	if cache.Status == "error" {
@@ -278,6 +282,9 @@ func hasUsableData(cache *CacheData) bool {
 		return true
 	}
 	if cache.Weekly != nil && cache.Weekly.Percent != nil {
+		return true
+	}
+	if cache.FableWeekly != nil && cache.FableWeekly.Percent != nil {
 		return true
 	}
 	return false
@@ -343,6 +350,7 @@ func writeErrorCache(claudeDir string, oldCache *CacheData, now int64) {
 		entry.LastSuccessTs = oldCache.LastSuccessTs
 		entry.FiveHour = oldCache.FiveHour
 		entry.Weekly = oldCache.Weekly
+		entry.FableWeekly = oldCache.FableWeekly
 		entry.Extra = oldCache.Extra
 	}
 
@@ -409,6 +417,28 @@ func writeSuccessCache(claudeDir string, oldCache *CacheData, resp *UsageRespons
 		result.Weekly = wr
 	}
 
+	// Fable weekly window (seven_day_overage_included).
+	if resp.FableWeekly.Utilization != 0 || resp.FableWeekly.ResetsAt != "" {
+		percent := resp.FableWeekly.Utilization
+		cw := &CachedWindow{Percent: &percent}
+		wr := &WindowResult{Percent: percent}
+
+		if resp.FableWeekly.ResetsAt != "" {
+			if t, err := time.Parse(time.RFC3339, resp.FableWeekly.ResetsAt); err == nil {
+				resetAt := t.UnixMilli()
+				cw.ResetAt = &resetAt
+				resetIn := resetAt - now
+				if resetIn < 0 {
+					resetIn = 0
+				}
+				wr.ResetIn = resetIn
+			}
+		}
+
+		entry.FableWeekly = cw
+		result.FableWeekly = wr
+	}
+
 	// Extra usage.
 	if resp.Extra != nil {
 		ce := &CachedExtra{
@@ -427,7 +457,7 @@ func writeSuccessCache(claudeDir string, oldCache *CacheData, resp *UsageRespons
 	}
 
 	// Write only if we got meaningful data.
-	if result.FiveHour != nil || result.Weekly != nil {
+	if result.FiveHour != nil || result.Weekly != nil || result.FableWeekly != nil {
 		_ = WriteCache(claudeDir, entry)
 	}
 
