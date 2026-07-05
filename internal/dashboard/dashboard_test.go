@@ -289,3 +289,62 @@ func TestRenderProfileRows_NonEmpty(t *testing.T) {
 		}
 	}
 }
+
+func TestRenderProfileRows_FableWeekly(t *testing.T) {
+	barCfg := &render.BarConfig{
+		Width:         3,
+		EmptyBg:       "\x1b[48;5;236m",
+		Gradient:      render.BuiltinColors[2].Gradient,
+		Truecolor:     false,
+		IsRgb:         false,
+		PartialBlocks: true,
+	}
+
+	usage := &cache.UsageResult{
+		FiveHour:    &cache.WindowResult{Percent: 50, ResetIn: 3600000},
+		Weekly:      &cache.WindowResult{Percent: 30, ResetIn: 172800000},
+		FableWeekly: &cache.WindowResult{Percent: 72, ResetIn: 259200000},
+	}
+
+	output := renderProfileRows("fable-prof", render.Cyan, "Pro", usage, barCfg)
+	lines := strings.Split(output, "\n")
+
+	// With FableWeekly present, we get 3 bar rows + 1 Fable text row = 4 lines
+	if len(lines) != 4 {
+		t.Errorf("expected 4 lines with FableWeekly, got %d", len(lines))
+	}
+
+	// The 4th line should contain the Fable label and percentage
+	if len(lines) >= 4 {
+		fableLine := lines[3]
+		if !strings.Contains(fableLine, "F") {
+			t.Errorf("Fable line missing label 'F'; got %q", fableLine)
+		}
+		if !strings.Contains(fableLine, "72%") {
+			t.Errorf("Fable line missing '72%%'; got %q", fableLine)
+		}
+	}
+}
+
+func TestRenderProfileRows_NoFableWithoutData(t *testing.T) {
+	barCfg := &render.BarConfig{
+		Width:         3,
+		EmptyBg:       "\x1b[48;5;236m",
+		Gradient:      render.BuiltinColors[2].Gradient,
+		Truecolor:     false,
+		IsRgb:         false,
+		PartialBlocks: true,
+	}
+
+	// No FableWeekly data — should produce exactly 3 lines (no 4th line)
+	usage := &cache.UsageResult{
+		FiveHour: &cache.WindowResult{Percent: 50, ResetIn: 3600000},
+		Weekly:   &cache.WindowResult{Percent: 30, ResetIn: 172800000},
+	}
+
+	output := renderProfileRows("no-fable", render.Cyan, "Pro", usage, barCfg)
+	lines := strings.Split(output, "\n")
+	if len(lines) != 3 {
+		t.Errorf("expected 3 lines without FableWeekly, got %d", len(lines))
+	}
+}

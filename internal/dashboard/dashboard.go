@@ -280,7 +280,7 @@ func renderProfileRows(name, nameColor, tier string, usage *cache.UsageResult, b
 		fiveHourPct = usage.FiveHour.Percent
 	}
 	if usage.Weekly != nil {
-		weeklyPct = *&usage.Weekly.Percent
+		weeklyPct = usage.Weekly.Percent
 	}
 	if usage.Weekly != nil && usage.Weekly.Percent >= 100 &&
 		usage.Extra != nil && usage.Extra.Enabled {
@@ -299,21 +299,23 @@ func renderProfileRows(name, nameColor, tier string, usage *cache.UsageResult, b
 		_, warmBg = render.WarmBgColors(isDark, truecolor)
 	}
 
-	// Bar percents: [5hr, weekly/extra]
-	percents := [2]float64{fiveHourPct, thirdPct}
+	// Build bar columns dynamically
+	columns := []render.BarColumn{
+		{Percent: fiveHourPct},
+		{Percent: thirdPct, BgOverride: warmBg},
+	}
+	if usage.FableWeekly != nil {
+		columns = append(columns, render.BarColumn{Percent: usage.FableWeekly.Percent})
+	}
 
 	var lines [3]string
 	for row := 0; row < 3; row++ {
 		var barStr strings.Builder
-		for i := 0; i < 2; i++ {
+		for i := 0; i < len(columns); i++ {
 			if i > 0 {
 				barStr.WriteString(render.Reset + " ")
 			}
-			bgOverride := ""
-			if i == 1 && warmBg != "" {
-				bgOverride = warmBg
-			}
-			barStr.WriteString(render.VerticalBarCell(percents[i], row, 3, bgOverride, barCfg))
+			barStr.WriteString(render.VerticalBarCell(columns[i].Percent, row, 3, columns[i].BgOverride, barCfg))
 		}
 		barStr.WriteString(render.Reset)
 
@@ -340,6 +342,22 @@ func renderProfileRows(name, nameColor, tier string, usage *cache.UsageResult, b
 		} else {
 			lines[row] = barStr.String()
 		}
+	}
+
+	// Append Fable text line when data is available.
+	// This is a text-only line (no bar cell) since bars span 3 rows above.
+	if usage.FableWeekly != nil {
+		// Pad with spaces matching the bar column width so text aligns
+		// with the text on rows above. Each bar cell is 1 char wide,
+		// columns are separated by Reset + " ". We need len(columns)
+		// chars for cells + (len(columns)-1) gaps.
+		padWidth := len(columns)
+		if len(columns) > 1 {
+			padWidth += len(columns) - 1
+		}
+		pad := strings.Repeat(" ", padWidth)
+		fableText := formatUsageLine("F", usage.FableWeekly, usage.Stale)
+		return strings.Join(lines[:], "\n") + "\n" + pad + " " + fableText
 	}
 
 	return strings.Join(lines[:], "\n")
