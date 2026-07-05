@@ -332,3 +332,199 @@ func TestRenderLines_ZeroWidth(t *testing.T) {
 		t.Errorf("Line 3 should contain '~/test', got %q", parts[2])
 	}
 }
+
+func TestRenderLines_NilColumnsBackwardCompat(t *testing.T) {
+	// Nil columns should produce identical output to explicit default columns.
+	os.Setenv("HOWMUCHLEFT_DARK", "1")
+	os.Setenv("COLORTERM", "truecolor")
+	ResetDarkModeCache()
+	ResetTruecolorCache()
+	defer func() {
+		os.Unsetenv("HOWMUCHLEFT_DARK")
+		os.Unsetenv("COLORTERM")
+		ResetDarkModeCache()
+		ResetTruecolorCache()
+	}()
+
+	barCfg := &BarConfig{
+		Width:         12,
+		EmptyBg:       "\x1b[48;2;48;48;48m",
+		TimeBarBg:     "\x1b[48;2;38;38;38m",
+		Gradient:      []GradientStop{NewRgbStop(0, 255, 0), NewRgbStop(255, 0, 0)},
+		Truecolor:     true,
+		IsRgb:         true,
+		PartialBlocks: true,
+	}
+
+	fiveHourPct := 30.0
+	weeklyPct := 45.0
+	fiveHourTimePct := 40.0
+	weeklyTimePct := 20.0
+
+	data := &RenderData{
+		Context:             50,
+		Model:               "claude-sonnet-4-5-20250514",
+		Tier:                "Pro",
+		FiveHour:            UsageData{Percent: &fiveHourPct, ResetIn: 3600000},
+		Weekly:              UsageData{Percent: &weeklyPct, ResetIn: 86400000},
+		Git:                 GitInfo{Branch: "main", HasGit: true},
+		Cwd:                 "~/test",
+		FiveHourTimePercent: &fiveHourTimePct,
+		WeeklyTimePercent:   &weeklyTimePct,
+	}
+
+	lineElements := &config.LinesConfig{
+		Line1: []string{"context", "tier", "model"},
+		Line2: []string{"usage5h", "branch"},
+		Line3: []string{"usageWeekly", "cwd"},
+	}
+
+	// Render with nil columns (backward compat path)
+	resultNil := RenderLines(data, barCfg, lineElements, nil)
+
+	// Render with explicit equivalent columns
+	explicitCols := []BarColumn{
+		{Percent: 50},
+		{Percent: 30, TimeBar: &TimeBarInfo{TimePercent: 40, UsagePercent: 30}},
+		{Percent: 45, TimeBar: &TimeBarInfo{TimePercent: 20, UsagePercent: 45}},
+	}
+	resultExplicit := RenderLines(data, barCfg, lineElements, explicitCols)
+
+	if resultNil != resultExplicit {
+		t.Errorf("nil columns and explicit equivalent columns produced different output:\nnil:      %q\nexplicit: %q", resultNil, resultExplicit)
+	}
+}
+
+func TestRenderLines_FourColumnsVertical(t *testing.T) {
+	// 4-element BarColumn slice should produce 4 bar characters per row in vertical mode.
+	os.Setenv("HOWMUCHLEFT_DARK", "1")
+	os.Setenv("COLORTERM", "truecolor")
+	ResetDarkModeCache()
+	ResetTruecolorCache()
+	defer func() {
+		os.Unsetenv("HOWMUCHLEFT_DARK")
+		os.Unsetenv("COLORTERM")
+		ResetDarkModeCache()
+		ResetTruecolorCache()
+	}()
+
+	barCfg := &BarConfig{
+		Width:         1,
+		EmptyBg:       "\x1b[48;2;48;48;48m",
+		Gradient:      []GradientStop{NewRgbStop(0, 255, 0), NewRgbStop(255, 0, 0)},
+		Truecolor:     true,
+		IsRgb:         true,
+		PartialBlocks: false, // no partial blocks: each bar is exactly 1 char
+	}
+
+	data := &RenderData{
+		Context: 50,
+		Model:   "claude-fable-5",
+		Tier:    "Max 5x",
+		Git:     GitInfo{HasGit: false},
+		Cwd:     "~/test",
+	}
+
+	lineElements := &config.LinesConfig{
+		Line1: []string{"model"},
+		Line2: []string{},
+		Line3: []string{},
+	}
+
+	columns := []BarColumn{
+		{Percent: 50},
+		{Percent: 30},
+		{Percent: 45},
+		{Percent: 20}, // 4th column (Fable)
+	}
+
+	result3 := RenderLines(data, barCfg, lineElements, columns[:3])
+	result4 := RenderLines(data, barCfg, lineElements, columns)
+
+	// Each vertical bar cell is 1 char wide (width=1, no partial blocks).
+	// With 3 columns: bar section is "X X X" (3 chars + 2 separators).
+	// With 4 columns: bar section is "X X X X" (4 chars + 3 separators).
+	// The 4-column output should be longer than 3-column on each line.
+	lines3 := strings.Split(result3, "\n")
+	lines4 := strings.Split(result4, "\n")
+
+	if len(lines3) != 3 || len(lines4) != 3 {
+		t.Fatalf("expected 3 lines each, got %d and %d", len(lines3), len(lines4))
+	}
+
+	// On every row, 4-column bar section should be wider.
+	// We check that 4-column result is strictly longer on at least line 2 and 3
+	// (line 1 has text appended which might differ by model display).
+	for i := 1; i < 3; i++ {
+		if len(lines4[i]) <= len(lines3[i]) {
+			t.Errorf("line %d: 4-column output (%d chars) should be longer than 3-column (%d chars)",
+				i+1, len(lines4[i]), len(lines3[i]))
+		}
+	}
+}
+
+func TestRenderLines_HorizontalCapsAtThree(t *testing.T) {
+	// Horizontal mode should cap at 3 bars even when given 4 columns.
+	os.Setenv("HOWMUCHLEFT_DARK", "1")
+	os.Setenv("COLORTERM", "truecolor")
+	ResetDarkModeCache()
+	ResetTruecolorCache()
+	defer func() {
+		os.Unsetenv("HOWMUCHLEFT_DARK")
+		os.Unsetenv("COLORTERM")
+		ResetDarkModeCache()
+		ResetTruecolorCache()
+	}()
+
+	barCfg := &BarConfig{
+		Width:         4,
+		EmptyBg:       "\x1b[48;2;48;48;48m",
+		Gradient:      []GradientStop{NewRgbStop(0, 255, 0), NewRgbStop(255, 0, 0)},
+		Truecolor:     true,
+		IsRgb:         true,
+		PartialBlocks: false,
+		Orientation:   "horizontal",
+	}
+
+	data := &RenderData{
+		Context: 50,
+		Model:   "claude-fable-5",
+		Tier:    "Max 5x",
+		Git:     GitInfo{HasGit: false},
+		Cwd:     "~/test",
+	}
+
+	lineElements := &config.LinesConfig{
+		Line1: []string{},
+		Line2: []string{},
+		Line3: []string{},
+	}
+
+	columns3 := []BarColumn{
+		{Percent: 50},
+		{Percent: 30},
+		{Percent: 45},
+	}
+	columns4 := []BarColumn{
+		{Percent: 50},
+		{Percent: 30},
+		{Percent: 45},
+		{Percent: 20},
+	}
+
+	result3 := RenderLines(data, barCfg, lineElements, columns3)
+	result4 := RenderLines(data, barCfg, lineElements, columns4)
+
+	// With empty line texts and no partial blocks, horizontal bars produce
+	// identical output for 3 and 4+ columns (capped at 3).
+	// The 4th column is silently ignored.
+	if result3 != result4 {
+		t.Errorf("horizontal mode: 4 columns should produce same output as 3 columns (capped):\n3col: %q\n4col: %q", result3, result4)
+	}
+
+	// Verify we still get 3 lines
+	lineCount := strings.Count(result3, "\n") + 1
+	if lineCount != 3 {
+		t.Errorf("horizontal mode: expected 3 lines, got %d", lineCount)
+	}
+}
