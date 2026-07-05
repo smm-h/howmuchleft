@@ -14,16 +14,6 @@
     }
   },
   "batch_limits": {
-    "exclusions": [
-      {
-        "reason": "**New feature.** Add Fable model support with separate usage tracking (F5 alias, 4th progress bar, Fable-specific rate limit display).",
-        "entries": [
-          {
-            "version": "unreleased",
-            "line": 7
-          }
-        ]
-      }
-    ]
+    "exclusions": []
   }
 }
