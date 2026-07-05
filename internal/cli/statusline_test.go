@@ -152,11 +152,24 @@ func TestHasStdinUsage(t *testing.T) {
 	}{
 		{"nil", nil, false},
 		{"empty", map[string]interface{}{}, false},
-		{"no five_hour", map[string]interface{}{"seven_day": map[string]interface{}{}}, false},
-		{"no used_percentage", map[string]interface{}{"five_hour": map[string]interface{}{}}, false},
-		{"has used_percentage", map[string]interface{}{
+		{"no used_percentage in any key", map[string]interface{}{
+			"five_hour": map[string]interface{}{"resets_at": 123.0},
+		}, false},
+		{"only five_hour present", map[string]interface{}{
 			"five_hour": map[string]interface{}{"used_percentage": 50.0},
 		}, true},
+		{"only seven_day_overage_included present", map[string]interface{}{
+			"seven_day_overage_included": map[string]interface{}{"used_percentage": 20.0},
+		}, true},
+		{"only seven_day present", map[string]interface{}{
+			"seven_day": map[string]interface{}{"used_percentage": 30.0},
+		}, true},
+		{"non-map value", map[string]interface{}{
+			"extra_usage": "not a map",
+		}, false},
+		{"map without used_percentage", map[string]interface{}{
+			"five_hour": map[string]interface{}{"other_field": 42.0},
+		}, false},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -208,5 +221,104 @@ func TestUsageFromStdinRateLimits(t *testing.T) {
 	}
 	if result.Extra.Percent != 15.0 {
 		t.Errorf("expected Extra.Percent=15.0, got %v", result.Extra.Percent)
+	}
+}
+
+func TestUsageFromStdinRateLimitsAllThreeWindows(t *testing.T) {
+	rateLimits := map[string]interface{}{
+		"five_hour": map[string]interface{}{
+			"used_percentage": 75.0,
+			"resets_at":       float64(1700000000),
+		},
+		"seven_day": map[string]interface{}{
+			"used_percentage": 30.0,
+			"resets_at":       float64(1700500000),
+		},
+		"seven_day_overage_included": map[string]interface{}{
+			"used_percentage": 10.0,
+			"resets_at":       float64(1700500000),
+		},
+		"extra_usage": map[string]interface{}{
+			"is_enabled":  true,
+			"utilization": 15.0,
+		},
+	}
+
+	result := usageFromStdinRateLimits(rateLimits)
+
+	if result.FiveHour == nil {
+		t.Fatal("expected FiveHour to be non-nil")
+	}
+	if result.FiveHour.Percent != 75.0 {
+		t.Errorf("FiveHour.Percent = %v, want 75.0", result.FiveHour.Percent)
+	}
+	if result.Weekly == nil {
+		t.Fatal("expected Weekly to be non-nil")
+	}
+	if result.Weekly.Percent != 30.0 {
+		t.Errorf("Weekly.Percent = %v, want 30.0", result.Weekly.Percent)
+	}
+	if result.FableWeekly == nil {
+		t.Fatal("expected FableWeekly to be non-nil")
+	}
+	if result.FableWeekly.Percent != 10.0 {
+		t.Errorf("FableWeekly.Percent = %v, want 10.0", result.FableWeekly.Percent)
+	}
+	if result.Extra == nil {
+		t.Fatal("expected Extra to be non-nil")
+	}
+	if !result.Extra.Enabled || result.Extra.Percent != 15.0 {
+		t.Errorf("Extra = {Enabled:%v, Percent:%v}, want {true, 15.0}", result.Extra.Enabled, result.Extra.Percent)
+	}
+}
+
+func TestUsageFromStdinRateLimitsUnknownKeyIgnored(t *testing.T) {
+	rateLimits := map[string]interface{}{
+		"five_hour": map[string]interface{}{
+			"used_percentage": 50.0,
+		},
+		"unknown_window": map[string]interface{}{
+			"used_percentage": 99.0,
+		},
+	}
+
+	result := usageFromStdinRateLimits(rateLimits)
+
+	if result.FiveHour == nil {
+		t.Fatal("expected FiveHour to be non-nil")
+	}
+	if result.FiveHour.Percent != 50.0 {
+		t.Errorf("FiveHour.Percent = %v, want 50.0", result.FiveHour.Percent)
+	}
+	// Unknown key should not populate any known field
+	if result.Weekly != nil {
+		t.Error("expected Weekly to be nil")
+	}
+	if result.FableWeekly != nil {
+		t.Error("expected FableWeekly to be nil")
+	}
+}
+
+func TestUsageFromStdinRateLimitsFableWeeklyOnly(t *testing.T) {
+	rateLimits := map[string]interface{}{
+		"seven_day_overage_included": map[string]interface{}{
+			"used_percentage": 42.0,
+			"resets_at":       float64(1700500000),
+		},
+	}
+
+	result := usageFromStdinRateLimits(rateLimits)
+
+	if result.FiveHour != nil {
+		t.Error("expected FiveHour to be nil")
+	}
+	if result.Weekly != nil {
+		t.Error("expected Weekly to be nil")
+	}
+	if result.FableWeekly == nil {
+		t.Fatal("expected FableWeekly to be non-nil")
+	}
+	if result.FableWeekly.Percent != 42.0 {
+		t.Errorf("FableWeekly.Percent = %v, want 42.0", result.FableWeekly.Percent)
 	}
 }

@@ -98,17 +98,19 @@ func extractCwd(data stdinData) string {
 	return cwd
 }
 
-// hasStdinUsage checks if rate_limits has five_hour.used_percentage.
+// hasStdinUsage checks if rate_limits has any window with used_percentage.
 func hasStdinUsage(rateLimits map[string]interface{}) bool {
 	if rateLimits == nil {
 		return false
 	}
-	fh, ok := rateLimits["five_hour"].(map[string]interface{})
-	if !ok {
-		return false
+	for _, v := range rateLimits {
+		if wm, ok := v.(map[string]interface{}); ok {
+			if _, ok := wm["used_percentage"].(float64); ok {
+				return true
+			}
+		}
 	}
-	_, ok = fh["used_percentage"].(float64)
-	return ok
+	return false
 }
 
 // usageFromStdinRateLimits builds a UsageResult directly from stdin rate_limits.
@@ -119,12 +121,32 @@ func usageFromStdinRateLimits(rateLimits map[string]interface{}) *cache.UsageRes
 		LastSuccessTs: now,
 	}
 
-	if fh, ok := rateLimits["five_hour"].(map[string]interface{}); ok {
-		percent, resetAtMs := cache.ParseWindowFromMap(fh)
-		wr := &cache.WindowResult{}
-		if percent != nil {
-			wr.Percent = *percent
+	for key, val := range rateLimits {
+		// extra_usage has a different shape (is_enabled + utilization, no resets_at)
+		if key == "extra_usage" {
+			if eu, ok := val.(map[string]interface{}); ok {
+				er := &cache.ExtraResult{}
+				if enabled, ok := eu["is_enabled"].(bool); ok {
+					er.Enabled = enabled
+				}
+				if p, ok := eu["utilization"].(float64); ok {
+					er.Percent = p
+				}
+				result.Extra = er
+			}
+			continue
 		}
+
+		windowMap, ok := val.(map[string]interface{})
+		if !ok {
+			continue
+		}
+		percent, resetAtMs := cache.ParseWindowFromMap(windowMap)
+		if percent == nil {
+			continue
+		}
+
+		wr := &cache.WindowResult{Percent: *percent}
 		if resetAtMs != nil {
 			resetIn := *resetAtMs - now
 			if resetIn < 0 {
@@ -132,34 +154,17 @@ func usageFromStdinRateLimits(rateLimits map[string]interface{}) *cache.UsageRes
 			}
 			wr.ResetIn = resetIn
 		}
-		result.FiveHour = wr
-	}
 
-	if sd, ok := rateLimits["seven_day"].(map[string]interface{}); ok {
-		percent, resetAtMs := cache.ParseWindowFromMap(sd)
-		wr := &cache.WindowResult{}
-		if percent != nil {
-			wr.Percent = *percent
+		switch key {
+		case "five_hour":
+			result.FiveHour = wr
+		case "seven_day":
+			result.Weekly = wr
+		case "seven_day_overage_included":
+			result.FableWeekly = wr
+		default:
+			fmt.Fprintf(os.Stderr, "howmuchleft: unknown rate_limits key %q\n", key)
 		}
-		if resetAtMs != nil {
-			resetIn := *resetAtMs - now
-			if resetIn < 0 {
-				resetIn = 0
-			}
-			wr.ResetIn = resetIn
-		}
-		result.Weekly = wr
-	}
-
-	if eu, ok := rateLimits["extra_usage"].(map[string]interface{}); ok {
-		er := &cache.ExtraResult{}
-		if enabled, ok := eu["is_enabled"].(bool); ok {
-			er.Enabled = enabled
-		}
-		if p, ok := eu["utilization"].(float64); ok {
-			er.Percent = p
-		}
-		result.Extra = er
 	}
 
 	return result
