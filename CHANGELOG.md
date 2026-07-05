@@ -2,6 +2,22 @@
 
 # Changelog
 
+## 0.13.0
+
+Add Fable model support with separate usage tracking, fix cache bugs, and consolidate duplicated code
+
+### Breaking
+
+- **Breaking.** Upgrade go-strictcli to v0.17.0: `--live` BoolFlag now has explicit default.
+
+### Features
+
+- **New feature.** Add Fable model support with separate usage tracking (F5 alias, 4th progress bar, Fable-specific rate limit display).
+
+### Fixes
+
+- **Bug fix.** Fix WriteUsageFromStdin reading wrong keys from stdin data.
+
 ## 0.12.2
 
 Fix OAuth detection to use stdin rate_limits
@@ -18,6 +34,15 @@ v0.12.1 checked CLAUDE_CODE_OAUTH_TOKEN env var, but Claude Code doesn't pass it
 - **Fix.** Detect OAuth from stdin `rate_limits` instead of relying on env var or credentials file, fixing tier display for claudewheel-launched sessions.
 
 ## 0.12.1
+
+Fix subscription tier detection for claudewheel-launched sessions
+
+<details>
+<summary>Context</summary>
+
+When claudewheel launches Claude Code, it sets CLAUDE_CODE_OAUTH_TOKEN instead of writing .credentials.json. howmuchleft now checks this env var as a fallback, showing 'OAuth' instead of incorrectly displaying 'API'.
+
+</details>
 
 ### Fixes
 

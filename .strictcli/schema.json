@@ -31,31 +31,44 @@
       "deprecated": {},
       "env_prefix": null,
       "global_flags": [],
-      "groups": {}
+      "groups": {},
+      "tag_contracts": {}
     },
     "arg": {
+      "choices": null,
+      "default": null,
       "required": true,
+      "type": "str",
       "variadic": false
     },
     "command": {
       "args": [],
+      "constraints": [],
       "flags": [],
-      "passthrough": false
+      "hidden": false,
+      "interactive": false,
+      "passthrough": false,
+      "tags": []
     },
     "flag": {
       "choices": null,
       "default": null,
       "env": null,
+      "env_separator": null,
       "hidden": false,
       "negatable": null,
       "repeatable": false,
-      "short": null
+      "short": null,
+      "unique": false
     },
     "group": {
       "commands": {},
       "deprecated": {},
-      "groups": {}
-    }
+      "groups": {},
+      "hidden": false,
+      "tags": []
+    },
+    "schema_version": 1
   },
   "groups": {
     "profile": {
@@ -103,5 +116,6 @@
   "help": "Claude Code statusline tool",
   "name": "howmuchleft",
   "project_id": "github.com/smm-h/howmuchleft",
-  "version": "v0.12.1-0.20260529221629-34ecfbaefb1d+dirty"
+  "schema_version": 1,
+  "version": "(devel)"
 }
