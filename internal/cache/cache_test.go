@@ -576,6 +576,42 @@ func TestWriteErrorCachePreservesFableWeekly(t *testing.T) {
 	}
 }
 
+func TestCacheToResultPopulatesFableWeekly(t *testing.T) {
+	now := int64(1700000100000)
+	resetAt := int64(1700000200000) // 100s in future
+
+	// With FableWeekly data
+	cache := &CacheData{
+		Status: "ok",
+		Ts:     now,
+		FableWeekly: &CachedWindow{
+			Percent: ptrFloat(0.42),
+			ResetAt: &resetAt,
+		},
+	}
+	result := cacheToResult(cache, now, false)
+	if result.FableWeekly == nil {
+		t.Fatal("expected non-nil FableWeekly")
+	}
+	if result.FableWeekly.Percent != 0.42 {
+		t.Errorf("FableWeekly percent: got %f, want 0.42", result.FableWeekly.Percent)
+	}
+	wantResetIn := resetAt - now
+	if result.FableWeekly.ResetIn != wantResetIn {
+		t.Errorf("FableWeekly resetIn: got %d, want %d", result.FableWeekly.ResetIn, wantResetIn)
+	}
+
+	// Without FableWeekly data
+	cacheEmpty := &CacheData{
+		Status: "ok",
+		Ts:     now,
+	}
+	resultEmpty := cacheToResult(cacheEmpty, now, false)
+	if resultEmpty.FableWeekly != nil {
+		t.Error("expected nil FableWeekly when no data cached")
+	}
+}
+
 // ptrFloat is a helper to create a *float64.
 func ptrFloat(f float64) *float64 {
 	return &f

@@ -260,6 +260,7 @@ func cacheToResult(cache *CacheData, now int64, stale bool) *UsageResult {
 
 	result.FiveHour = windowCacheToResult(cache.FiveHour, now)
 	result.Weekly = windowCacheToResult(cache.Weekly, now)
+	result.FableWeekly = windowCacheToResult(cache.FableWeekly, now)
 
 	if cache.Extra != nil {
 		result.Extra = &ExtraResult{
