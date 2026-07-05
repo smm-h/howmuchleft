@@ -59,7 +59,7 @@ func DefaultLines() *LinesConfig {
 	return &LinesConfig{
 		Line1: []string{"context", "elapsed", "profile", "tier", "model", "version"},
 		Line2: []string{"usage5h", "staleness", "age", "ghUser", "branch"},
-		Line3: []string{"usageWeekly", "staleness", "age", "cwd"},
+		Line3: []string{"usageWeekly", "staleness", "age", "usageFable", "fableStaleness", "fableAge", "cwd"},
 	}
 }
 

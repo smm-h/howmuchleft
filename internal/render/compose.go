@@ -373,6 +373,9 @@ func RenderLines(data *RenderData, barCfg *BarConfig, lineElements *config.Lines
 		},
 	}
 
+	fablePercent := FormatPercent(data.FableWeekly.Percent, data.Stale)
+	fableReset := FormatTimeRemaining(data.FableWeekly.ResetIn)
+
 	line3Elements := map[string]func() string{
 		"usageWeekly": func() string {
 			if showExtraUsage {
@@ -382,7 +385,25 @@ func RenderLines(data *RenderData, barCfg *BarConfig, lineElements *config.Lines
 		},
 		"staleness": func() string { return ageSuffix },
 		"age":       func() string { return Dim + weeklyReset + Reset },
-		"cwd":       func() string { return White + data.Cwd + Reset },
+		"usageFable": func() string {
+			if data.FableWeekly.Percent == nil {
+				return ""
+			}
+			return fablePercent
+		},
+		"fableStaleness": func() string {
+			if data.FableWeekly.Percent == nil || !data.Stale {
+				return ""
+			}
+			return ageSuffix
+		},
+		"fableAge": func() string {
+			if data.FableWeekly.Percent == nil {
+				return ""
+			}
+			return Dim + fableReset + Reset
+		},
+		"cwd": func() string { return White + data.Cwd + Reset },
 	}
 
 	// Determine warm bg for extra usage bar

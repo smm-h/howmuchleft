@@ -528,3 +528,111 @@ func TestRenderLines_HorizontalCapsAtThree(t *testing.T) {
 		t.Errorf("horizontal mode: expected 3 lines, got %d", lineCount)
 	}
 }
+
+func TestUsageFableElement(t *testing.T) {
+	os.Setenv("HOWMUCHLEFT_DARK", "1")
+	ResetDarkModeCache()
+	defer func() {
+		os.Unsetenv("HOWMUCHLEFT_DARK")
+		ResetDarkModeCache()
+	}()
+
+	barCfg := &BarConfig{
+		Width:     0,
+		Truecolor: true,
+		IsRgb:     true,
+	}
+
+	lineElements := &config.LinesConfig{
+		Line1: []string{"context"},
+		Line2: []string{},
+		Line3: []string{"usageFable"},
+	}
+
+	// When FableWeekly.Percent is nil, element returns empty string
+	data := &RenderData{
+		Context:     50,
+		Model:       "claude-fable-5",
+		Tier:        "Max 5x",
+		FableWeekly: UsageData{Percent: nil},
+		Git:         GitInfo{HasGit: false},
+		Cwd:         "~/test",
+	}
+
+	result := RenderLines(data, barCfg, lineElements, nil)
+	parts := strings.Split(result, "\n")
+	if len(parts) != 3 {
+		t.Fatalf("expected 3 lines, got %d", len(parts))
+	}
+	// Line 3 should be empty (usageFable returns "" when nil)
+	if parts[2] != "" {
+		t.Errorf("usageFable with nil Percent should be empty, got %q", parts[2])
+	}
+
+	// When FableWeekly.Percent is set, element renders percent in cyan
+	fablePct := 42.6
+	data.FableWeekly = UsageData{Percent: &fablePct, ResetIn: 86400000}
+
+	result = RenderLines(data, barCfg, lineElements, nil)
+	parts = strings.Split(result, "\n")
+	if !strings.Contains(parts[2], "43%") {
+		t.Errorf("usageFable with 42.6%% should contain '43%%', got %q", parts[2])
+	}
+	if !strings.Contains(parts[2], Cyan) {
+		t.Errorf("usageFable should use cyan color")
+	}
+}
+
+func TestNonFableOutputUnchanged(t *testing.T) {
+	// Non-Fable users should see identical output whether or not the Fable
+	// elements are in the line config, because they all return empty string.
+	os.Setenv("HOWMUCHLEFT_DARK", "1")
+	os.Setenv("COLORTERM", "truecolor")
+	ResetDarkModeCache()
+	ResetTruecolorCache()
+	defer func() {
+		os.Unsetenv("HOWMUCHLEFT_DARK")
+		os.Unsetenv("COLORTERM")
+		ResetDarkModeCache()
+		ResetTruecolorCache()
+	}()
+
+	barCfg := &BarConfig{
+		Width:     0,
+		Truecolor: true,
+		IsRgb:     true,
+	}
+
+	weeklyPct := 45.0
+
+	data := &RenderData{
+		Context:     50,
+		Model:       "claude-sonnet-4-5-20250514",
+		Tier:        "Pro",
+		Weekly:      UsageData{Percent: &weeklyPct, ResetIn: 86400000},
+		FableWeekly: UsageData{Percent: nil}, // non-Fable: no Fable data
+		Git:         GitInfo{Branch: "main", HasGit: true},
+		Cwd:         "~/Projects/test",
+	}
+
+	// Old config without Fable elements
+	oldLines := &config.LinesConfig{
+		Line1: []string{"context", "tier", "model"},
+		Line2: []string{"usage5h", "branch"},
+		Line3: []string{"usageWeekly", "staleness", "age", "cwd"},
+	}
+
+	// New default config with Fable elements included
+	newLines := &config.LinesConfig{
+		Line1: []string{"context", "tier", "model"},
+		Line2: []string{"usage5h", "branch"},
+		Line3: []string{"usageWeekly", "staleness", "age", "usageFable", "fableStaleness", "fableAge", "cwd"},
+	}
+
+	resultOld := RenderLines(data, barCfg, oldLines, nil)
+	resultNew := RenderLines(data, barCfg, newLines, nil)
+
+	if resultOld != resultNew {
+		t.Errorf("non-Fable output differs between old and new line configs:\nold: %q\nnew: %q", resultOld, resultNew)
+	}
+}
