@@ -500,34 +500,42 @@ func WriteUsageFromStdin(claudeDir string, rateLimits map[string]interface{}) er
 		LastSuccessTs: &now,
 	}
 
-	// Parse five_hour from rate_limits.
-	if fh, ok := rateLimits["five_hour"].(map[string]interface{}); ok {
-		percent, resetAtMs := ParseWindowFromMap(fh)
+	for key, val := range rateLimits {
+		// extra_usage has a different shape (is_enabled + utilization, no resets_at)
+		if key == "extra_usage" {
+			if eu, ok := val.(map[string]interface{}); ok {
+				ce := &CachedExtra{}
+				if enabled, ok := eu["is_enabled"].(bool); ok {
+					ce.Enabled = enabled
+				}
+				if p, ok := eu["utilization"].(float64); ok {
+					ce.Percent = &p
+				}
+				entry.Extra = ce
+			}
+			continue
+		}
+
+		windowMap, ok := val.(map[string]interface{})
+		if !ok {
+			continue
+		}
+		percent, resetAtMs := ParseWindowFromMap(windowMap)
+		if percent == nil {
+			continue
+		}
+
 		cw := &CachedWindow{Percent: percent, ResetAt: resetAtMs}
-		if cw.Percent != nil {
+
+		switch key {
+		case "five_hour":
 			entry.FiveHour = cw
-		}
-	}
-
-	// Parse seven_day (weekly) from rate_limits.
-	if sd, ok := rateLimits["seven_day"].(map[string]interface{}); ok {
-		percent, resetAtMs := ParseWindowFromMap(sd)
-		cw := &CachedWindow{Percent: percent, ResetAt: resetAtMs}
-		if cw.Percent != nil {
+		case "seven_day":
 			entry.Weekly = cw
+		case "seven_day_overage_included":
+			entry.FableWeekly = cw
+		// Unknown keys are silently skipped
 		}
-	}
-
-	// Parse extra_usage from rate_limits.
-	if eu, ok := rateLimits["extra_usage"].(map[string]interface{}); ok {
-		ce := &CachedExtra{}
-		if enabled, ok := eu["is_enabled"].(bool); ok {
-			ce.Enabled = enabled
-		}
-		if p, ok := eu["utilization"].(float64); ok {
-			ce.Percent = &p
-		}
-		entry.Extra = ce
 	}
 
 	return WriteCache(claudeDir, entry)

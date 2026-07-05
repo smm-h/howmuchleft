@@ -612,6 +612,133 @@ func TestCacheToResultPopulatesFableWeekly(t *testing.T) {
 	}
 }
 
+func TestWriteUsageFromStdinAllThreeWindows(t *testing.T) {
+	dir := t.TempDir()
+
+	origNow := NowMs
+	NowMs = func() int64 { return 1700000000000 }
+	defer func() { NowMs = origNow }()
+
+	rateLimits := map[string]interface{}{
+		"five_hour": map[string]interface{}{
+			"used_percentage": 0.65,
+			"resets_at":       float64(1705320000),
+		},
+		"seven_day": map[string]interface{}{
+			"used_percentage": 0.30,
+			"resets_at":       float64(1705708800),
+		},
+		"seven_day_overage_included": map[string]interface{}{
+			"used_percentage": 0.15,
+			"resets_at":       float64(1705708800),
+		},
+		"extra_usage": map[string]interface{}{
+			"is_enabled":  true,
+			"utilization": 0.10,
+		},
+	}
+
+	if err := WriteUsageFromStdin(dir, rateLimits); err != nil {
+		t.Fatalf("WriteUsageFromStdin failed: %v", err)
+	}
+
+	cache := ReadCache(dir)
+	if cache == nil {
+		t.Fatal("ReadCache returned nil")
+	}
+
+	if cache.FiveHour == nil || cache.FiveHour.Percent == nil || *cache.FiveHour.Percent != 0.65 {
+		t.Error("fiveHour percent mismatch")
+	}
+	if cache.Weekly == nil || cache.Weekly.Percent == nil || *cache.Weekly.Percent != 0.30 {
+		t.Error("weekly percent mismatch")
+	}
+	if cache.FableWeekly == nil || cache.FableWeekly.Percent == nil || *cache.FableWeekly.Percent != 0.15 {
+		t.Error("fableWeekly percent mismatch")
+	}
+	wantResetMs := int64(1705708800) * 1000
+	if cache.FableWeekly.ResetAt == nil || *cache.FableWeekly.ResetAt != wantResetMs {
+		t.Errorf("fableWeekly resetAt: got %v, want %d", cache.FableWeekly.ResetAt, wantResetMs)
+	}
+	if cache.Extra == nil || !cache.Extra.Enabled || cache.Extra.Percent == nil || *cache.Extra.Percent != 0.10 {
+		t.Error("extra usage mismatch")
+	}
+}
+
+func TestWriteUsageFromStdinFableWeeklyOnly(t *testing.T) {
+	dir := t.TempDir()
+
+	origNow := NowMs
+	NowMs = func() int64 { return 1700000000000 }
+	defer func() { NowMs = origNow }()
+
+	rateLimits := map[string]interface{}{
+		"seven_day_overage_included": map[string]interface{}{
+			"used_percentage": 0.42,
+			"resets_at":       float64(1705708800),
+		},
+	}
+
+	if err := WriteUsageFromStdin(dir, rateLimits); err != nil {
+		t.Fatalf("WriteUsageFromStdin failed: %v", err)
+	}
+
+	cache := ReadCache(dir)
+	if cache == nil {
+		t.Fatal("ReadCache returned nil")
+	}
+
+	if cache.FiveHour != nil {
+		t.Error("expected nil FiveHour")
+	}
+	if cache.Weekly != nil {
+		t.Error("expected nil Weekly")
+	}
+	if cache.FableWeekly == nil {
+		t.Fatal("expected non-nil FableWeekly")
+	}
+	if cache.FableWeekly.Percent == nil || *cache.FableWeekly.Percent != 0.42 {
+		t.Errorf("FableWeekly percent: got %v, want 0.42", cache.FableWeekly.Percent)
+	}
+}
+
+func TestWriteUsageFromStdinUnknownKeysIgnored(t *testing.T) {
+	dir := t.TempDir()
+
+	origNow := NowMs
+	NowMs = func() int64 { return 1700000000000 }
+	defer func() { NowMs = origNow }()
+
+	rateLimits := map[string]interface{}{
+		"five_hour": map[string]interface{}{
+			"used_percentage": 0.50,
+		},
+		"unknown_window": map[string]interface{}{
+			"used_percentage": 0.99,
+		},
+	}
+
+	if err := WriteUsageFromStdin(dir, rateLimits); err != nil {
+		t.Fatalf("WriteUsageFromStdin failed: %v", err)
+	}
+
+	cache := ReadCache(dir)
+	if cache == nil {
+		t.Fatal("ReadCache returned nil")
+	}
+
+	if cache.FiveHour == nil || cache.FiveHour.Percent == nil || *cache.FiveHour.Percent != 0.50 {
+		t.Error("fiveHour percent mismatch")
+	}
+	// Unknown key should not populate any field
+	if cache.Weekly != nil {
+		t.Error("expected nil Weekly")
+	}
+	if cache.FableWeekly != nil {
+		t.Error("expected nil FableWeekly")
+	}
+}
+
 // ptrFloat is a helper to create a *float64.
 func ptrFloat(f float64) *float64 {
 	return &f
