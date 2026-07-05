@@ -1,0 +1,15 @@
+{"commits":["04fcc389d3eff08ef737b1e40ddebc58ed202ed5"],"user_facing":false}
+{"commits":["3076d37969b4aa8301fd66dd26f4b095c54b6d97"],"user_facing":false}
+{"commits":["273a9771deec4a72476497b0fd9aa305adc1eaa1"],"user_facing":true,"description":"**Breaking.** Upgrade go-strictcli to v0.17.0: `--live` BoolFlag now has explicit default.","type":"breaking"}
+{"commits":["093b73aa808fcbf070b6f738a274ae439e3bf470","2ea361b09a8cc0c5ab34b5e73242903c52353c4e","3624c1a31beaa220eb083864621ef2fe1540ae70","4d272318230b2a23273e90645912f6fcbacc48e5","569286653df3046aeeed9b90d6be33e0f8b9aa1d"],"user_facing":false}
+{"commits":["a03fbd7525f45abe5428b2a9e77dce831f7c0dca","a8846ce932396bda7e857646923cb6bb9919446b","db6c5cc7a71b94327b547ea167dae9182719564b"],"user_facing":false}
+{"commits":["1f6713f4b0190aab319176e690b461cdb83101fd"],"user_facing":false}
+{"commits":["d87a97fe6d279cf1a3fa0603afb1732232cbad40","671ef2df888ea4a1bfb79148f26c0cead5cb6974","34d7028621e00401c6ec7ec5c225f1480ec43292","215e363d356b9b4fb6df2f0f517060227f5b452f","829a688f7fc8ca414f5b27c9045b544919a6f812","e074bf7508dceda37584ecfab17b95d55a12c18e","4f26cb7a5ea2e8930663ed7e49ae3fa020a36b3c","f5f11315ef2dbf91f68f16f6cc202141a7b0f293","a229392757a8fa7568e555eef3c37b821fb4ef39","5b90b38c1f51568e1180d6ba10b1111c5b02f8c5","61d8c59a0e1d8694bec34ab9a74377c99d90a31c"],"user_facing":true,"description":"**New feature.** Add Fable model support with separate usage tracking (F5 alias, 4th progress bar, Fable-specific rate limit display).","type":"feature"}
+{"commits":["a6cfc980a7ef95da8932f0acf64a931e1f161cb9"],"user_facing":true,"description":"**Bug fix.** Fix WriteUsageFromStdin reading wrong keys from stdin data.","type":"fix"}
+{"commits":["1d59d57d97e4b49f7ae43327e13648aeb832622b","6120d540eedfd02b8131c534ba70649fb2ad0080","a79033d3a92775befa1abc9c16fa5e9d569d46e7","29669b7171ebd5f59e5dbfc90614166fa22385a8","0d59319bbc3cd60272a5a065a61b42cf8f9f319a"],"user_facing":false}
+{"commits":["45112b394ce128e6e22d34ca2664ab0f7d815d75","f0162e3da70e8f5bbd16b04106d26423487c6eec","ea2dca4909bb06b1a7abc8d9d815e483a9f914d5","fc95c8279451af47fa1c1f69081f842897501a54"],"user_facing":false}
+{"commits":["f055a561cf9667ee941b4bd12d3612d12a8f2e99"],"user_facing":false}
+{"commits":["6e145e08ac73727408c921e32240a9ff708b8646","8f83bbd4392c8010198772b8ac344c8011a45b53"],"user_facing":false}
+{"commits":["5e5e228e38ec2da457d0d9870dcf225ce7f91d47"],"user_facing":false}
+{"commits":["5b9c28097921978e6bfb3990461a99d5ee032a45"],"user_facing":false}
+{"commits":["7adb45c427698ba92958a5982d0c534509882b3f"],"user_facing":false}
