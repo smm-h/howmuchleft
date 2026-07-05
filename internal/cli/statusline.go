@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"strings"
 	"sync"
 	"time"
 
@@ -354,7 +355,56 @@ func runStatusline() error {
 		CcVersion:              ccVersion,
 	}
 
-	output := render.RenderLines(renderData, barCfg, lineElements, nil)
+	// Build bar columns
+	fiveHourPct := float64(0)
+	if usage.FiveHour != nil {
+		fiveHourPct = usage.FiveHour.Percent
+	}
+
+	showExtraUsage := usage.Weekly != nil && usage.Weekly.Percent >= 100 &&
+		usage.Extra != nil && usage.Extra.Enabled
+
+	var thirdPercent float64
+	var warmBg string
+	if showExtraUsage {
+		thirdPercent = usage.Extra.Percent
+		_, warmBg = render.WarmBgColors(barCfg.IsDark, barCfg.Truecolor)
+	} else if usage.Weekly != nil {
+		thirdPercent = usage.Weekly.Percent
+	}
+
+	columns := []render.BarColumn{
+		{Percent: contextPercent},
+		{Percent: fiveHourPct},
+		{Percent: thirdPercent, BgOverride: warmBg},
+	}
+
+	if fiveHourTimePercent != nil {
+		columns[1].TimeBar = &render.TimeBarInfo{TimePercent: *fiveHourTimePercent, UsagePercent: fiveHourPct}
+	}
+	if weeklyTimePercent != nil {
+		columns[2].TimeBar = &render.TimeBarInfo{TimePercent: *weeklyTimePercent, UsagePercent: thirdPercent}
+	}
+
+	// Show Fable bar only when on a Fable model and Fable data is available
+	if renderData.FableWeekly.Percent != nil && strings.Contains(model, "fable") {
+		fableCol := render.BarColumn{Percent: *renderData.FableWeekly.Percent}
+		if fableWeeklyTimePercent != nil {
+			fableCol.TimeBar = &render.TimeBarInfo{
+				TimePercent:  *fableWeeklyTimePercent,
+				UsagePercent: *renderData.FableWeekly.Percent,
+			}
+		}
+		columns = append(columns, fableCol)
+	}
+
+	// In horizontal mode, Fable replaces weekly (column 2) since only 3 lines exist
+	if barCfg.Orientation == "horizontal" && len(columns) > 3 {
+		columns[2] = columns[3]
+		columns = columns[:3]
+	}
+
+	output := render.RenderLines(renderData, barCfg, lineElements, columns)
 	fmt.Println(output)
 	return nil
 }
