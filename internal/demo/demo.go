@@ -296,7 +296,7 @@ func buildBarConfig(cfg *config.Config) *render.BarConfig {
 
 	var timeBarBg string
 	if showTimeBars {
-		timeBarBg = computeTimeBarBg(bgValue, isDark, truecolor, timeBarDim)
+		timeBarBg = render.ComputeTimeBarBg(bgValue, isDark, truecolor, timeBarDim)
 	}
 
 	return &render.BarConfig{
@@ -310,25 +310,3 @@ func buildBarConfig(cfg *config.Config) *render.BarConfig {
 	}
 }
 
-// computeTimeBarBg blends the bar background toward the terminal default.
-func computeTimeBarBg(bg render.BgValue, isDark bool, truecolor bool, blend float64) string {
-	termDefault := float64(0)
-	if !isDark {
-		termDefault = 255
-	}
-
-	if bg.IsRgb {
-		r := uint8(math.Round(float64(bg.Rgb[0]) + (termDefault-float64(bg.Rgb[0]))*blend))
-		g := uint8(math.Round(float64(bg.Rgb[1]) + (termDefault-float64(bg.Rgb[1]))*blend))
-		b := uint8(math.Round(float64(bg.Rgb[2]) + (termDefault-float64(bg.Rgb[2]))*blend))
-		return render.FormatBg(r, g, b, truecolor)
-	}
-
-	base := float64(bg.Index)
-	target := float64(232)
-	if !isDark {
-		target = 255
-	}
-	mid := int(math.Round(base + (target-base)*blend))
-	return render.FormatBgFromValue(render.NewBgIndex(mid), truecolor)
-}

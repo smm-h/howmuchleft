@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"math"
 	"os"
 	"sync"
 	"time"
@@ -225,7 +224,7 @@ func buildBarConfig(cfg *config.Config) *render.BarConfig {
 
 	var timeBarBg string
 	if showTimeBars {
-		timeBarBg = computeTimeBarBg(bgValue, isDark, truecolor, timeBarDim)
+		timeBarBg = render.ComputeTimeBarBg(bgValue, isDark, truecolor, timeBarDim)
 	}
 
 	return &render.BarConfig{
@@ -238,32 +237,6 @@ func buildBarConfig(cfg *config.Config) *render.BarConfig {
 		TimeBarBg:     timeBarBg,
 		Orientation:   cfg.ProgressBarOrientation,
 	}
-}
-
-// computeTimeBarBg blends the bar background toward the terminal default.
-// Dark terminals default to black (0,0,0), light to white (255,255,255).
-// blend: 0 = same as bar bg, 1 = fully terminal default.
-func computeTimeBarBg(bg render.BgValue, isDark bool, truecolor bool, blend float64) string {
-	termDefault := float64(0)
-	if !isDark {
-		termDefault = 255
-	}
-
-	if bg.IsRgb {
-		r := uint8(math.Round(float64(bg.Rgb[0]) + (termDefault-float64(bg.Rgb[0]))*blend))
-		g := uint8(math.Round(float64(bg.Rgb[1]) + (termDefault-float64(bg.Rgb[1]))*blend))
-		b := uint8(math.Round(float64(bg.Rgb[2]) + (termDefault-float64(bg.Rgb[2]))*blend))
-		return render.FormatBg(r, g, b, truecolor)
-	}
-
-	// 256-color: grayscale shift toward terminal default end
-	base := float64(bg.Index)
-	target := float64(232)
-	if !isDark {
-		target = 255
-	}
-	mid := int(math.Round(base + (target-base)*blend))
-	return fmt.Sprintf("\x1b[48;5;%dm", mid)
 }
 
 
