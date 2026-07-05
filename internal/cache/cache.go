@@ -444,6 +444,21 @@ func emptyResult() *UsageResult {
 	}
 }
 
+// ParseWindowFromMap extracts used_percentage and resets_at from a rate limit
+// window map (five_hour or seven_day). Returns nil for either value if the key
+// is missing or has the wrong type. resets_at is converted from unix seconds to
+// unix milliseconds. Does NOT apply to extra_usage (different shape).
+func ParseWindowFromMap(m map[string]interface{}) (percent *float64, resetAtMs *int64) {
+	if p, ok := m["used_percentage"].(float64); ok {
+		percent = &p
+	}
+	if ra, ok := m["resets_at"].(float64); ok && ra > 0 {
+		ms := int64(ra) * 1000
+		resetAtMs = &ms
+	}
+	return
+}
+
 // WriteUsageFromStdin writes rate limit data from stdin directly to cache,
 // bypassing the API. This is the "newer Claude Code" path where rate_limits
 // are provided in the stdin JSON.
@@ -458,14 +473,8 @@ func WriteUsageFromStdin(claudeDir string, rateLimits map[string]interface{}) er
 
 	// Parse five_hour from rate_limits.
 	if fh, ok := rateLimits["five_hour"].(map[string]interface{}); ok {
-		cw := &CachedWindow{}
-		if p, ok := fh["used_percentage"].(float64); ok {
-			cw.Percent = &p
-		}
-		if ra, ok := fh["resets_at"].(float64); ok && ra > 0 {
-			resetAt := int64(ra) * 1000
-			cw.ResetAt = &resetAt
-		}
+		percent, resetAtMs := ParseWindowFromMap(fh)
+		cw := &CachedWindow{Percent: percent, ResetAt: resetAtMs}
 		if cw.Percent != nil {
 			entry.FiveHour = cw
 		}
@@ -473,14 +482,8 @@ func WriteUsageFromStdin(claudeDir string, rateLimits map[string]interface{}) er
 
 	// Parse seven_day (weekly) from rate_limits.
 	if sd, ok := rateLimits["seven_day"].(map[string]interface{}); ok {
-		cw := &CachedWindow{}
-		if p, ok := sd["used_percentage"].(float64); ok {
-			cw.Percent = &p
-		}
-		if ra, ok := sd["resets_at"].(float64); ok && ra > 0 {
-			resetAt := int64(ra) * 1000
-			cw.ResetAt = &resetAt
-		}
+		percent, resetAtMs := ParseWindowFromMap(sd)
+		cw := &CachedWindow{Percent: percent, ResetAt: resetAtMs}
 		if cw.Percent != nil {
 			entry.Weekly = cw
 		}

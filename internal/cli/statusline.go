@@ -121,13 +121,13 @@ func usageFromStdinRateLimits(rateLimits map[string]interface{}) *cache.UsageRes
 	}
 
 	if fh, ok := rateLimits["five_hour"].(map[string]interface{}); ok {
+		percent, resetAtMs := cache.ParseWindowFromMap(fh)
 		wr := &cache.WindowResult{}
-		if p, ok := fh["used_percentage"].(float64); ok {
-			wr.Percent = p
+		if percent != nil {
+			wr.Percent = *percent
 		}
-		if ra, ok := fh["resets_at"].(float64); ok && ra > 0 {
-			resetAtMs := int64(ra) * 1000
-			resetIn := resetAtMs - now
+		if resetAtMs != nil {
+			resetIn := *resetAtMs - now
 			if resetIn < 0 {
 				resetIn = 0
 			}
@@ -137,13 +137,13 @@ func usageFromStdinRateLimits(rateLimits map[string]interface{}) *cache.UsageRes
 	}
 
 	if sd, ok := rateLimits["seven_day"].(map[string]interface{}); ok {
+		percent, resetAtMs := cache.ParseWindowFromMap(sd)
 		wr := &cache.WindowResult{}
-		if p, ok := sd["used_percentage"].(float64); ok {
-			wr.Percent = p
+		if percent != nil {
+			wr.Percent = *percent
 		}
-		if ra, ok := sd["resets_at"].(float64); ok && ra > 0 {
-			resetAtMs := int64(ra) * 1000
-			resetIn := resetAtMs - now
+		if resetAtMs != nil {
+			resetIn := *resetAtMs - now
 			if resetIn < 0 {
 				resetIn = 0
 			}
