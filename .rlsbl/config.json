@@ -15,5 +15,6 @@
   },
   "batch_limits": {
     "exclusions": []
-  }
+  },
+  "coverage_unit": "commit"
 }
