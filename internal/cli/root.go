@@ -63,16 +63,16 @@ func NewApp() *strictcli.App {
 	app := strictcli.NewApp("howmuchleft", appVersion, "Claude Code statusline tool")
 
 	// version
-	app.Command("version", "Print the version", func(kwargs map[string]interface{}) int {
+	app.Command("version", "Print the version", func(ctx *strictcli.Context, kwargs map[string]interface{}) strictcli.Outcome {
 		runMigrations()
 		fmt.Println(appVersion)
-		return 0
+		return strictcli.Exit(0)
 	})
 
 	// profile group
 	profileGrp := app.Group("profile", "Manage profiles")
 
-	profileGrp.Command("install", "Add howmuchleft to a Claude Code profile", func(kwargs map[string]interface{}) int {
+	profileGrp.Command("install", "Add howmuchleft to a Claude Code profile", func(ctx *strictcli.Context, kwargs map[string]interface{}) strictcli.Outcome {
 		runMigrations()
 		var args []string
 		if dir := kwargs["dir"]; dir != nil {
@@ -81,14 +81,14 @@ func NewApp() *strictcli.App {
 		claudeDir := resolveClaudeDir(args)
 		if err := profileInstall(claudeDir); err != nil {
 			fmt.Fprintf(os.Stderr, "howmuchleft: %v\n", err)
-			return 1
+			return strictcli.Exit(1)
 		}
-		return 0
+		return strictcli.Exit(0)
 	}, strictcli.WithArgs(
 		strictcli.NewArg("dir", "Claude Code profile directory", strictcli.ArgRequired(false)),
 	))
 
-	profileGrp.Command("uninstall", "Remove howmuchleft from a Claude Code profile", func(kwargs map[string]interface{}) int {
+	profileGrp.Command("uninstall", "Remove howmuchleft from a Claude Code profile", func(ctx *strictcli.Context, kwargs map[string]interface{}) strictcli.Outcome {
 		runMigrations()
 		var args []string
 		if dir := kwargs["dir"]; dir != nil {
@@ -97,62 +97,62 @@ func NewApp() *strictcli.App {
 		claudeDir := resolveClaudeDir(args)
 		if err := profileUninstall(claudeDir); err != nil {
 			fmt.Fprintf(os.Stderr, "howmuchleft: %v\n", err)
-			return 1
+			return strictcli.Exit(1)
 		}
-		return 0
+		return strictcli.Exit(0)
 	}, strictcli.WithArgs(
 		strictcli.NewArg("dir", "Claude Code profile directory", strictcli.ArgRequired(false)),
 	))
 
-	profileGrp.Command("list", "Show all profiles' usage", func(kwargs map[string]interface{}) int {
+	profileGrp.Command("list", "Show all profiles' usage", func(ctx *strictcli.Context, kwargs map[string]interface{}) strictcli.Outcome {
 		runMigrations()
 		live := kwargs["live"].(bool)
 		if err := dashboard.Run(live); err != nil {
 			fmt.Fprintf(os.Stderr, "howmuchleft: %v\n", err)
-			return 1
+			return strictcli.Exit(1)
 		}
-		return 0
+		return strictcli.Exit(0)
 	}, strictcli.WithFlags(
 		strictcli.BoolFlag("live", "Refresh dashboard every 30s", strictcli.Default(false)),
 	))
 
 	// demo
-	app.Command("demo", "Run demo animation", func(kwargs map[string]interface{}) int {
+	app.Command("demo", "Run demo animation", func(ctx *strictcli.Context, kwargs map[string]interface{}) strictcli.Outcome {
 		runMigrations()
 		duration := 60
 		if ds := kwargs["duration_seconds"]; ds != nil {
 			d, err := strconv.Atoi(ds.(string))
 			if err != nil {
 				fmt.Fprintf(os.Stderr, "howmuchleft: invalid duration: %s\n", ds.(string))
-				return 1
+				return strictcli.Exit(1)
 			}
 			duration = d
 		}
 		if err := demo.Run(duration); err != nil {
 			fmt.Fprintf(os.Stderr, "howmuchleft: %v\n", err)
-			return 1
+			return strictcli.Exit(1)
 		}
-		return 0
+		return strictcli.Exit(0)
 	}, strictcli.WithArgs(
 		strictcli.NewArg("duration_seconds", "Duration in seconds", strictcli.ArgRequired(false)),
 	))
 
 	// colors
-	app.Command("colors", "Preview gradient colors for your terminal", func(kwargs map[string]interface{}) int {
+	app.Command("colors", "Preview gradient colors for your terminal", func(ctx *strictcli.Context, kwargs map[string]interface{}) strictcli.Outcome {
 		runMigrations()
 		cfg := config.Get()
 		barCfg := render.BuildBarConfig(cfg)
 		testCfg := *barCfg
 		testCfg.Width = 13
 		fmt.Print(render.TestColors(&testCfg))
-		return 0
+		return strictcli.Exit(0)
 	})
 
 	// config
-	app.Command("config", "Show config file and current settings", func(kwargs map[string]interface{}) int {
+	app.Command("config", "Show config file and current settings", func(ctx *strictcli.Context, kwargs map[string]interface{}) strictcli.Outcome {
 		runMigrations()
 		showConfig()
-		return 0
+		return strictcli.Exit(0)
 	})
 
 	return app
