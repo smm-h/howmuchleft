@@ -10,7 +10,9 @@
       "local": true,
       "install_paths": [
         "."
-      ]
+      ],
+      "target": "go",
+      "artifact": "binary"
     }
   },
   "batch_limits": {
