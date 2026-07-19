@@ -1,13 +1,13 @@
 {
   "version": 1,
   "files": {
-    "VERSION": "f482d06e4ee83158e42999dcf951d5909861dad7e03317deb2b1e2ddd5c46274",
+    "VERSION": "d84c9e596c7d6a94e5f74579ef8d8912a807b0d28582474900ad35dfb3edfcf4",
     ".github/workflows/ci.yml": "a4eb37a8927ffda2aa646e45ac6f849648a53ea7fb4efe0df4fda3c9946c28f9",
     ".goreleaser.yml": "a028e8e5c368c11dd22915732bdc4f914674cc6bd478db248ee0cf65983b9a63",
-    ".github/workflows/publish.yml": "f1f707e4efdb4e837546ebb5d11385cb6ae2b1538207b2c40c14de8efac3ec97",
-    "CHANGELOG.md": "7d7ba273bec2f72b11845800146b9bf4762fbbfa1338c2f070931ca05880c305",
-    ".gitignore": "1c0820097f3cc42582eb317629f9b861eddb40d401cdf29870d5e6d44b92af06",
-    ".rlsbl/changes/unreleased.jsonl": "0a3dab978ab59eaf10cd912fa1919c4bfa4e9c842b96c70d9a05ee64f0e66b7a",
+    ".github/workflows/publish.yml": "315f95dbf65e057131101810e80078a34c8dd1a0a6a39a4302eb4d47b3b963c7",
+    "CHANGELOG.md": "687369cc9871eb765e093beef9ca398b91f07a9b4b6cea89307703f190b3754e",
+    ".gitignore": "33814109e9fdf2237be08bb8a30bdcb030aa45cf49c23aa336a076fa2a284e02",
+    ".rlsbl/changes/unreleased.jsonl": "f0e000d4eaa41a0aa3caf05e54e5c28a120530c7d37cec2dea08b9078ac29913",
     ".rlsbl/lint/go.toml": "807d5cf760baad6d571a5bfd43cb163efe356f7462ba9f1918d72de45f62339f"
   }
 }
