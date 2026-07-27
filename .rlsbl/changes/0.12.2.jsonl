@@ -1,1 +1,1 @@
-{"commits":["43355de5291e843fdfd1e2ce58ea9bf8210835cd"],"user_facing":true,"description":"**Fix.** Detect OAuth from stdin `rate_limits` instead of relying on env var or credentials file, fixing tier display for claudewheel-launched sessions.","type":"fix"}
+{"format_version":1,"commits":["43355de5291e843fdfd1e2ce58ea9bf8210835cd"],"user_facing":true,"description":"**Fix.** Detect OAuth from stdin `rate_limits` instead of relying on env var or credentials file, fixing tier display for claudewheel-launched sessions.","type":"fix"}

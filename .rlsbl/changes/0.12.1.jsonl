@@ -1,10 +1,10 @@
-{"commits":["8fdb818692cd57312646060f0417bdafcbc0941f","fb74ba12f45d648512c841cd0347bebee2a9c58d","9eb45d3f0eb6fc129eb67db9e91e3d52bb121a95","b5985c222dae341d20d56db2f539661bb8d1ab34"],"user_facing":false}
-{"commits":["34ecfbaefb1d951cdb282ae12433dffddfc3880c","e9b1ff0135c38c9af4cf4bfe3c28d5f9220dc264"],"user_facing":false}
-{"commits":["4d9de110f6c33ad3ed804488e09852d38216ab10"],"user_facing":false}
-{"commits":["ccabc6a4562db16fe3bc077c85eae325bfaab814","1c687c2e5413cdb6614ff95d9383694c36763669","9187cce8847019aacbe320f57d7ce8a30b5a7989","2155c437764a3f622d79ae68dd17a98979c1ea55"],"user_facing":false}
-{"commits":["a08a03ddba3cf60abeae28932f160f6131949ce2"],"user_facing":false}
-{"commits":["61bd7dfec01a47a35e517bd7502d948f001f710f","8959e03ec27f4b50e6a51d42343a6f225bfed02c"],"user_facing":false}
-{"commits":["8db4b9731eb8293c7a6c53ba41a3814399c26f5b"],"user_facing":false}
-{"commits":["dccd781535a24ac8a4130652163558aa96d16e67"],"user_facing":false}
-{"commits":["27110c69c1f99ab2125ddd9a9f470fdc5abc4383"],"user_facing":true,"description":"**Fix.** Detect OAuth authentication from `CLAUDE_CODE_OAUTH_TOKEN` env var when `.credentials.json` is absent, showing \"OAuth\" instead of \"API\" for claudewheel-launched sessions.","type":"fix"}
-{"commits":["92f7879d42338dc4faa3eedcce8fbe0378fcdae8","f355554f9bd805e38465762da3a8d55e8a03f196"],"user_facing":false}
+{"format_version":1,"commits":["8fdb818692cd57312646060f0417bdafcbc0941f","fb74ba12f45d648512c841cd0347bebee2a9c58d","9eb45d3f0eb6fc129eb67db9e91e3d52bb121a95","b5985c222dae341d20d56db2f539661bb8d1ab34"],"user_facing":false}
+{"format_version":1,"commits":["34ecfbaefb1d951cdb282ae12433dffddfc3880c","e9b1ff0135c38c9af4cf4bfe3c28d5f9220dc264"],"user_facing":false}
+{"format_version":1,"commits":["4d9de110f6c33ad3ed804488e09852d38216ab10"],"user_facing":false}
+{"format_version":1,"commits":["ccabc6a4562db16fe3bc077c85eae325bfaab814","1c687c2e5413cdb6614ff95d9383694c36763669","9187cce8847019aacbe320f57d7ce8a30b5a7989","2155c437764a3f622d79ae68dd17a98979c1ea55"],"user_facing":false}
+{"format_version":1,"commits":["a08a03ddba3cf60abeae28932f160f6131949ce2"],"user_facing":false}
+{"format_version":1,"commits":["61bd7dfec01a47a35e517bd7502d948f001f710f","8959e03ec27f4b50e6a51d42343a6f225bfed02c"],"user_facing":false}
+{"format_version":1,"commits":["8db4b9731eb8293c7a6c53ba41a3814399c26f5b"],"user_facing":false}
+{"format_version":1,"commits":["dccd781535a24ac8a4130652163558aa96d16e67"],"user_facing":false}
+{"format_version":1,"commits":["27110c69c1f99ab2125ddd9a9f470fdc5abc4383"],"user_facing":true,"description":"**Fix.** Detect OAuth authentication from `CLAUDE_CODE_OAUTH_TOKEN` env var when `.credentials.json` is absent, showing \"OAuth\" instead of \"API\" for claudewheel-launched sessions.","type":"fix"}
+{"format_version":1,"commits":["92f7879d42338dc4faa3eedcce8fbe0378fcdae8","f355554f9bd805e38465762da3a8d55e8a03f196"],"user_facing":false}
