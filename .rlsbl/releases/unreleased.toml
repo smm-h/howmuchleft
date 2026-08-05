@@ -2,11 +2,21 @@
 format_version = 1
 # Version bump type: patch, minor, major, infra, or prerelease
 #   prerelease: advance an existing pre-release (0.6.0-beta.0 -> -beta.1)
-bump = ""
+bump = "minor"
 # Short description of this release (required)
-description = ""
+description = "Migrate to the go-strictcli effect model: every command declares its effect, and --dry-run, --quiet and --verbose are now framework-provided on every invocation."
 # Optional context explaining why these changes were made
-context = ""
+context = """
+go-strictcli 0.29.0 made effect classification mandatory: each command must
+declare whether it reads, writes, or performs a consequential action. Adopting
+it means the framework now supplies the --dry-run/--quiet/--verbose flag
+quartet uniformly across every command, replacing per-command ad-hoc handling.
+
+Known ceiling in this release: --dry-run does not yet suppress the embedded
+config migration that runs on startup, so a dry-run invocation can still
+migrate the config file. This is documented in the effect classification and
+will be addressed separately.
+"""
 # Pre-release channel: alpha, beta, rc, or stable (ordered;
 # demotion is an error). With patch/minor/major it ENTERS the
 # channel (0.5.2 + minor + alpha -> 0.6.0-alpha.0); with
