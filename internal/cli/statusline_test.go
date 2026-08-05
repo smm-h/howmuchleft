@@ -1,11 +1,13 @@
 package cli
 
 import (
+	"github.com/smm-h/stricttest/go/hygiene"
 	"strings"
 	"testing"
 )
 
 func TestParseStdin_Full(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	input := `{
 		"model": "claude-sonnet-4-6-20250514",
 		"context_window": {"used_percentage": 45.5},
@@ -27,6 +29,7 @@ func TestParseStdin_Full(t *testing.T) {
 }
 
 func TestParseStdin_Minimal(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	input := `{}`
 	data := parseStdin(strings.NewReader(input))
 
@@ -39,6 +42,7 @@ func TestParseStdin_Minimal(t *testing.T) {
 }
 
 func TestParseStdin_Malformed(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	input := `not json at all`
 	data := parseStdin(strings.NewReader(input))
 
@@ -49,6 +53,7 @@ func TestParseStdin_Malformed(t *testing.T) {
 }
 
 func TestParseStdin_Empty(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	data := parseStdin(strings.NewReader(""))
 
 	if data.Cwd != "" {
@@ -57,6 +62,7 @@ func TestParseStdin_Empty(t *testing.T) {
 }
 
 func TestExtractModel_String(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	got := extractModel("claude-opus-4-6")
 	if got != "claude-opus-4-6" {
 		t.Errorf("expected claude-opus-4-6, got %q", got)
@@ -64,6 +70,7 @@ func TestExtractModel_String(t *testing.T) {
 }
 
 func TestExtractModel_ObjectDisplayName(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	obj := map[string]interface{}{
 		"display_name": "Claude Opus",
 		"id":           "claude-opus-4-6",
@@ -75,6 +82,7 @@ func TestExtractModel_ObjectDisplayName(t *testing.T) {
 }
 
 func TestExtractModel_ObjectIdFallback(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	obj := map[string]interface{}{
 		"id": "claude-opus-4-6",
 	}
@@ -85,6 +93,7 @@ func TestExtractModel_ObjectIdFallback(t *testing.T) {
 }
 
 func TestExtractModel_Nil(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	got := extractModel(nil)
 	if got != "?" {
 		t.Errorf("expected '?', got %q", got)
@@ -92,6 +101,7 @@ func TestExtractModel_Nil(t *testing.T) {
 }
 
 func TestExtractModel_EmptyString(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	got := extractModel("")
 	if got != "?" {
 		t.Errorf("expected '?', got %q", got)
@@ -99,6 +109,7 @@ func TestExtractModel_EmptyString(t *testing.T) {
 }
 
 func TestExtractContextPercent(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	tests := []struct {
 		name string
 		cw   map[string]interface{}
@@ -120,6 +131,7 @@ func TestExtractContextPercent(t *testing.T) {
 }
 
 func TestExtractCwd(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	// Direct cwd
 	data := stdinData{Cwd: "/some/path"}
 	got := extractCwd(data)
@@ -145,6 +157,7 @@ func TestExtractCwd(t *testing.T) {
 }
 
 func TestHasStdinUsage(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	tests := []struct {
 		name       string
 		rateLimits map[string]interface{}
@@ -182,6 +195,7 @@ func TestHasStdinUsage(t *testing.T) {
 }
 
 func TestUsageFromStdinRateLimits(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	rateLimits := map[string]interface{}{
 		"five_hour": map[string]interface{}{
 			"used_percentage": 75.0,
@@ -225,6 +239,7 @@ func TestUsageFromStdinRateLimits(t *testing.T) {
 }
 
 func TestUsageFromStdinRateLimitsAllThreeWindows(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	rateLimits := map[string]interface{}{
 		"five_hour": map[string]interface{}{
 			"used_percentage": 75.0,
@@ -273,6 +288,7 @@ func TestUsageFromStdinRateLimitsAllThreeWindows(t *testing.T) {
 }
 
 func TestUsageFromStdinRateLimitsUnknownKeyIgnored(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	rateLimits := map[string]interface{}{
 		"five_hour": map[string]interface{}{
 			"used_percentage": 50.0,
@@ -300,6 +316,7 @@ func TestUsageFromStdinRateLimitsUnknownKeyIgnored(t *testing.T) {
 }
 
 func TestUsageFromStdinRateLimitsFableWeeklyOnly(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	rateLimits := map[string]interface{}{
 		"seven_day_overage_included": map[string]interface{}{
 			"used_percentage": 42.0,

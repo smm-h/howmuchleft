@@ -2,12 +2,14 @@ package cli
 
 import (
 	"encoding/json"
+	"github.com/smm-h/stricttest/go/hygiene"
 	"os"
 	"path/filepath"
 	"testing"
 )
 
 func TestProfileInstall_WritesSettings(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	tmpDir := t.TempDir()
 	claudeDir := filepath.Join(tmpDir, ".claude")
 	if err := os.MkdirAll(claudeDir, 0755); err != nil {
@@ -63,6 +65,7 @@ func TestProfileInstall_WritesSettings(t *testing.T) {
 }
 
 func TestProfileInstall_AlreadyInstalled(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	tmpDir := t.TempDir()
 	claudeDir := filepath.Join(tmpDir, ".claude")
 	if err := os.MkdirAll(claudeDir, 0755); err != nil {
@@ -106,6 +109,7 @@ func TestProfileInstall_AlreadyInstalled(t *testing.T) {
 }
 
 func TestProfileUninstall_RemovesStatusLine(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	tmpDir := t.TempDir()
 	claudeDir := filepath.Join(tmpDir, ".claude")
 	if err := os.MkdirAll(claudeDir, 0755); err != nil {
@@ -140,6 +144,7 @@ func TestProfileUninstall_RemovesStatusLine(t *testing.T) {
 }
 
 func TestProfileUninstall_SafetyCheck(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	tmpDir := t.TempDir()
 	claudeDir := filepath.Join(tmpDir, ".claude")
 	if err := os.MkdirAll(claudeDir, 0755); err != nil {
@@ -185,6 +190,7 @@ func TestProfileUninstall_SafetyCheck(t *testing.T) {
 }
 
 func TestProfileUninstall_NotInstalled(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	tmpDir := t.TempDir()
 	claudeDir := filepath.Join(tmpDir, ".claude")
 	if err := os.MkdirAll(claudeDir, 0755); err != nil {
@@ -203,6 +209,7 @@ func TestProfileUninstall_NotInstalled(t *testing.T) {
 }
 
 func TestProfileInstall_CreatesClaudeDir(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	tmpDir := t.TempDir()
 	claudeDir := filepath.Join(tmpDir, "nonexistent", ".claude")
 

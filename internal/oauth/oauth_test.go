@@ -2,12 +2,14 @@ package oauth
 
 import (
 	"encoding/json"
+	"github.com/smm-h/stricttest/go/hygiene"
 	"os"
 	"path/filepath"
 	"testing"
 )
 
 func TestGetAuthInfo_NilOAuth(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	info := GetAuthInfo(nil)
 	if info.IsOAuth {
 		t.Error("expected IsOAuth=false for nil oauth")
@@ -18,6 +20,7 @@ func TestGetAuthInfo_NilOAuth(t *testing.T) {
 }
 
 func TestGetAuthInfo_EmptyAccessToken(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	info := GetAuthInfo(&OAuthData{AccessToken: ""})
 	if info.IsOAuth {
 		t.Error("expected IsOAuth=false for empty access token")
@@ -28,6 +31,7 @@ func TestGetAuthInfo_EmptyAccessToken(t *testing.T) {
 }
 
 func TestGetAuthInfo_ProTier(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	info := GetAuthInfo(&OAuthData{
 		AccessToken:   "tok",
 		RateLimitTier: "default_claude_pro",
@@ -41,6 +45,7 @@ func TestGetAuthInfo_ProTier(t *testing.T) {
 }
 
 func TestGetAuthInfo_Max5xTier(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	info := GetAuthInfo(&OAuthData{
 		AccessToken:   "tok",
 		RateLimitTier: "default_claude_pro_max_5x",
@@ -51,6 +56,7 @@ func TestGetAuthInfo_Max5xTier(t *testing.T) {
 }
 
 func TestGetAuthInfo_Max20xTier(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	info := GetAuthInfo(&OAuthData{
 		AccessToken:   "tok",
 		RateLimitTier: "default_claude_pro_max_20x",
@@ -61,6 +67,7 @@ func TestGetAuthInfo_Max20xTier(t *testing.T) {
 }
 
 func TestGetAuthInfo_AlternateTierKeys(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	// The JS source uses "default_claude_max_5x" (without _pro_).
 	info := GetAuthInfo(&OAuthData{
 		AccessToken:   "tok",
@@ -80,6 +87,7 @@ func TestGetAuthInfo_AlternateTierKeys(t *testing.T) {
 }
 
 func TestGetAuthInfo_UnknownTierFallsBackToPro(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	info := GetAuthInfo(&OAuthData{
 		AccessToken:   "tok",
 		RateLimitTier: "unknown_tier_value",
@@ -90,6 +98,7 @@ func TestGetAuthInfo_UnknownTierFallsBackToPro(t *testing.T) {
 }
 
 func TestGetAuthInfo_TeamPrefix(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	info := GetAuthInfo(&OAuthData{
 		AccessToken:   "tok",
 		RateLimitTier: "default_claude_pro",
@@ -101,6 +110,7 @@ func TestGetAuthInfo_TeamPrefix(t *testing.T) {
 }
 
 func TestGetAuthInfo_TeamMax5x(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	info := GetAuthInfo(&OAuthData{
 		AccessToken:   "tok",
 		RateLimitTier: "default_claude_pro_max_5x",
@@ -112,14 +122,15 @@ func TestGetAuthInfo_TeamMax5x(t *testing.T) {
 }
 
 func TestReadCredentialsFile_Valid(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	ResetCredentialsCache()
 
 	dir := t.TempDir()
 	credData := map[string]any{
 		"claudeAiOauth": map[string]any{
-			"accessToken":  "test-access-token",
-			"refreshToken": "test-refresh-token",
-			"expiresAt":    float64(9999999999999),
+			"accessToken":   "test-access-token",
+			"refreshToken":  "test-refresh-token",
+			"expiresAt":     float64(9999999999999),
 			"rateLimitTier": "default_claude_pro",
 		},
 		"otherField": "preserved",
@@ -157,6 +168,7 @@ func TestReadCredentialsFile_Valid(t *testing.T) {
 }
 
 func TestReadCredentialsFile_Missing(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	ResetCredentialsCache()
 
 	dir := t.TempDir()
@@ -167,6 +179,7 @@ func TestReadCredentialsFile_Missing(t *testing.T) {
 }
 
 func TestReadCredentialsFile_InvalidJSON(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	ResetCredentialsCache()
 
 	dir := t.TempDir()
@@ -178,6 +191,7 @@ func TestReadCredentialsFile_InvalidJSON(t *testing.T) {
 }
 
 func TestReadCredentialsFile_Cached(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	ResetCredentialsCache()
 
 	dir := t.TempDir()
@@ -206,6 +220,7 @@ func TestReadCredentialsFile_Cached(t *testing.T) {
 }
 
 func TestWriteFileAtomic(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	dir := t.TempDir()
 	target := filepath.Join(dir, "test-file.json")
 
@@ -224,6 +239,7 @@ func TestWriteFileAtomic(t *testing.T) {
 }
 
 func TestWriteFileAtomic_NoPartialWrite(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	dir := t.TempDir()
 	target := filepath.Join(dir, "atomic-test.json")
 
@@ -253,6 +269,7 @@ func TestWriteFileAtomic_NoPartialWrite(t *testing.T) {
 }
 
 func TestResetCredentialsCache(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	ResetCredentialsCache()
 
 	dir := t.TempDir()
@@ -283,6 +300,7 @@ func TestResetCredentialsCache(t *testing.T) {
 }
 
 func TestCredFileMarshal_PreservesExtraFields(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	input := `{"claudeAiOauth":{"accessToken":"tok","refreshToken":"rt","expiresAt":123},"mcpOAuth":{"someKey":"someVal"}}`
 	var cf CredFile
 	if err := json.Unmarshal([]byte(input), &cf); err != nil {

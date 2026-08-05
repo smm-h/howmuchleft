@@ -1,11 +1,13 @@
 package demo
 
 import (
+	"github.com/smm-h/stricttest/go/hygiene"
 	"math"
 	"testing"
 )
 
 func TestComputeWaves_AtZero(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	w := ComputeWaves(0, false)
 
 	if w.Context != 0 {
@@ -38,6 +40,7 @@ func TestComputeWaves_AtZero(t *testing.T) {
 }
 
 func TestComputeWaves_AtHalf(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	w := ComputeWaves(0.5, false)
 
 	// Context: 0.5 * 15 = 7.5, mod 1 = 0.5 -> 50%
@@ -70,6 +73,7 @@ func TestComputeWaves_AtHalf(t *testing.T) {
 }
 
 func TestComputeWaves_FableWave(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	// At t=0.51: fableCycleT = mod(0.51*4, 1) = mod(2.04, 1) = 0.04 -> 4%
 	w := ComputeWaves(0.51, false)
 	if w.FableWeekly <= 0 {
@@ -106,6 +110,7 @@ func TestComputeWaves_FableWave(t *testing.T) {
 }
 
 func TestComputeWaves_IsLast(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	w := ComputeWaves(0.99, true)
 
 	if w.Context != 100 {
@@ -147,6 +152,7 @@ func TestComputeWaves_IsLast(t *testing.T) {
 }
 
 func TestComputeWaves_WeeklyTransition(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	// Just before 70%: weekly should be < 100%
 	wBefore := ComputeWaves(0.69, false)
 	if wBefore.Weekly >= 100 {
@@ -183,6 +189,7 @@ func TestComputeWaves_WeeklyTransition(t *testing.T) {
 }
 
 func TestComputeWaves_ContextCycleReset(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	// Context resets at each cycle boundary: t = 1/15, 2/15, etc.
 	// Just after a reset, context should be near 0.
 	resetT := 1.0 / contextCycles
@@ -193,6 +200,7 @@ func TestComputeWaves_ContextCycleReset(t *testing.T) {
 }
 
 func TestComputeWaves_TimePercentLinear(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	// Weekly time percent is simply t * 100 (linear)
 	w := ComputeWaves(0.3, false)
 	if math.Abs(w.WeeklyTimePercent-30) > 0.01 {

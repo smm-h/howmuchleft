@@ -2,12 +2,14 @@ package config
 
 import (
 	"fmt"
+	"github.com/smm-h/stricttest/go/hygiene"
 	"os"
 	"path/filepath"
 	"testing"
 )
 
 func TestDefaultValues(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	cfg := Default()
 	if cfg.ColorMode != "auto" {
 		t.Errorf("ColorMode: got %q, want %q", cfg.ColorMode, "auto")
@@ -39,6 +41,7 @@ func TestDefaultValues(t *testing.T) {
 }
 
 func TestLoadNonexistentFile(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	cfg, err := Load("/nonexistent/path/config.toml")
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
@@ -53,6 +56,7 @@ func TestLoadNonexistentFile(t *testing.T) {
 }
 
 func TestLoadValidConfig(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	toml := `
 color_mode = "truecolor"
 progress_length = 20
@@ -124,6 +128,7 @@ true_color = true
 }
 
 func TestValidationClamping(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	tests := []struct {
 		name  string
 		toml  string
@@ -294,6 +299,7 @@ line2 = ["context_bar"]
 }
 
 func TestLoadInvalidTOMLReturnsDefaults(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	dir := t.TempDir()
 	path := filepath.Join(dir, "config.toml")
 	// Write syntactically invalid TOML
@@ -314,6 +320,7 @@ func TestLoadInvalidTOMLReturnsDefaults(t *testing.T) {
 }
 
 func TestConfigPath(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	path := ConfigPath()
 	if path == "" {
 		t.Fatal("ConfigPath returned empty string")
@@ -326,6 +333,7 @@ func TestConfigPath(t *testing.T) {
 }
 
 func TestGetCaching(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	ResetCache()
 	// Get should return a non-nil config even if file doesn't exist
 	cfg1 := Get()
@@ -357,4 +365,3 @@ func findSubstring(s, sub string) bool {
 	}
 	return false
 }
-

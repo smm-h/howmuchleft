@@ -2,6 +2,7 @@ package cache
 
 import (
 	"encoding/json"
+	"github.com/smm-h/stricttest/go/hygiene"
 	"os"
 	"path/filepath"
 	"testing"
@@ -9,6 +10,7 @@ import (
 )
 
 func TestReadWriteCacheRoundTrip(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	dir := t.TempDir()
 
 	percent := 0.42
@@ -69,6 +71,7 @@ func TestReadWriteCacheRoundTrip(t *testing.T) {
 }
 
 func TestReadCacheReturnsNilOnMissing(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	dir := t.TempDir()
 	got := ReadCache(dir)
 	if got != nil {
@@ -77,6 +80,7 @@ func TestReadCacheReturnsNilOnMissing(t *testing.T) {
 }
 
 func TestReadCacheReturnsNilOnInvalidJSON(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	dir := t.TempDir()
 	path := filepath.Join(dir, cacheFileName)
 	if err := os.WriteFile(path, []byte("not json"), 0644); err != nil {
@@ -89,6 +93,7 @@ func TestReadCacheReturnsNilOnInvalidJSON(t *testing.T) {
 }
 
 func TestIsCacheValidFreshSuccess(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	now := int64(1700000060000)
 	cache := &CacheData{
 		Status: "ok",
@@ -100,6 +105,7 @@ func TestIsCacheValidFreshSuccess(t *testing.T) {
 }
 
 func TestIsCacheValidExpiredSuccess(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	now := int64(1700000060000)
 	cache := &CacheData{
 		Status: "ok",
@@ -111,6 +117,7 @@ func TestIsCacheValidExpiredSuccess(t *testing.T) {
 }
 
 func TestIsCacheValidForceRefresh(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	now := int64(1700000060000)
 	cache := &CacheData{
 		Status: "ok",
@@ -122,6 +129,7 @@ func TestIsCacheValidForceRefresh(t *testing.T) {
 }
 
 func TestErrorBackoff(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	// Error backoff: 1st=60s, 2nd=120s, 3rd=240s, 4th+=300s (capped)
 	tests := []struct {
 		errorCount int
@@ -143,6 +151,7 @@ func TestErrorBackoff(t *testing.T) {
 }
 
 func TestIsCacheValidErrorBackoff(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	now := int64(1700000100000)
 
 	// 1st error, 59s ago: should be valid (TTL=60s).
@@ -207,6 +216,7 @@ func TestIsCacheValidErrorBackoff(t *testing.T) {
 }
 
 func TestForceRefreshWhenResetAtPassed(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	now := int64(1700000100000)
 	resetAt := int64(1700000050000) // 50s ago, already passed
 
@@ -225,6 +235,7 @@ func TestForceRefreshWhenResetAtPassed(t *testing.T) {
 }
 
 func TestForceRefreshWhenWeeklyResetAtPassed(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	now := int64(1700000100000)
 	resetAt := int64(1700000050000) // already passed
 
@@ -242,6 +253,7 @@ func TestForceRefreshWhenWeeklyResetAtPassed(t *testing.T) {
 }
 
 func TestStaleFallbackReturnsLastSuccessData(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	now := int64(1700000100000)
 	resetAt := int64(1700000200000) // still in future
 	successTs := int64(1699999000000)
@@ -281,6 +293,7 @@ func TestStaleFallbackReturnsLastSuccessData(t *testing.T) {
 }
 
 func TestCacheToResultNoData(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	now := int64(1700000100000)
 	cache := &CacheData{
 		Status:     "error",
@@ -297,6 +310,7 @@ func TestCacheToResultNoData(t *testing.T) {
 }
 
 func TestHasUsableData(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	if hasUsableData(nil) {
 		t.Error("nil cache should not have usable data")
 	}
@@ -312,6 +326,7 @@ func TestHasUsableData(t *testing.T) {
 }
 
 func TestWriteUsageFromStdin(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	dir := t.TempDir()
 
 	// Override NowMs for deterministic test.
@@ -391,6 +406,7 @@ func TestWriteUsageFromStdin(t *testing.T) {
 }
 
 func TestWriteUsageFromStdinPartial(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	dir := t.TempDir()
 
 	origNow := NowMs
@@ -421,6 +437,7 @@ func TestWriteUsageFromStdinPartial(t *testing.T) {
 }
 
 func TestCacheJSONFieldNames(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	// Verify JSON field names match the JS implementation for cross-language compat.
 	percent := 0.5
 	resetAt := int64(1700000000000)
@@ -477,6 +494,7 @@ func TestCacheJSONFieldNames(t *testing.T) {
 }
 
 func TestFableWeeklyRoundTripThroughWriteSuccessCache(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	dir := t.TempDir()
 
 	resp := &UsageResponse{
@@ -518,6 +536,7 @@ func TestFableWeeklyRoundTripThroughWriteSuccessCache(t *testing.T) {
 }
 
 func TestIsCacheValidFableWeeklyResetPassed(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	now := int64(1700000100000)
 	resetAt := int64(1700000050000) // already passed
 
@@ -535,6 +554,7 @@ func TestIsCacheValidFableWeeklyResetPassed(t *testing.T) {
 }
 
 func TestHasUsableDataFableWeeklyOnly(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	cache := &CacheData{
 		FableWeekly: &CachedWindow{Percent: ptrFloat(0.3)},
 	}
@@ -544,6 +564,7 @@ func TestHasUsableDataFableWeeklyOnly(t *testing.T) {
 }
 
 func TestWriteErrorCachePreservesFableWeekly(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	dir := t.TempDir()
 
 	fablePercent := 0.65
@@ -577,6 +598,7 @@ func TestWriteErrorCachePreservesFableWeekly(t *testing.T) {
 }
 
 func TestCacheToResultPopulatesFableWeekly(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	now := int64(1700000100000)
 	resetAt := int64(1700000200000) // 100s in future
 
@@ -613,6 +635,7 @@ func TestCacheToResultPopulatesFableWeekly(t *testing.T) {
 }
 
 func TestWriteUsageFromStdinAllThreeWindows(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	dir := t.TempDir()
 
 	origNow := NowMs
@@ -666,6 +689,7 @@ func TestWriteUsageFromStdinAllThreeWindows(t *testing.T) {
 }
 
 func TestWriteUsageFromStdinFableWeeklyOnly(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	dir := t.TempDir()
 
 	origNow := NowMs
@@ -703,6 +727,7 @@ func TestWriteUsageFromStdinFableWeeklyOnly(t *testing.T) {
 }
 
 func TestWriteUsageFromStdinUnknownKeysIgnored(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	dir := t.TempDir()
 
 	origNow := NowMs

@@ -1,8 +1,12 @@
 package git
 
-import "testing"
+import (
+	"github.com/smm-h/stricttest/go/hygiene"
+	"testing"
+)
 
 func TestParseStatus_Normal(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	output := `# branch.oid abc123def456
 # branch.head main
 # branch.upstream origin/main
@@ -30,6 +34,7 @@ func TestParseStatus_Normal(t *testing.T) {
 }
 
 func TestParseStatus_DetachedHead(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	output := `# branch.oid abc123def456
 # branch.head (detached)
 `
@@ -50,6 +55,7 @@ func TestParseStatus_DetachedHead(t *testing.T) {
 }
 
 func TestParseStatus_NoUpstream(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	output := `# branch.oid abc123def456
 # branch.head feature-branch
 1 .M N... 100644 100644 100644 abc123 def456 file.go
@@ -74,6 +80,7 @@ func TestParseStatus_NoUpstream(t *testing.T) {
 }
 
 func TestParseStatus_InitialBranch(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	output := `# branch.oid (initial)
 # branch.head (initial)
 ? new-file.go
@@ -92,6 +99,7 @@ func TestParseStatus_InitialBranch(t *testing.T) {
 }
 
 func TestParseStatus_EmptyOutput(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	info := parseStatus("")
 
 	if !info.HasGit {
@@ -106,6 +114,7 @@ func TestParseStatus_EmptyOutput(t *testing.T) {
 }
 
 func TestParseStatus_AllChangeTypes(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	output := `# branch.oid abc123
 # branch.head main
 # branch.upstream origin/main
@@ -123,6 +132,7 @@ u UU N... 100644 100644 100644 100644 abc123 def456 789abc conflict.go
 }
 
 func TestGetInfo_NotARepo(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	info := GetInfo("/")
 
 	if info.HasGit {

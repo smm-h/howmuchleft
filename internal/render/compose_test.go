@@ -1,6 +1,7 @@
 package render
 
 import (
+	"github.com/smm-h/stricttest/go/hygiene"
 	"os"
 	"strings"
 	"testing"
@@ -9,6 +10,7 @@ import (
 )
 
 func TestShortenModelName(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	tests := []struct {
 		input string
 		want  string
@@ -19,13 +21,13 @@ func TestShortenModelName(t *testing.T) {
 		{"claude-haiku-3-5", "H3.5"},
 		{"claude-sonnet-3-5-2-20250514", "S3.5.2"},
 		{"claude-opus-4-0", "O4.0"},
-		{"claude-haiku-3-5-0", "H3.5"},   // patch "0" is omitted
-		{"claude-sonnet-4-5", "S4.5"},     // no date suffix
-		{"claude-opus-4-6", "O4.6"},       // no date suffix
+		{"claude-haiku-3-5-0", "H3.5"}, // patch "0" is omitted
+		{"claude-sonnet-4-5", "S4.5"},  // no date suffix
+		{"claude-opus-4-6", "O4.6"},    // no date suffix
 		// Fable (no minor version)
 		{"claude-fable-5", "F5"},
-		{"claude-fable-5-20260101", "F5"},   // with date suffix
-		{"claude-fable-5-1", "F5.1"},        // with minor version
+		{"claude-fable-5-20260101", "F5"},     // with date suffix
+		{"claude-fable-5-1", "F5.1"},          // with minor version
 		{"claude-fable-5-1-20260101", "F5.1"}, // with minor and date
 		// Unknown passthrough
 		{"gpt-4", "gpt-4"},
@@ -43,6 +45,7 @@ func TestShortenModelName(t *testing.T) {
 }
 
 func TestFormatPercent_Nil(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	result := FormatPercent(nil, false)
 	if !strings.Contains(result, "?%") {
 		t.Errorf("FormatPercent(nil, false) = %q, want to contain '?%%'", result)
@@ -53,6 +56,7 @@ func TestFormatPercent_Nil(t *testing.T) {
 }
 
 func TestFormatPercent_Stale(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	pct := 75.4
 	result := FormatPercent(&pct, true)
 	if !strings.Contains(result, "~75%") {
@@ -64,6 +68,7 @@ func TestFormatPercent_Stale(t *testing.T) {
 }
 
 func TestFormatPercent_Normal(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	pct := 42.6
 	result := FormatPercent(&pct, false)
 	if !strings.Contains(result, "43%") {
@@ -75,6 +80,7 @@ func TestFormatPercent_Normal(t *testing.T) {
 }
 
 func TestFormatTimeRemaining(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	tests := []struct {
 		ms   int64
 		want string
@@ -102,6 +108,7 @@ func TestFormatTimeRemaining(t *testing.T) {
 }
 
 func TestFormatAge(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	tests := []struct {
 		ms   int64
 		want string
@@ -125,6 +132,7 @@ func TestFormatAge(t *testing.T) {
 }
 
 func TestShortenPath(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	home, _ := os.UserHomeDir()
 
 	tests := []struct {
@@ -152,9 +160,10 @@ func TestShortenPath(t *testing.T) {
 }
 
 func TestBuildLineText(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	elements := map[string]func() string{
 		"a": func() string { return "hello" },
-		"b": func() string { return "" },      // empty, should be filtered
+		"b": func() string { return "" }, // empty, should be filtered
 		"c": func() string { return "world" },
 		"d": nil, // nil func, should be filtered
 	}
@@ -191,6 +200,7 @@ func TestBuildLineText(t *testing.T) {
 }
 
 func TestRenderLines_NilConfig(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	barCfg := &BarConfig{
 		Width:         12,
 		EmptyBg:       "\x1b[48;2;48;48;48m",
@@ -214,6 +224,7 @@ func TestRenderLines_NilConfig(t *testing.T) {
 }
 
 func TestRenderLines_ProducesThreeLines(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	// Set deterministic environment
 	os.Setenv("HOWMUCHLEFT_DARK", "1")
 	os.Setenv("COLORTERM", "truecolor")
@@ -280,6 +291,7 @@ func TestRenderLines_ProducesThreeLines(t *testing.T) {
 }
 
 func TestRenderLines_ZeroWidth(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	// Width=0 means no bars, just text
 	os.Setenv("HOWMUCHLEFT_DARK", "1")
 	ResetDarkModeCache()
@@ -334,6 +346,7 @@ func TestRenderLines_ZeroWidth(t *testing.T) {
 }
 
 func TestRenderLines_NilColumnsBackwardCompat(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	// Nil columns should produce identical output to explicit default columns.
 	os.Setenv("HOWMUCHLEFT_DARK", "1")
 	os.Setenv("COLORTERM", "truecolor")
@@ -396,6 +409,7 @@ func TestRenderLines_NilColumnsBackwardCompat(t *testing.T) {
 }
 
 func TestRenderLines_FourColumnsVertical(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	// 4-element BarColumn slice should produce 4 bar characters per row in vertical mode.
 	os.Setenv("HOWMUCHLEFT_DARK", "1")
 	os.Setenv("COLORTERM", "truecolor")
@@ -464,6 +478,7 @@ func TestRenderLines_FourColumnsVertical(t *testing.T) {
 }
 
 func TestRenderLines_HorizontalCapsAtThree(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	// Horizontal mode should cap at 3 bars even when given 4 columns.
 	os.Setenv("HOWMUCHLEFT_DARK", "1")
 	os.Setenv("COLORTERM", "truecolor")
@@ -530,6 +545,7 @@ func TestRenderLines_HorizontalCapsAtThree(t *testing.T) {
 }
 
 func TestUsageFableElement(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	os.Setenv("HOWMUCHLEFT_DARK", "1")
 	ResetDarkModeCache()
 	defer func() {
@@ -584,6 +600,7 @@ func TestUsageFableElement(t *testing.T) {
 }
 
 func TestNonFableOutputUnchanged(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	// Non-Fable users should see identical output whether or not the Fable
 	// elements are in the line config, because they all return empty string.
 	os.Setenv("HOWMUCHLEFT_DARK", "1")

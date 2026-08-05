@@ -3,6 +3,7 @@ package config
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/smm-h/stricttest/go/hygiene"
 	"os"
 	"path/filepath"
 	"strings"
@@ -10,6 +11,7 @@ import (
 )
 
 func TestStripJSONComments_LineComments(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	input := `{
   // This is a comment
   "key": "value"
@@ -24,6 +26,7 @@ func TestStripJSONComments_LineComments(t *testing.T) {
 }
 
 func TestStripJSONComments_BlockComments(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	input := `{
   /* block comment */
   "key": "value"
@@ -38,6 +41,7 @@ func TestStripJSONComments_BlockComments(t *testing.T) {
 }
 
 func TestStripJSONComments_TrailingCommas(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	input := `{
   "a": 1,
   "b": [1, 2, 3,],
@@ -49,6 +53,7 @@ func TestStripJSONComments_TrailingCommas(t *testing.T) {
 }
 
 func TestStripJSONComments_StringsPreserved(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	input := `{
   "url": "http://example.com/path",
   "comment": "this has // slashes and /* stars */"
@@ -63,6 +68,7 @@ func TestStripJSONComments_StringsPreserved(t *testing.T) {
 }
 
 func TestStripJSONComments_MultilineBlock(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	input := `{
   /* multi
      line
@@ -79,6 +85,7 @@ func TestStripJSONComments_MultilineBlock(t *testing.T) {
 }
 
 func TestConvertJSONToTOML_FullConfig(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	// Set up temp dirs to simulate ~/.config/
 	tmpDir := t.TempDir()
 	oldPath := filepath.Join(tmpDir, "howmuchleft.json")
@@ -179,6 +186,7 @@ func TestConvertJSONToTOML_FullConfig(t *testing.T) {
 }
 
 func TestConvertJSONToTOML_ExistingTOMLPreventsConversion(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	tmpDir := t.TempDir()
 	oldPath := filepath.Join(tmpDir, "howmuchleft.json")
 	newDir := filepath.Join(tmpDir, "howmuchleft")
@@ -213,6 +221,7 @@ func TestConvertJSONToTOML_ExistingTOMLPreventsConversion(t *testing.T) {
 }
 
 func TestConvertJSONToTOML_NeitherExists(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	tmpDir := t.TempDir()
 	oldPath := filepath.Join(tmpDir, "howmuchleft.json")
 	newPath := filepath.Join(tmpDir, "howmuchleft", "config.toml")
@@ -229,6 +238,7 @@ func TestConvertJSONToTOML_NeitherExists(t *testing.T) {
 }
 
 func TestConvertJSONToTOML_BackupCreation(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	tmpDir := t.TempDir()
 	oldPath := filepath.Join(tmpDir, "howmuchleft.json")
 	newPath := filepath.Join(tmpDir, "howmuchleft", "config.toml")
@@ -254,6 +264,7 @@ func TestConvertJSONToTOML_BackupCreation(t *testing.T) {
 }
 
 func TestConvertJSONToTOML_MinimalConfig(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	tmpDir := t.TempDir()
 	oldPath := filepath.Join(tmpDir, "howmuchleft.json")
 	newPath := filepath.Join(tmpDir, "howmuchleft", "config.toml")
@@ -281,6 +292,7 @@ func TestConvertJSONToTOML_MinimalConfig(t *testing.T) {
 }
 
 func TestConvertJSONToTOML_BooleanPartialBlocks(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	tmpDir := t.TempDir()
 	oldPath := filepath.Join(tmpDir, "howmuchleft.json")
 	newPath := filepath.Join(tmpDir, "howmuchleft", "config.toml")

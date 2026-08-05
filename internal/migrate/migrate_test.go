@@ -1,6 +1,7 @@
 package migrate
 
 import (
+	"github.com/smm-h/stricttest/go/hygiene"
 	"os"
 	"path/filepath"
 	"strings"
@@ -9,6 +10,7 @@ import (
 )
 
 func TestRun(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	// Read the actual migration file from the repo.
 	migrationData, err := os.ReadFile(filepath.Join(repoRoot(t), "migrations", "next", "initial-config.toml"))
 	if err != nil {
@@ -64,6 +66,7 @@ func TestRun(t *testing.T) {
 }
 
 func TestRunDryRun(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	migrationData, err := os.ReadFile(filepath.Join(repoRoot(t), "migrations", "next", "initial-config.toml"))
 	if err != nil {
 		t.Fatalf("failed to read migration file: %v", err)
@@ -99,6 +102,7 @@ func TestRunDryRun(t *testing.T) {
 }
 
 func TestRunIdempotent(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	migrationData, err := os.ReadFile(filepath.Join(repoRoot(t), "migrations", "next", "initial-config.toml"))
 	if err != nil {
 		t.Fatalf("failed to read migration file: %v", err)

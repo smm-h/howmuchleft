@@ -1,12 +1,14 @@
 package render
 
 import (
+	"github.com/smm-h/stricttest/go/hygiene"
 	"os"
 	"strings"
 	"testing"
 )
 
 func TestShouldUsePartialBlocks(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	// Save and restore env
 	origTermProgram := os.Getenv("TERM_PROGRAM")
 	origTerm := os.Getenv("TERM")
@@ -57,10 +59,11 @@ func TestShouldUsePartialBlocks(t *testing.T) {
 }
 
 func TestGetGradientStop_Rgb(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	config := &BarConfig{
 		Gradient: []GradientStop{
-			NewRgbStop(0, 255, 0),   // green at 0%
-			NewRgbStop(255, 0, 0),   // red at 100%
+			NewRgbStop(0, 255, 0), // green at 0%
+			NewRgbStop(255, 0, 0), // red at 100%
 		},
 		Truecolor: true,
 		IsRgb:     true,
@@ -101,6 +104,7 @@ func TestGetGradientStop_Rgb(t *testing.T) {
 }
 
 func TestGetGradientStop_256Color(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	config := &BarConfig{
 		Gradient: []GradientStop{
 			NewIndexStop(46),  // green
@@ -130,6 +134,7 @@ func TestGetGradientStop_256Color(t *testing.T) {
 }
 
 func TestGetGradientStop_RgbOn256Terminal(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	config := &BarConfig{
 		Gradient: []GradientStop{
 			NewRgbStop(0, 255, 0),
@@ -147,6 +152,7 @@ func TestGetGradientStop_RgbOn256Terminal(t *testing.T) {
 }
 
 func TestGetUrgencyColor(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	// At urgency 0 (truecolor, dark): should be gray
 	fg := GetUrgencyColor(0, true, true)
 	if fg != "\x1b[38;2;120;120;120m" {
@@ -203,6 +209,7 @@ func TestGetUrgencyColor(t *testing.T) {
 }
 
 func TestHorizontalBar_0Percent(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	config := &BarConfig{
 		Width:         10,
 		EmptyBg:       "\x1b[48;2;48;48;48m",
@@ -229,6 +236,7 @@ func TestHorizontalBar_0Percent(t *testing.T) {
 }
 
 func TestHorizontalBar_100Percent(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	config := &BarConfig{
 		Width:         10,
 		EmptyBg:       "\x1b[48;2;48;48;48m",
@@ -252,6 +260,7 @@ func TestHorizontalBar_100Percent(t *testing.T) {
 }
 
 func TestHorizontalBar_50Percent(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	config := &BarConfig{
 		Width:         10,
 		EmptyBg:       "\x1b[48;2;48;48;48m",
@@ -273,6 +282,7 @@ func TestHorizontalBar_50Percent(t *testing.T) {
 }
 
 func TestHorizontalBar_NoPartialBlocks(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	config := &BarConfig{
 		Width:         10,
 		EmptyBg:       "\x1b[48;2;48;48;48m",
@@ -292,6 +302,7 @@ func TestHorizontalBar_NoPartialBlocks(t *testing.T) {
 }
 
 func TestHorizontalBar_EmptyBgOverride(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	config := &BarConfig{
 		Width:         5,
 		EmptyBg:       "\x1b[48;5;236m",
@@ -312,6 +323,7 @@ func TestHorizontalBar_EmptyBgOverride(t *testing.T) {
 }
 
 func TestVerticalBarCell_Empty(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	config := &BarConfig{
 		Width:         1,
 		EmptyBg:       "\x1b[48;2;48;48;48m",
@@ -336,6 +348,7 @@ func TestVerticalBarCell_Empty(t *testing.T) {
 }
 
 func TestVerticalBarCell_Full(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	config := &BarConfig{
 		Width:         1,
 		EmptyBg:       "\x1b[48;2;48;48;48m",
@@ -355,6 +368,7 @@ func TestVerticalBarCell_Full(t *testing.T) {
 }
 
 func TestVerticalBarCell_BottomFillsFirst(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	config := &BarConfig{
 		Width:         1,
 		EmptyBg:       "\x1b[48;2;48;48;48m",
@@ -378,6 +392,7 @@ func TestVerticalBarCell_BottomFillsFirst(t *testing.T) {
 }
 
 func TestVerticalBarCell_PartialFill(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	config := &BarConfig{
 		Width:         1,
 		EmptyBg:       "\x1b[48;2;48;48;48m",
@@ -402,6 +417,7 @@ func TestVerticalBarCell_PartialFill(t *testing.T) {
 }
 
 func TestVerticalBarCell_NoPartialBlocks(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	config := &BarConfig{
 		Width:         1,
 		EmptyBg:       "\x1b[48;2;48;48;48m",
@@ -421,6 +437,7 @@ func TestVerticalBarCell_NoPartialBlocks(t *testing.T) {
 }
 
 func TestVerticalBarCell_CustomTotalRows(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	config := &BarConfig{
 		Width:         1,
 		EmptyBg:       "\x1b[48;2;48;48;48m",
@@ -440,6 +457,7 @@ func TestVerticalBarCell_CustomTotalRows(t *testing.T) {
 }
 
 func TestTimeBarCell(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	// Set dark mode for deterministic output
 	os.Setenv("HOWMUCHLEFT_DARK", "1")
 	ResetDarkModeCache()
@@ -485,6 +503,7 @@ func TestTimeBarCell(t *testing.T) {
 }
 
 func TestTimeBarCell_UrgencyZeroWhenTimeFull(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	os.Setenv("HOWMUCHLEFT_DARK", "1")
 	ResetDarkModeCache()
 	defer func() {

@@ -2,23 +2,25 @@ package render
 
 import (
 	"errors"
+	"github.com/smm-h/stricttest/go/hygiene"
 	"os"
 	"strings"
 	"testing"
 )
 
 func TestRgbTo256(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	tests := []struct {
 		r, g, b uint8
 		want    int
 	}{
-		{0, 0, 0, 16},         // black -> cube origin
-		{255, 255, 255, 231},  // white -> cube max
-		{255, 0, 0, 196},      // pure red
-		{0, 255, 0, 46},       // pure green
-		{0, 0, 255, 21},       // pure blue
-		{255, 215, 0, 220},    // gold-ish
-		{128, 128, 128, 145},  // mid-gray -> rounds to 3,3,3 in 6x6x6 cube
+		{0, 0, 0, 16},        // black -> cube origin
+		{255, 255, 255, 231}, // white -> cube max
+		{255, 0, 0, 196},     // pure red
+		{0, 255, 0, 46},      // pure green
+		{0, 0, 255, 21},      // pure blue
+		{255, 215, 0, 220},   // gold-ish
+		{128, 128, 128, 145}, // mid-gray -> rounds to 3,3,3 in 6x6x6 cube
 	}
 
 	for _, tt := range tests {
@@ -30,6 +32,7 @@ func TestRgbTo256(t *testing.T) {
 }
 
 func TestInterpolateRgb(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	stops := [][3]uint8{{0, 0, 0}, {255, 255, 255}}
 
 	// At 0%
@@ -71,6 +74,7 @@ func TestInterpolateRgb(t *testing.T) {
 }
 
 func TestHashToHue(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	// Consistency: same input always produces same output
 	h1 := HashToHue("hello")
 	h2 := HashToHue("hello")
@@ -102,6 +106,7 @@ func TestHashToHue(t *testing.T) {
 }
 
 func TestHueToAnsi(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	// Set truecolor mode for deterministic output
 	os.Setenv("COLORTERM", "truecolor")
 	ResetTruecolorCache()
@@ -132,6 +137,7 @@ func TestHueToAnsi(t *testing.T) {
 }
 
 func TestIsTruecolorSupported(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	// Test with "truecolor"
 	os.Setenv("COLORTERM", "truecolor")
 	ResetTruecolorCache()
@@ -162,6 +168,7 @@ func TestIsTruecolorSupported(t *testing.T) {
 }
 
 func TestFindColorMatch(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	// Should find dark+truecolor entry
 	entry := FindColorMatch(BuiltinColors, true, true)
 	if entry == nil {
@@ -228,6 +235,7 @@ func TestFindColorMatch(t *testing.T) {
 }
 
 func TestFormatFg(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	tc := FormatFg(255, 128, 0, true)
 	if tc != "\x1b[38;2;255;128;0m" {
 		t.Errorf("FormatFg truecolor = %q, want \\x1b[38;2;255;128;0m", tc)
@@ -240,6 +248,7 @@ func TestFormatFg(t *testing.T) {
 }
 
 func TestFormatBg(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	tc := FormatBg(48, 48, 48, true)
 	if tc != "\x1b[48;2;48;48;48m" {
 		t.Errorf("FormatBg truecolor = %q, want \\x1b[48;2;48;48;48m", tc)
@@ -252,6 +261,7 @@ func TestFormatBg(t *testing.T) {
 }
 
 func TestFormatBgFromValue(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	// RGB background
 	rgb := NewBgRgb(208, 208, 208)
 	got := FormatBgFromValue(rgb, true)
@@ -274,6 +284,7 @@ func TestFormatBgFromValue(t *testing.T) {
 }
 
 func TestParseDarkModeGsettings(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	tests := []struct {
 		name string
 		out  string

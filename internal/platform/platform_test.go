@@ -3,6 +3,7 @@ package platform
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/smm-h/stricttest/go/hygiene"
 	"os"
 	"path/filepath"
 	"testing"
@@ -10,6 +11,7 @@ import (
 )
 
 func TestGetProfileName(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	tests := []struct {
 		claudeDir string
 		want      string
@@ -32,6 +34,7 @@ func TestGetProfileName(t *testing.T) {
 }
 
 func TestGetCCVersion_Execpath(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	t.Setenv("CLAUDE_CODE_EXECPATH", "/usr/local/bin/1-0-3")
 	t.Setenv("AI_AGENT", "")
 
@@ -43,6 +46,7 @@ func TestGetCCVersion_Execpath(t *testing.T) {
 }
 
 func TestGetCCVersion_AIAgent(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	t.Setenv("CLAUDE_CODE_EXECPATH", "")
 	// Real AI_AGENT format uses dashes between version segments (non-greedy regex
 	// would stop too early with underscores since _ is in the capture class).
@@ -56,6 +60,7 @@ func TestGetCCVersion_AIAgent(t *testing.T) {
 }
 
 func TestGetCCVersion_AIAgentWithDash(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	t.Setenv("CLAUDE_CODE_EXECPATH", "")
 	t.Setenv("AI_AGENT", "claude-code_1-0-3_somethingelse")
 
@@ -67,6 +72,7 @@ func TestGetCCVersion_AIAgentWithDash(t *testing.T) {
 }
 
 func TestGetCCVersion_Neither(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	t.Setenv("CLAUDE_CODE_EXECPATH", "")
 	t.Setenv("AI_AGENT", "")
 
@@ -77,6 +83,7 @@ func TestGetCCVersion_Neither(t *testing.T) {
 }
 
 func TestGetCCVersion_AIAgentNoMatch(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	t.Setenv("CLAUDE_CODE_EXECPATH", "")
 	t.Setenv("AI_AGENT", "some-other-agent_foo")
 
@@ -87,6 +94,7 @@ func TestGetCCVersion_AIAgentNoMatch(t *testing.T) {
 }
 
 func TestGetSessionElapsed_Found(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	// Create a temporary directory with a session file for the current parent PID.
 	dir := t.TempDir()
 	sessionsDir := filepath.Join(dir, "sessions")
@@ -117,6 +125,7 @@ func TestGetSessionElapsed_Found(t *testing.T) {
 }
 
 func TestGetSessionElapsed_NotFound(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	dir := t.TempDir()
 	elapsed := GetSessionElapsed(dir)
 	if elapsed != nil {

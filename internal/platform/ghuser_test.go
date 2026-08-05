@@ -2,6 +2,7 @@ package platform
 
 import (
 	"encoding/json"
+	"github.com/smm-h/stricttest/go/hygiene"
 	"os"
 	"path/filepath"
 	"testing"
@@ -9,6 +10,7 @@ import (
 )
 
 func TestGhTokenHash(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	// SHA-256 of "ghp_testtoken123" first 8 hex chars
 	hash := GhTokenHash("ghp_testtoken123")
 	if len(hash) != 8 {
@@ -29,6 +31,7 @@ func TestGhTokenHash(t *testing.T) {
 }
 
 func TestReadWriteGhUserDiskCache(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	dir := t.TempDir()
 
 	// Initially empty
@@ -67,6 +70,7 @@ func TestReadWriteGhUserDiskCache(t *testing.T) {
 }
 
 func TestCacheFormat(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	dir := t.TempDir()
 
 	// Write raw JSON in the expected format and verify it parses
@@ -93,6 +97,7 @@ func TestCacheFormat(t *testing.T) {
 }
 
 func TestNegativeCacheTTLExpiry(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	// A negative entry with ts in the past should be considered expired
 	now := time.Now().UnixMilli()
 
@@ -115,6 +120,7 @@ func TestNegativeCacheTTLExpiry(t *testing.T) {
 }
 
 func TestWriteGhUserDiskCache_AtomicCreatesDir(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	// The cache write should handle a non-existent parent directory gracefully
 	// (it creates the directory via MkdirAll)
 	dir := filepath.Join(t.TempDir(), "nested", "dir")
@@ -141,6 +147,7 @@ func TestWriteGhUserDiskCache_AtomicCreatesDir(t *testing.T) {
 }
 
 func TestGetActiveGhUser_NoToken(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	ResetGhUserCache()
 	t.Setenv("GH_TOKEN", "")
 
@@ -152,6 +159,7 @@ func TestGetActiveGhUser_NoToken(t *testing.T) {
 }
 
 func TestGetActiveGhUser_CachedPositive(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	ResetGhUserCache()
 	dir := t.TempDir()
 

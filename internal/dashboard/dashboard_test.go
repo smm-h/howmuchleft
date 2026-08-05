@@ -1,6 +1,7 @@
 package dashboard
 
 import (
+	"github.com/smm-h/stricttest/go/hygiene"
 	"os"
 	"path/filepath"
 	"strings"
@@ -11,6 +12,7 @@ import (
 )
 
 func TestDiscoverProfiles_IncludesDefault(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	home, err := os.UserHomeDir()
 	if err != nil {
 		t.Skip("cannot determine home directory")
@@ -35,6 +37,7 @@ func TestDiscoverProfiles_IncludesDefault(t *testing.T) {
 }
 
 func TestDiscoverProfiles_Deduplicates(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	dirs := DiscoverProfiles()
 	seen := make(map[string]bool)
 	for _, d := range dirs {
@@ -46,6 +49,7 @@ func TestDiscoverProfiles_Deduplicates(t *testing.T) {
 }
 
 func TestDiscoverProfiles_Sorted(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	dirs := DiscoverProfiles()
 	for i := 1; i < len(dirs); i++ {
 		if dirs[i-1] > dirs[i] {
@@ -55,6 +59,7 @@ func TestDiscoverProfiles_Sorted(t *testing.T) {
 }
 
 func TestProfileDisplayName(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	cases := []struct {
 		dir  string
 		want string
@@ -73,6 +78,7 @@ func TestProfileDisplayName(t *testing.T) {
 }
 
 func TestRenderProfileRows_ProducesThreeLines(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	barCfg := &render.BarConfig{
 		Width:         3,
 		EmptyBg:       "\x1b[48;5;236m",
@@ -106,6 +112,7 @@ func TestRenderProfileRows_ProducesThreeLines(t *testing.T) {
 }
 
 func TestRenderProfileRows_NilUsage(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	barCfg := &render.BarConfig{
 		Width:         3,
 		EmptyBg:       "\x1b[48;5;236m",
@@ -125,6 +132,7 @@ func TestRenderProfileRows_NilUsage(t *testing.T) {
 }
 
 func TestRenderProfileRows_ExtraUsage(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	barCfg := &render.BarConfig{
 		Width:         3,
 		EmptyBg:       "\x1b[48;5;236m",
@@ -148,6 +156,7 @@ func TestRenderProfileRows_ExtraUsage(t *testing.T) {
 }
 
 func TestFormatUsageLine(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	// nil window
 	line := formatUsageLine("5h", nil, false)
 	if !strings.Contains(line, "?%") {
@@ -172,6 +181,7 @@ func TestFormatUsageLine(t *testing.T) {
 }
 
 func TestResolvePath(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	home := "/home/testuser"
 	cases := []struct {
 		input string
@@ -190,6 +200,7 @@ func TestResolvePath(t *testing.T) {
 }
 
 func TestDiscoverProfiles_WithTempDirs(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	// Create a temp directory simulating a home dir with .claude and .claude-work
 	tmpHome := t.TempDir()
 	defaultDir := filepath.Join(tmpHome, ".claude")
@@ -235,6 +246,7 @@ func TestDiscoverProfiles_WithTempDirs(t *testing.T) {
 }
 
 func TestFetchAndRender_MissingCredentials(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	// FetchAndRender should return an error (not panic) when credentials are absent
 	tmpDir := t.TempDir()
 
@@ -260,6 +272,7 @@ func TestFetchAndRender_MissingCredentials(t *testing.T) {
 }
 
 func TestRenderProfileRows_NonEmpty(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	barCfg := &render.BarConfig{
 		Width:         3,
 		EmptyBg:       "\x1b[48;5;236m",
@@ -291,6 +304,7 @@ func TestRenderProfileRows_NonEmpty(t *testing.T) {
 }
 
 func TestRenderProfileRows_FableWeekly(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	barCfg := &render.BarConfig{
 		Width:         3,
 		EmptyBg:       "\x1b[48;5;236m",
@@ -327,6 +341,7 @@ func TestRenderProfileRows_FableWeekly(t *testing.T) {
 }
 
 func TestRenderProfileRows_NoFableWithoutData(t *testing.T) {
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
 	barCfg := &render.BarConfig{
 		Width:         3,
 		EmptyBg:       "\x1b[48;5;236m",
