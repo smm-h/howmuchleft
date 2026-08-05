@@ -2,6 +2,7 @@
 title: howmuchleft colors
 description: "Reference for the howmuchleft colors command — usage, flags, arguments, and examples for the colors subcommand of the howmuchleft CLI."
 generated: true
+seeded: true
 nav_group: "CLI Reference"
 nav_order: 1
 ---

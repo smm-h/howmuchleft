@@ -2,6 +2,7 @@
 title: howmuchleft config
 description: "Reference for the howmuchleft config command — usage, flags, arguments, and examples for the config subcommand of the howmuchleft CLI."
 generated: true
+seeded: true
 nav_group: "CLI Reference"
 nav_order: 2
 ---

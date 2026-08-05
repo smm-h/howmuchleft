@@ -2,6 +2,7 @@
 title: howmuchleft profile
 description: "Reference for the howmuchleft profile command group — subcommands, flags, arguments, and usage details for the profile group in the howmuchleft CLI."
 generated: true
+seeded: true
 nav_group: "CLI Reference"
 nav_order: 4
 ---
