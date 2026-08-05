@@ -5,7 +5,8 @@ go 1.25.7
 require (
 	github.com/smm-h/go-toml-edit v0.2.2
 	github.com/smm-h/migrable v0.6.0
-	github.com/smm-h/strictcli/go v0.23.0
+	github.com/smm-h/strictcli/go v0.29.0
+	github.com/smm-h/stricttest/go v0.1.1
 )
 
 require (

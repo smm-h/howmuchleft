@@ -59,6 +59,14 @@ func RunStatuslineDirect() bool {
 }
 
 // NewApp builds and returns the strictcli application.
+//
+// Every command is classified strictcli.EffectMutating, including the ones
+// that only print. That is not a rubber stamp: every handler opens with
+// runMigrations(), which converts a legacy ~/.config/howmuchleft.json to TOML
+// (renaming the original to .bak) and applies pending embedded schema
+// migrations to ~/.config/howmuchleft/config.toml. Those are user-visible
+// filesystem mutations, so no command here can honestly claim read_only.
+// classification_test.go pins the table.
 func NewApp() *strictcli.App {
 	app := strictcli.NewApp("howmuchleft", appVersion, "Claude Code statusline tool")
 
@@ -67,7 +75,7 @@ func NewApp() *strictcli.App {
 		runMigrations()
 		fmt.Println(appVersion)
 		return strictcli.Exit(0)
-	})
+	}, strictcli.WithEffect(strictcli.EffectMutating))
 
 	// profile group
 	profileGrp := app.Group("profile", "Manage profiles")
@@ -84,7 +92,7 @@ func NewApp() *strictcli.App {
 			return strictcli.Exit(1)
 		}
 		return strictcli.Exit(0)
-	}, strictcli.WithArgs(
+	}, strictcli.WithEffect(strictcli.EffectMutating), strictcli.WithArgs(
 		strictcli.NewArg("dir", "Claude Code profile directory", strictcli.ArgRequired(false)),
 	))
 
@@ -100,7 +108,7 @@ func NewApp() *strictcli.App {
 			return strictcli.Exit(1)
 		}
 		return strictcli.Exit(0)
-	}, strictcli.WithArgs(
+	}, strictcli.WithEffect(strictcli.EffectMutating), strictcli.WithArgs(
 		strictcli.NewArg("dir", "Claude Code profile directory", strictcli.ArgRequired(false)),
 	))
 
@@ -112,7 +120,7 @@ func NewApp() *strictcli.App {
 			return strictcli.Exit(1)
 		}
 		return strictcli.Exit(0)
-	}, strictcli.WithFlags(
+	}, strictcli.WithEffect(strictcli.EffectMutating), strictcli.WithFlags(
 		strictcli.BoolFlag("live", "Refresh dashboard every 30s", strictcli.Default(false)),
 	))
 
@@ -133,7 +141,7 @@ func NewApp() *strictcli.App {
 			return strictcli.Exit(1)
 		}
 		return strictcli.Exit(0)
-	}, strictcli.WithArgs(
+	}, strictcli.WithEffect(strictcli.EffectMutating), strictcli.WithArgs(
 		strictcli.NewArg("duration_seconds", "Duration in seconds", strictcli.ArgRequired(false)),
 	))
 
@@ -146,14 +154,14 @@ func NewApp() *strictcli.App {
 		testCfg.Width = 13
 		fmt.Print(render.TestColors(&testCfg))
 		return strictcli.Exit(0)
-	})
+	}, strictcli.WithEffect(strictcli.EffectMutating))
 
 	// config
 	app.Command("config", "Show config file and current settings", func(ctx *strictcli.Context, kwargs map[string]interface{}) strictcli.Outcome {
 		runMigrations()
 		showConfig()
 		return strictcli.Exit(0)
-	})
+	}, strictcli.WithEffect(strictcli.EffectMutating))
 
 	return app
 }

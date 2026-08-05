@@ -1,10 +1,12 @@
 {
   "commands": {
     "colors": {
+      "effect": "mutating",
       "help": "Preview gradient colors for your terminal",
       "name": "colors"
     },
     "config": {
+      "effect": "mutating",
       "help": "Show config file and current settings",
       "name": "config"
     },
@@ -16,10 +18,12 @@
           "required": false
         }
       ],
+      "effect": "mutating",
       "help": "Run demo animation",
       "name": "demo"
     },
     "version": {
+      "effect": "mutating",
       "help": "Print the version",
       "name": "version"
     }
@@ -81,10 +85,12 @@
               "required": false
             }
           ],
+          "effect": "mutating",
           "help": "Add howmuchleft to a Claude Code profile",
           "name": "install"
         },
         "list": {
+          "effect": "mutating",
           "flags": [
             {
               "default": false,
@@ -105,6 +111,7 @@
               "required": false
             }
           ],
+          "effect": "mutating",
           "help": "Remove howmuchleft from a Claude Code profile",
           "name": "uninstall"
         }
@@ -117,5 +124,5 @@
   "name": "howmuchleft",
   "project_id": "github.com/smm-h/howmuchleft",
   "schema_version": 1,
-  "version": "(devel)"
+  "version": "0.13.0"
 }
