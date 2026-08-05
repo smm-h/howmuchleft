@@ -2,11 +2,21 @@
 format_version = 1
 # Version bump type: patch, minor, major, infra, or prerelease
 #   prerelease: advance an existing pre-release (0.6.0-beta.0 -> -beta.1)
-bump = ""
+bump = "infra"
 # Short description of this release (required)
-description = ""
+description = "Repair the publish pipeline: allowlist the public OAuth client ID so the release secret scan stops blocking binary builds."
 # Optional context explaining why these changes were made
-context = ""
+context = """
+The 0.14.0 scaffold update added a `gitleaks dir .` source scan to the publish
+workflow. It flagged internal/oauth/oauth.go's OAuthClientID -- Claude Code's
+public OAuth *client* identifier, which is not a credential -- as a
+generic-api-key, so goreleaser never ran and the v0.14.0 GitHub Release
+shipped without its binary archives.
+
+This release adds a .gitleaks.toml allowlist for that one public identifier
+and re-runs the publish pipeline, restoring the pre-built binaries. It carries
+no user-facing code changes, hence bump = "infra".
+"""
 # Pre-release channel: alpha, beta, rc, or stable (ordered;
 # demotion is an error). With patch/minor/major it ENTERS the
 # channel (0.5.2 + minor + alpha -> 0.6.0-alpha.0); with
