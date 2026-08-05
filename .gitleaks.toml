@@ -1,0 +1,16 @@
+# gitleaks configuration.
+#
+# The publish workflow runs `gitleaks dir .` on the release tag's tree before
+# building artifacts, and the release flow scans build artifacts in dist/.
+
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Public, non-secret identifiers"
+# Claude Code's OAuth *client* ID. A public client identifier by design (it is
+# embedded in every public OAuth client and is not a credential), but its
+# entropy trips the generic-api-key rule.
+regexes = [
+  '''9d1c250a-e61b-44d9-88ed-5944d1962f5e''',
+]
