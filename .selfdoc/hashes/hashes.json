@@ -1,36 +1,36 @@
 {
   "_hash_version": 3,
   "en/cli-colors.md": {
-    "content": "1a3ecc8509f7ca38ae30858e580be9479c055bac3e3b290c64792433c84a2917",
+    "content": "99b324fac01d01629c74e8fbe3a37b9c464979130f5b9d86a5c9a230d8ee5235",
     "description": "bf19ca1f6ff575afdb786e11bb6684801d6a264769b675872dd252e9ede1c402",
     "schema_hash": "14f9a9542f14da3f1fdfa6d846565e008d30a033345f2fc26b5098ab588c56a3",
     "seed_hash": "bf19ca1f6ff575afdb786e11bb6684801d6a264769b675872dd252e9ede1c402"
   },
   "en/cli-config.md": {
-    "content": "c9ec958812cf2d6e726ad2ff670f9ce5aa8b538c8587475d03131d42416eabe7",
+    "content": "cf1e756a4824eab24f9ca91c76e39636b0833c3c65226ea24b5ae84e720a211b",
     "description": "775a676509b2d12d2bed571b829a0864064ee30c2c8a4bdb754d5b751f0b7bb2",
     "schema_hash": "35b1922b9dadee673506a98c176c74cbc3b6d6d31a2c6e5ea4dc7e6790944d50",
     "seed_hash": "775a676509b2d12d2bed571b829a0864064ee30c2c8a4bdb754d5b751f0b7bb2"
   },
   "en/cli-demo.md": {
-    "content": "b8f4d28aaf1bd79fdbc8bb825a77973a305459c95c33f58da9e2c605ebe18006",
+    "content": "46a50739d6e97d0b20d34162c58faef37f31121dc7e7ea17c06890aee3ad90da",
     "description": "86679f90e429d5afd0508019f5aa8db720cc5f7330de9e8cf16144b621f8b9c0",
     "schema_hash": "45be35e9fe069df544a2c182929bd4909802af68df029032c28770092158e035",
     "seed_hash": "86679f90e429d5afd0508019f5aa8db720cc5f7330de9e8cf16144b621f8b9c0"
   },
   "en/cli-index.md": {
-    "content": "424a338d7d5c4473fe35a490d181bda785c9606e7c33c92c78ec5c9335f0c766",
+    "content": "b8857c6844cfbe955d0cf0c62ffb1312b6b1f0750dfc5c3ba9ed5d3a2c4d266e",
     "description": "6050045e1f31b52fac1f2f7f9c88a80f0e6ac10e143af9777bb804570f054d47",
     "seed_hash": "6050045e1f31b52fac1f2f7f9c88a80f0e6ac10e143af9777bb804570f054d47"
   },
   "en/cli-profile.md": {
-    "content": "38dd14c2124490e11628fb1d9916c1015051a3b56e87d4e157cb4d2d9046e22e",
+    "content": "05e1ab581ecf39623cc56999c320eec0da58715d279542bd2ce81cbb4183a03a",
     "description": "6f3dd0a24122365fa835100058a531b61983a6684ab488f9ff38e6156fe4c57f",
     "schema_hash": "db0294ae733794b7a88ef1638d53898aca1eee9f5ace5bb119818540e3547936",
     "seed_hash": "6f3dd0a24122365fa835100058a531b61983a6684ab488f9ff38e6156fe4c57f"
   },
   "en/cli-version.md": {
-    "content": "5ae7ee6519f524faa6163667d99031afd6de97e4c75dbb7d9bd948279080dfda",
+    "content": "00a7a6cbff62734bc80f1dcc189b50085ef6e7acb15edffb2a8293b02c43c64a",
     "description": "0a73172e8c01f8788c6756644890efba9bbd57992e340f93384b67cbf1252689",
     "schema_hash": "ad6c665d5bf4cfcdf871d682f3172e16b47d59c85f0e19dfe403dcd1d10ef3c1",
     "seed_hash": "0a73172e8c01f8788c6756644890efba9bbd57992e340f93384b67cbf1252689"
@@ -74,7 +74,8 @@
   },
   "en/internal-migrate.md": {
     "content": "fa922969a57523d1c0fe70a3d1832d544144b4e968a71be2390f11f8f966d524",
-    "description": "aaadb63a4072ba502dc364e3ea8287b0ce2547e76a9493fdcee1dc077ace3a57"
+    "description": "aaadb63a4072ba502dc364e3ea8287b0ce2547e76a9493fdcee1dc077ace3a57",
+    "source_docstring": "4de2900b9d3f6a01763dbd1b306b64953c69c7ae205ae637005220b7c187bfef"
   },
   "en/internal-oauth.md": {
     "content": "275c1186f3c44eabc11decc593abacee82921bb6e34b1b40e608bf9289816052",
