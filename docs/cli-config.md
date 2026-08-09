@@ -11,3 +11,5 @@ nav_order: 2
 # howmuchleft config
 
 Show config file and current settings
+
+**Effect:** mutating

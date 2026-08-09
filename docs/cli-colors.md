@@ -11,3 +11,5 @@ nav_order: 1
 # howmuchleft colors
 
 Preview gradient colors for your terminal
+
+**Effect:** mutating

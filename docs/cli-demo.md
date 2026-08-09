@@ -12,6 +12,8 @@ nav_order: 3
 
 Run demo animation
 
+**Effect:** mutating
+
 ## Arguments
 
 | Name | Required | Description |

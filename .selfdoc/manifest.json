@@ -2,7 +2,7 @@
   "schema_version": 1,
   "name": "howmuchleft",
   "slug": "howmuchleft",
-  "version": "0.14.0",
+  "version": "0.14.1",
   "description": "",
   "language": "go",
   "base_url": "https://howmuchleft.smmh.dev",
@@ -104,5 +104,5 @@
     }
   ],
   "posts": [],
-  "last_gen": "2026-08-05T18:34:39.991686+00:00"
+  "last_gen": "2026-08-09T12:46:28.572262+00:00"
 }

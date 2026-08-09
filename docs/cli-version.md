@@ -11,3 +11,5 @@ nav_order: 5
 # howmuchleft version
 
 Print the version
+
+**Effect:** mutating

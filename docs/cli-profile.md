@@ -16,6 +16,8 @@ Manage profiles
 
 Add howmuchleft to a Claude Code profile
 
+**Effect:** mutating
+
 ### Arguments
 
 | Name | Required | Description |
@@ -26,6 +28,8 @@ Add howmuchleft to a Claude Code profile
 
 Show all profiles' usage
 
+**Effect:** mutating
+
 ### Flags
 
 | Name | Short | Type | Default | Env | Description |
@@ -35,6 +39,8 @@ Show all profiles' usage
 ## profile uninstall
 
 Remove howmuchleft from a Claude Code profile
+
+**Effect:** mutating
 
 ### Arguments
 
