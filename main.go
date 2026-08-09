@@ -5,7 +5,6 @@ import (
 	"runtime/debug"
 
 	"github.com/smm-h/howmuchleft/internal/cli"
-	"github.com/smm-h/howmuchleft/internal/migrate"
 )
 
 var version string
@@ -19,7 +18,6 @@ func main() {
 		}
 	}
 	cli.SetVersion(version)
-	migrate.SetFS(MigrationsFS)
 
 	// If stdin is piped and no subcommand args, run statusline directly.
 	if len(os.Args) == 1 {

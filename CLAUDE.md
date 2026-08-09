@@ -5,10 +5,7 @@ Claude Code statusline tool. Static Go binary, zero runtime dependencies.
 ## File structure
 
 ```
-main.go              Entry point: version detection, migration FS setup, strictcli app
-embed.go             Embeds migrations/ directory into the binary
-migrable.toml        Config for the migrable schema migration tool
-migrations/          Embedded TOML migration files (applied on startup)
+main.go              Entry point: version detection, strictcli app
 internal/
   cli/               strictcli command definitions, statusline runner, profile install/uninstall
   config/            TOML config loading, validation, clamping, JSON-to-TOML conversion
@@ -19,7 +16,7 @@ internal/
   platform/          Claude dir resolution, dark/light mode detection, GitHub user lookup
   demo/              Animated sawtooth-wave demo
   dashboard/         Multi-profile live dashboard
-  migrate/           Embedded migration runner (wraps migrable)
+  migrate/           Config default seeding (creates/completes config.toml)
 assets/              demo-dark.gif and demo-light.gif (recorded via VHS)
 ```
 
@@ -31,7 +28,7 @@ Claude Code spawns `howmuchleft` as a child process on every render. It pipes a 
 
 ### CLI (internal/cli)
 
-Uses go-strictcli. `NewApp()` builds a `strictcli.App` with subcommands: `version`, `profile {install,uninstall,list}`, `demo`, `colors`, `config`. Pipe detection is handled separately by `RunStatuslineDirect()` in `main.go` before the app is built. Each command calls `runMigrations()` (sync.Once-wrapped) for JSON-to-TOML conversion and embedded schema migrations.
+Uses go-strictcli. `NewApp()` builds a `strictcli.App` with subcommands: `version`, `profile {install,uninstall,list}`, `demo`, `colors`, `config`. Pipe detection is handled separately by `RunStatuslineDirect()` in `main.go` before the app is built. Each command calls `runMigrations()` (sync.Once-wrapped) for JSON-to-TOML conversion and config default seeding.
 
 ### Config (internal/config)
 
@@ -76,14 +73,12 @@ Sawtooth waves: weekly 1 cycle, 5-hour 8 cycles, context 15 cycles. Default 60s 
 
 ### Migrate (internal/migrate)
 
-Wraps the migrable library. `SetFS()` receives the embedded migrations filesystem. `RunEmbedded()` applies pending migrations to the config file.
+`EnsureDefaults(configDir)` creates `config.toml` when missing and fills in any key a newer version introduced, leaving existing values, comments and unknown keys untouched. Defaults come from `config.Default()` and `config.DefaultLines()`, so those are the single source of truth.
 
 ## Dependencies
 
 - `github.com/smm-h/strictcli/go` -- CLI framework
 - `github.com/smm-h/go-toml-edit` -- TOML parsing/editing (preserves comments and formatting)
-- `github.com/smm-h/migrable` -- Embedded schema migrations for config files
-- `github.com/google/cel-go` -- CEL expressions (used by migrable for migration conditions)
 
 ## Local development
 

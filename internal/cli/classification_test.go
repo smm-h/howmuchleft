@@ -20,7 +20,7 @@ import (
 // Every command is `mutating`, and the reason is shared rather than
 // per-command: every handler opens with runMigrations(), which converts a
 // legacy ~/.config/howmuchleft.json into TOML and renames the original to
-// .bak, then applies pending embedded schema migrations to
+// .bak, then writes any missing settings into
 // ~/.config/howmuchleft/config.toml. Those writes happen on `version` and
 // `colors` exactly as they happen on `profile install`, so no command here can
 // honestly claim read_only, however little of its own work it does.

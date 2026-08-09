@@ -1,127 +1,97 @@
+// Package migrate brings the on-disk howmuchleft config up to the shape the
+// current binary expects: it creates ~/.config/howmuchleft/config.toml when it
+// is missing, and fills in any key a newer version introduced. Existing values,
+// comments and formatting are never touched, and unknown keys are left alone.
+//
+// The defaults it writes come from internal/config, which is the single source
+// of truth -- a new setting becomes part of the seeded file the moment it is
+// added to config.Default() or config.DefaultLines().
 package migrate
 
 import (
 	"fmt"
-	"io/fs"
 	"os"
 	"path/filepath"
 
-	"github.com/smm-h/migrable/config"
-	"github.com/smm-h/migrable/engine"
+	tomledit "github.com/smm-h/go-toml-edit"
+	"github.com/smm-h/howmuchleft/internal/config"
 )
 
-// migrationsFS holds the embedded migrations filesystem, set by main via SetFS.
-var migrationsFS fs.FS
-
-// SetFS stores the embedded migrations FS for use by RunEmbedded.
-func SetFS(fsys fs.FS) {
-	migrationsFS = fsys
+// Result reports what EnsureDefaults did to the config file.
+type Result struct {
+	// Created is true when the config file did not exist and was written fresh.
+	Created bool
+	// Added lists the config paths that were absent and have been filled in.
+	Added []string
 }
 
-// RunEmbedded applies pending migrations using the FS set via SetFS.
-func RunEmbedded(configDir string) (*engine.MigrateResult, error) {
-	if migrationsFS == nil {
-		return nil, fmt.Errorf("migrations FS not set; call SetFS first")
+// defaultEntry is one config path and the default value written when the path
+// is absent from the user's file.
+type defaultEntry struct {
+	path  string
+	value any
+}
+
+// defaultEntries returns every config path seeded into a config file, in the
+// order they are written, derived from the in-code defaults.
+func defaultEntries() []defaultEntry {
+	d := config.Default()
+	lines := config.DefaultLines()
+	return []defaultEntry{
+		{"color_mode", d.ColorMode},
+		{"progress_length", d.ProgressLength},
+		{"partial_blocks", d.PartialBlocks},
+		{"progress_bar_orientation", d.ProgressBarOrientation},
+		{"cwd_max_length", d.CwdMaxLength},
+		{"cwd_depth", d.CwdDepth},
+		{"show_time_bars", *d.ShowTimeBars},
+		{"time_bar_dim", *d.TimeBarDim},
+		{"lines.line1", lines.Line1},
+		{"lines.line2", lines.Line2},
+		{"lines.line3", lines.Line3},
 	}
-	return Run(migrationsFS, configDir)
 }
 
-// Run applies all pending embedded migrations to the config file at configDir.
-// It writes embedded migrations to a temp directory, merges any next/ staging
-// files into a versioned migration, then runs engine.Migrate.
-func Run(migrations fs.FS, configDir string) (*engine.MigrateResult, error) {
-	return run(migrations, configDir, false)
-}
+// EnsureDefaults creates or completes the config file in configDir. It is
+// idempotent: when nothing is missing, the file is not rewritten at all.
+func EnsureDefaults(configDir string) (*Result, error) {
+	configPath := filepath.Join(configDir, config.ConfigFile)
 
-// RunDryRun applies all pending embedded migrations in dry-run mode (no writes).
-func RunDryRun(migrations fs.FS, configDir string) (*engine.MigrateResult, error) {
-	return run(migrations, configDir, true)
-}
-
-func run(migrations fs.FS, configDir string, dryRun bool) (*engine.MigrateResult, error) {
-	configPath := filepath.Join(configDir, "config.toml")
-
-	// Ensure config file exists (migrable needs something to operate on).
-	if err := ensureConfigFile(configPath); err != nil {
-		return nil, fmt.Errorf("failed to ensure config file: %w", err)
-	}
-
-	// Write embedded migrations to a temp directory.
-	tmpDir, err := os.MkdirTemp("", "howmuchleft-migrations-*")
+	data, err := os.ReadFile(configPath)
+	created := false
 	if err != nil {
-		return nil, fmt.Errorf("failed to create temp dir: %w", err)
-	}
-	defer os.RemoveAll(tmpDir)
-
-	if err := writeEmbedded(migrations, tmpDir); err != nil {
-		return nil, fmt.Errorf("failed to write embedded migrations: %w", err)
-	}
-
-	migrationsDir := filepath.Join(tmpDir, "migrations")
-
-	// Merge any next/ staging files into a versioned migration.
-	// Use "0.0.1" as the merge version for next/ files (the lowest possible
-	// version above 0.0.0, ensuring it's always applied to fresh configs).
-	nextDir := filepath.Join(migrationsDir, "next")
-	if entries, err := os.ReadDir(nextDir); err == nil && hasTomlFiles(entries) {
-		if _, err := engine.Merge(migrationsDir, "0.0.1"); err != nil {
-			return nil, fmt.Errorf("failed to merge next/ migrations: %w", err)
+		if !os.IsNotExist(err) {
+			return nil, fmt.Errorf("failed to read %s: %w", configPath, err)
 		}
+		created = true
+		data = nil
 	}
 
-	cfg := &config.Config{
-		MigrationsDir: "migrations",
-		Files:         map[string]string{"config": configPath},
-		BaseDir:       tmpDir,
+	doc, err := tomledit.Parse(data)
+	if err != nil {
+		return nil, fmt.Errorf("failed to parse %s: %w", configPath, err)
 	}
 
-	return engine.Migrate(cfg, dryRun)
-}
-
-// ensureConfigFile creates the config file with a minimal schema version if it
-// doesn't exist yet.
-func ensureConfigFile(path string) error {
-	if _, err := os.Stat(path); err == nil {
-		return nil
-	}
-
-	dir := filepath.Dir(path)
-	if err := os.MkdirAll(dir, 0o755); err != nil {
-		return err
-	}
-
-	return os.WriteFile(path, []byte("_schema_version = \"0.0.0\"\n"), 0o644)
-}
-
-// writeEmbedded writes all files from the embedded FS to the target directory,
-// preserving the directory structure.
-func writeEmbedded(fsys fs.FS, targetDir string) error {
-	return fs.WalkDir(fsys, ".", func(path string, d fs.DirEntry, err error) error {
-		if err != nil {
-			return err
+	result := &Result{Created: created}
+	for _, entry := range defaultEntries() {
+		if doc.Get(entry.path) != nil {
+			continue
 		}
-
-		targetPath := filepath.Join(targetDir, path)
-
-		if d.IsDir() {
-			return os.MkdirAll(targetPath, 0o755)
+		if err := doc.SetCreate(entry.path, entry.value); err != nil {
+			return nil, fmt.Errorf("failed to set %s: %w", entry.path, err)
 		}
-
-		data, err := fs.ReadFile(fsys, path)
-		if err != nil {
-			return fmt.Errorf("failed to read embedded file %s: %w", path, err)
-		}
-
-		return os.WriteFile(targetPath, data, 0o644)
-	})
-}
-
-// hasTomlFiles returns true if any entry in the list is a .toml file.
-func hasTomlFiles(entries []os.DirEntry) bool {
-	for _, e := range entries {
-		if !e.IsDir() && filepath.Ext(e.Name()) == ".toml" {
-			return true
-		}
+		result.Added = append(result.Added, entry.path)
 	}
-	return false
+
+	if !created && len(result.Added) == 0 {
+		return result, nil
+	}
+
+	if err := os.MkdirAll(configDir, 0o755); err != nil {
+		return nil, fmt.Errorf("failed to create %s: %w", configDir, err)
+	}
+	if err := os.WriteFile(configPath, doc.Bytes(), 0o644); err != nil {
+		return nil, fmt.Errorf("failed to write %s: %w", configPath, err)
+	}
+	return result, nil
 }

@@ -24,16 +24,16 @@ func SetVersion(v string) {
 
 var migrateOnce sync.Once
 
-// runMigrations runs JSON-to-TOML conversion and embedded schema migrations.
-// Safe to call multiple times; work is done only once.
+// runMigrations runs JSON-to-TOML conversion and fills the config file with
+// any settings it is missing. Safe to call multiple times; work is done once.
 func runMigrations() {
 	migrateOnce.Do(func() {
 		if err := config.ConvertJSONToTOML(); err != nil {
 			fmt.Fprintf(os.Stderr, "howmuchleft: warning: JSON to TOML conversion failed: %v\n", err)
 		}
 		configDir := resolveConfigDir()
-		if _, err := migrate.RunEmbedded(configDir); err != nil {
-			fmt.Fprintf(os.Stderr, "howmuchleft: warning: migration failed: %v\n", err)
+		if _, err := migrate.EnsureDefaults(configDir); err != nil {
+			fmt.Fprintf(os.Stderr, "howmuchleft: warning: config migration failed: %v\n", err)
 		}
 	})
 }
@@ -63,8 +63,8 @@ func RunStatuslineDirect() bool {
 // Every command is classified strictcli.EffectMutating, including the ones
 // that only print. That is not a rubber stamp: every handler opens with
 // runMigrations(), which converts a legacy ~/.config/howmuchleft.json to TOML
-// (renaming the original to .bak) and applies pending embedded schema
-// migrations to ~/.config/howmuchleft/config.toml. Those are user-visible
+// (renaming the original to .bak) and writes any missing settings into
+// ~/.config/howmuchleft/config.toml. Those are user-visible
 // filesystem mutations, so no command here can honestly claim read_only.
 // classification_test.go pins the table.
 func NewApp() *strictcli.App {
