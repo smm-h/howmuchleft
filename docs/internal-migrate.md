@@ -1,6 +1,6 @@
 ---
 title: internal/migrate
-description: "Applies embedded TOML schema migrations to the howmuchleft config file using the migrable engine."
+description: "Creates the howmuchleft config file when it is missing and fills in any setting a newer version added, leaving existing values and comments untouched."
 generated: true
 nav_group: "API Reference"
 nav_order: 8

@@ -1,6 +1,6 @@
 ---
 title: howmuchleft
-description: "Entry point that initializes version, embedded migrations filesystem, and delegates to the CLI or piped statusline mode."
+description: "Entry point that resolves the build version and delegates to the strictcli app or, when stdin is piped, straight to the statusline renderer."
 generated: true
 nav_group: "API Reference"
 nav_order: 1
