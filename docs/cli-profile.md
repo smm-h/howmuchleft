@@ -2,7 +2,6 @@
 title: howmuchleft profile
 description: "Reference for the howmuchleft profile command group — subcommands, flags, arguments, and usage details for the profile group in the howmuchleft CLI."
 generated: true
-seeded: true
 nav_group: "CLI Reference"
 nav_order: 4
 ---
@@ -10,11 +9,11 @@ nav_order: 4
 
 # howmuchleft profile
 
-Manage profiles
+Install, remove and inspect the Claude Code profiles howmuchleft tracks: wire the statusLine into a profile's settings.json, take it back out again, and show every registered profile's token usage side by side in one dashboard
 
 ## profile install
 
-Add howmuchleft to a Claude Code profile
+Add howmuchleft as the statusLine in a Claude Code profile's settings.json, writing a command entry that points back at that profile directory, then register the profile so it shows up in the dashboard. Reports and overwrites a statusLine another tool configured, and changes nothing when howmuchleft is already installed there
 
 **Effect:** mutating
 
@@ -22,11 +21,11 @@ Add howmuchleft to a Claude Code profile
 
 | Name | Required | Description |
 | --- | --- | --- |
-| `dir` | no | Claude Code profile directory |
+| `dir` | no | Claude Code profile directory to operate on; defaults to $CLAUDE_CONFIG_DIR when that is set, and to ~/.claude otherwise. A leading ~ is expanded to your home directory |
 
 ## profile list
 
-Show all profiles' usage
+Discover every registered Claude Code profile and render their token usage side by side in one dashboard, a row per profile. Prints a single snapshot and exits by default; with --live it redraws every 30 seconds until interrupted. Reports that none were found, and exits cleanly, when no profile has been registered yet
 
 **Effect:** mutating
 
@@ -34,11 +33,11 @@ Show all profiles' usage
 
 | Name | Short | Type | Default | Env | Description |
 | --- | --- | --- | --- | --- | --- |
-| `--live` |  | bool |  |  | Refresh dashboard every 30s |
+| `--live` |  | bool |  |  | Redraw the dashboard every 30 seconds until interrupted, instead of printing a single snapshot and exiting immediately |
 
 ## profile uninstall
 
-Remove howmuchleft from a Claude Code profile
+Remove howmuchleft's statusLine entry from a Claude Code profile's settings.json and unregister the profile so it no longer appears in the dashboard. Refuses to touch a statusLine that some other tool configured, printing it for inspection instead, and reports plainly when the profile has no statusLine at all
 
 **Effect:** mutating
 
@@ -46,4 +45,4 @@ Remove howmuchleft from a Claude Code profile
 
 | Name | Required | Description |
 | --- | --- | --- |
-| `dir` | no | Claude Code profile directory |
+| `dir` | no | Claude Code profile directory to operate on; defaults to $CLAUDE_CONFIG_DIR when that is set, and to ~/.claude otherwise. A leading ~ is expanded to your home directory |

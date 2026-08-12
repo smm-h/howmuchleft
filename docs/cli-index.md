@@ -17,14 +17,14 @@ Version: :-: var key="project.version"
 
 ## Commands
 
-- [colors](cli-colors.html) -- Preview gradient colors for your terminal
-- [config](cli-config.html) -- Show config file and current settings
-- [demo](cli-demo.html) -- Run demo animation
-- [version](cli-version.html) -- Print the version
+- [colors](../cli-colors/) -- Preview gradient colors for your terminal
+- [config](../cli-config/) -- Show config file and current settings
+- [demo](../cli-demo/) -- Run demo animation
+- [version](../cli-version/) -- Print the version
 
 ## Command Groups
 
-- [profile](cli-profile.html) -- Manage profiles
+- [profile](../cli-profile/) -- Install, remove and inspect the Claude Code profiles howmuchleft tracks: wire the statusLine into a profile's settings.json, take it back out again, and show every registered profile's token usage side by side in one dashboard
 
 ## Framework flags
 

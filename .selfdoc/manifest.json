@@ -10,99 +10,1052 @@
     {
       "path": "cli-colors.md",
       "title": "howmuchleft colors",
-      "type": "doc"
+      "type": "doc",
+      "headings": [
+        {
+          "level": 1,
+          "text": "howmuchleft colors",
+          "anchor": "howmuchleft-colors"
+        }
+      ]
     },
     {
       "path": "cli-config.md",
       "title": "howmuchleft config",
-      "type": "doc"
+      "type": "doc",
+      "headings": [
+        {
+          "level": 1,
+          "text": "howmuchleft config",
+          "anchor": "howmuchleft-config"
+        }
+      ]
     },
     {
       "path": "cli-demo.md",
       "title": "howmuchleft demo",
-      "type": "doc"
+      "type": "doc",
+      "headings": [
+        {
+          "level": 1,
+          "text": "howmuchleft demo",
+          "anchor": "howmuchleft-demo"
+        },
+        {
+          "level": 2,
+          "text": "Arguments",
+          "anchor": "arguments"
+        }
+      ]
     },
     {
       "path": "cli-index.md",
       "title": "howmuchleft CLI Reference",
-      "type": "doc"
+      "type": "doc",
+      "headings": [
+        {
+          "level": 1,
+          "text": "howmuchleft CLI Reference",
+          "anchor": "howmuchleft-cli-reference"
+        },
+        {
+          "level": 2,
+          "text": "Commands",
+          "anchor": "commands"
+        },
+        {
+          "level": 2,
+          "text": "Command Groups",
+          "anchor": "command-groups"
+        },
+        {
+          "level": 2,
+          "text": "Framework flags",
+          "anchor": "framework-flags"
+        }
+      ]
     },
     {
       "path": "cli-profile.md",
       "title": "howmuchleft profile",
-      "type": "doc"
+      "type": "doc",
+      "headings": [
+        {
+          "level": 1,
+          "text": "howmuchleft profile",
+          "anchor": "howmuchleft-profile"
+        },
+        {
+          "level": 2,
+          "text": "profile install",
+          "anchor": "profile-install"
+        },
+        {
+          "level": 3,
+          "text": "Arguments",
+          "anchor": "arguments"
+        },
+        {
+          "level": 2,
+          "text": "profile list",
+          "anchor": "profile-list"
+        },
+        {
+          "level": 3,
+          "text": "Flags",
+          "anchor": "flags"
+        },
+        {
+          "level": 2,
+          "text": "profile uninstall",
+          "anchor": "profile-uninstall"
+        },
+        {
+          "level": 3,
+          "text": "Arguments",
+          "anchor": "arguments-1"
+        }
+      ]
     },
     {
       "path": "cli-version.md",
       "title": "howmuchleft version",
-      "type": "doc"
+      "type": "doc",
+      "headings": [
+        {
+          "level": 1,
+          "text": "howmuchleft version",
+          "anchor": "howmuchleft-version"
+        }
+      ]
     },
     {
       "path": "gen-index.md",
       "title": "API Reference",
-      "type": "doc"
+      "type": "doc",
+      "headings": [
+        {
+          "level": 1,
+          "text": "API Reference",
+          "anchor": "api-reference"
+        }
+      ]
     },
     {
       "path": "howmuchleft.md",
       "title": "howmuchleft",
-      "type": "doc"
+      "type": "doc",
+      "headings": [
+        {
+          "level": 1,
+          "text": "howmuchleft",
+          "anchor": "howmuchleft"
+        },
+        {
+          "level": 2,
+          "text": ".",
+          "anchor": ""
+        }
+      ]
     },
     {
       "path": "index.md",
       "title": "howmuchleft",
-      "type": "doc"
+      "type": "doc",
+      "headings": [
+        {
+          "level": 1,
+          "text": "howmuchleft",
+          "anchor": "howmuchleft"
+        },
+        {
+          "level": 2,
+          "text": "API Reference",
+          "anchor": "api-reference"
+        },
+        {
+          "level": 2,
+          "text": ".",
+          "anchor": ""
+        }
+      ]
     },
     {
       "path": "internal-cache.md",
       "title": "internal/cache",
-      "type": "doc"
+      "type": "doc",
+      "headings": [
+        {
+          "level": 1,
+          "text": "internal/cache",
+          "anchor": "internalcache"
+        },
+        {
+          "level": 2,
+          "text": "internal/cache",
+          "anchor": "internalcache"
+        },
+        {
+          "level": 3,
+          "text": "CacheTTL",
+          "anchor": "cachettl"
+        },
+        {
+          "level": 3,
+          "text": "ErrorCacheTTL",
+          "anchor": "errorcachettl"
+        },
+        {
+          "level": 3,
+          "text": "MaxErrorCacheTTL",
+          "anchor": "maxerrorcachettl"
+        },
+        {
+          "level": 3,
+          "text": "CombinedTimeout",
+          "anchor": "combinedtimeout"
+        },
+        {
+          "level": 3,
+          "text": "ErrAuth",
+          "anchor": "errauth"
+        },
+        {
+          "level": 3,
+          "text": "NowMs",
+          "anchor": "nowms"
+        },
+        {
+          "level": 3,
+          "text": "UsageResponse",
+          "anchor": "usageresponse"
+        },
+        {
+          "level": 3,
+          "text": "WindowUsage",
+          "anchor": "windowusage"
+        },
+        {
+          "level": 3,
+          "text": "ExtraUsage",
+          "anchor": "extrausage"
+        },
+        {
+          "level": 3,
+          "text": "CacheData",
+          "anchor": "cachedata"
+        },
+        {
+          "level": 3,
+          "text": "CachedWindow",
+          "anchor": "cachedwindow"
+        },
+        {
+          "level": 3,
+          "text": "CachedExtra",
+          "anchor": "cachedextra"
+        },
+        {
+          "level": 3,
+          "text": "UsageResult",
+          "anchor": "usageresult"
+        },
+        {
+          "level": 3,
+          "text": "WindowResult",
+          "anchor": "windowresult"
+        },
+        {
+          "level": 3,
+          "text": "ExtraResult",
+          "anchor": "extraresult"
+        },
+        {
+          "level": 3,
+          "text": "FetchUsageFromAPI",
+          "anchor": "fetchusagefromapi"
+        },
+        {
+          "level": 3,
+          "text": "ReadCache",
+          "anchor": "readcache"
+        },
+        {
+          "level": 3,
+          "text": "WriteCache",
+          "anchor": "writecache"
+        },
+        {
+          "level": 3,
+          "text": "IsCacheValid",
+          "anchor": "iscachevalid"
+        },
+        {
+          "level": 3,
+          "text": "GetUsageData",
+          "anchor": "getusagedata"
+        },
+        {
+          "level": 3,
+          "text": "ParseWindowFromMap",
+          "anchor": "parsewindowfrommap"
+        },
+        {
+          "level": 3,
+          "text": "WriteUsageFromStdin",
+          "anchor": "writeusagefromstdin"
+        }
+      ]
     },
     {
       "path": "internal-cli.md",
       "title": "internal/cli",
-      "type": "doc"
+      "type": "doc",
+      "headings": [
+        {
+          "level": 1,
+          "text": "internal/cli",
+          "anchor": "internalcli"
+        },
+        {
+          "level": 2,
+          "text": "internal/cli",
+          "anchor": "internalcli"
+        },
+        {
+          "level": 3,
+          "text": "SetVersion",
+          "anchor": "setversion"
+        },
+        {
+          "level": 3,
+          "text": "RunStatuslineDirect",
+          "anchor": "runstatuslinedirect"
+        },
+        {
+          "level": 3,
+          "text": "NewApp",
+          "anchor": "newapp"
+        }
+      ]
     },
     {
       "path": "internal-config.md",
       "title": "internal/config",
-      "type": "doc"
+      "type": "doc",
+      "headings": [
+        {
+          "level": 1,
+          "text": "internal/config",
+          "anchor": "internalconfig"
+        },
+        {
+          "level": 2,
+          "text": "internal/config",
+          "anchor": "internalconfig"
+        },
+        {
+          "level": 3,
+          "text": "ConfigDir",
+          "anchor": "configdir"
+        },
+        {
+          "level": 3,
+          "text": "ConfigFile",
+          "anchor": "configfile"
+        },
+        {
+          "level": 3,
+          "text": "Config",
+          "anchor": "config"
+        },
+        {
+          "level": 3,
+          "text": "ColorEntry",
+          "anchor": "colorentry"
+        },
+        {
+          "level": 3,
+          "text": "LinesConfig",
+          "anchor": "linesconfig"
+        },
+        {
+          "level": 3,
+          "text": "ConfigPath",
+          "anchor": "configpath"
+        },
+        {
+          "level": 3,
+          "text": "DefaultLines",
+          "anchor": "defaultlines"
+        },
+        {
+          "level": 3,
+          "text": "Default",
+          "anchor": "default"
+        },
+        {
+          "level": 3,
+          "text": "Load",
+          "anchor": "load"
+        },
+        {
+          "level": 3,
+          "text": "Get",
+          "anchor": "get"
+        },
+        {
+          "level": 3,
+          "text": "ResetCache",
+          "anchor": "resetcache"
+        },
+        {
+          "level": 3,
+          "text": "OldConfigPath",
+          "anchor": "oldconfigpath"
+        },
+        {
+          "level": 3,
+          "text": "ConvertJSONToTOML",
+          "anchor": "convertjsontotoml"
+        },
+        {
+          "level": 3,
+          "text": "StripJSONComments",
+          "anchor": "stripjsoncomments"
+        }
+      ]
     },
     {
       "path": "internal-dashboard.md",
       "title": "internal/dashboard",
-      "type": "doc"
+      "type": "doc",
+      "headings": [
+        {
+          "level": 1,
+          "text": "internal/dashboard",
+          "anchor": "internaldashboard"
+        },
+        {
+          "level": 2,
+          "text": "internal/dashboard",
+          "anchor": "internaldashboard"
+        },
+        {
+          "level": 3,
+          "text": "ProfileResult",
+          "anchor": "profileresult"
+        },
+        {
+          "level": 3,
+          "text": "DiscoverProfiles",
+          "anchor": "discoverprofiles"
+        },
+        {
+          "level": 3,
+          "text": "FetchAndRender",
+          "anchor": "fetchandrender"
+        },
+        {
+          "level": 3,
+          "text": "RenderDashboard",
+          "anchor": "renderdashboard"
+        },
+        {
+          "level": 3,
+          "text": "RunLive",
+          "anchor": "runlive"
+        },
+        {
+          "level": 3,
+          "text": "RunOnce",
+          "anchor": "runonce"
+        },
+        {
+          "level": 3,
+          "text": "Run",
+          "anchor": "run"
+        }
+      ]
     },
     {
       "path": "internal-demo.md",
       "title": "internal/demo",
-      "type": "doc"
+      "type": "doc",
+      "headings": [
+        {
+          "level": 1,
+          "text": "internal/demo",
+          "anchor": "internaldemo"
+        },
+        {
+          "level": 2,
+          "text": "internal/demo",
+          "anchor": "internaldemo"
+        },
+        {
+          "level": 3,
+          "text": "WaveState",
+          "anchor": "wavestate"
+        },
+        {
+          "level": 3,
+          "text": "ComputeWaves",
+          "anchor": "computewaves"
+        },
+        {
+          "level": 3,
+          "text": "Run",
+          "anchor": "run"
+        }
+      ]
     },
     {
       "path": "internal-git.md",
       "title": "internal/git",
-      "type": "doc"
+      "type": "doc",
+      "headings": [
+        {
+          "level": 1,
+          "text": "internal/git",
+          "anchor": "internalgit"
+        },
+        {
+          "level": 2,
+          "text": "internal/git",
+          "anchor": "internalgit"
+        },
+        {
+          "level": 3,
+          "text": "Info",
+          "anchor": "info"
+        },
+        {
+          "level": 3,
+          "text": "GetInfo",
+          "anchor": "getinfo"
+        }
+      ]
     },
     {
       "path": "internal-migrate.md",
       "title": "internal/migrate",
-      "type": "doc"
+      "type": "doc",
+      "headings": [
+        {
+          "level": 1,
+          "text": "internal/migrate",
+          "anchor": "internalmigrate"
+        },
+        {
+          "level": 2,
+          "text": "internal/migrate",
+          "anchor": "internalmigrate"
+        },
+        {
+          "level": 3,
+          "text": "Result",
+          "anchor": "result"
+        },
+        {
+          "level": 3,
+          "text": "EnsureDefaults",
+          "anchor": "ensuredefaults"
+        }
+      ]
     },
     {
       "path": "internal-oauth.md",
       "title": "internal/oauth",
-      "type": "doc"
+      "type": "doc",
+      "headings": [
+        {
+          "level": 1,
+          "text": "internal/oauth",
+          "anchor": "internaloauth"
+        },
+        {
+          "level": 2,
+          "text": "internal/oauth",
+          "anchor": "internaloauth"
+        },
+        {
+          "level": 3,
+          "text": "OAuthClientID",
+          "anchor": "oauthclientid"
+        },
+        {
+          "level": 3,
+          "text": "Credentials",
+          "anchor": "credentials"
+        },
+        {
+          "level": 3,
+          "text": "OAuthData",
+          "anchor": "oauthdata"
+        },
+        {
+          "level": 3,
+          "text": "CredFile",
+          "anchor": "credfile"
+        },
+        {
+          "level": 3,
+          "text": "AuthInfo",
+          "anchor": "authinfo"
+        },
+        {
+          "level": 3,
+          "text": "ReadCredentialsFile",
+          "anchor": "readcredentialsfile"
+        },
+        {
+          "level": 3,
+          "text": "ReadKeychainCredentials",
+          "anchor": "readkeychaincredentials"
+        },
+        {
+          "level": 3,
+          "text": "GetAuthInfo",
+          "anchor": "getauthinfo"
+        },
+        {
+          "level": 3,
+          "text": "ResetCredentialsCache",
+          "anchor": "resetcredentialscache"
+        },
+        {
+          "level": 3,
+          "text": "RefreshToken",
+          "anchor": "refreshtoken"
+        },
+        {
+          "level": 3,
+          "text": "GetValidToken",
+          "anchor": "getvalidtoken"
+        },
+        {
+          "level": 3,
+          "text": "WriteFileAtomic",
+          "anchor": "writefileatomic"
+        },
+        {
+          "level": 3,
+          "text": "CredFile.UnmarshalJSON",
+          "anchor": "credfileunmarshaljson"
+        },
+        {
+          "level": 3,
+          "text": "CredFile.MarshalJSON",
+          "anchor": "credfilemarshaljson"
+        }
+      ]
     },
     {
       "path": "internal-platform.md",
       "title": "internal/platform",
-      "type": "doc"
+      "type": "doc",
+      "headings": [
+        {
+          "level": 1,
+          "text": "internal/platform",
+          "anchor": "internalplatform"
+        },
+        {
+          "level": 2,
+          "text": "internal/platform",
+          "anchor": "internalplatform"
+        },
+        {
+          "level": 3,
+          "text": "GetActiveGhUser",
+          "anchor": "getactiveghuser"
+        },
+        {
+          "level": 3,
+          "text": "ResetGhUserCache",
+          "anchor": "resetghusercache"
+        },
+        {
+          "level": 3,
+          "text": "GhTokenHash",
+          "anchor": "ghtokenhash"
+        },
+        {
+          "level": 3,
+          "text": "GetSessionElapsed",
+          "anchor": "getsessionelapsed"
+        },
+        {
+          "level": 3,
+          "text": "GetClaudeDir",
+          "anchor": "getclaudedir"
+        },
+        {
+          "level": 3,
+          "text": "GetProfileName",
+          "anchor": "getprofilename"
+        },
+        {
+          "level": 3,
+          "text": "GetCCVersion",
+          "anchor": "getccversion"
+        }
+      ]
     },
     {
       "path": "internal-render.md",
       "title": "internal/render",
-      "type": "doc"
+      "type": "doc",
+      "headings": [
+        {
+          "level": 1,
+          "text": "internal/render",
+          "anchor": "internalrender"
+        },
+        {
+          "level": 2,
+          "text": "internal/render",
+          "anchor": "internalrender"
+        },
+        {
+          "level": 3,
+          "text": "FullBlock",
+          "anchor": "fullblock"
+        },
+        {
+          "level": 3,
+          "text": "Reset",
+          "anchor": "reset"
+        },
+        {
+          "level": 3,
+          "text": "Bold",
+          "anchor": "bold"
+        },
+        {
+          "level": 3,
+          "text": "Dim",
+          "anchor": "dim"
+        },
+        {
+          "level": 3,
+          "text": "Green",
+          "anchor": "green"
+        },
+        {
+          "level": 3,
+          "text": "Yellow",
+          "anchor": "yellow"
+        },
+        {
+          "level": 3,
+          "text": "Orange",
+          "anchor": "orange"
+        },
+        {
+          "level": 3,
+          "text": "Red",
+          "anchor": "red"
+        },
+        {
+          "level": 3,
+          "text": "Cyan",
+          "anchor": "cyan"
+        },
+        {
+          "level": 3,
+          "text": "Magenta",
+          "anchor": "magenta"
+        },
+        {
+          "level": 3,
+          "text": "White",
+          "anchor": "white"
+        },
+        {
+          "level": 3,
+          "text": "Gray",
+          "anchor": "gray"
+        },
+        {
+          "level": 3,
+          "text": "HorizontalChars",
+          "anchor": "horizontalchars"
+        },
+        {
+          "level": 3,
+          "text": "VerticalChars",
+          "anchor": "verticalchars"
+        },
+        {
+          "level": 3,
+          "text": "PartialBlocksBlocklist",
+          "anchor": "partialblocksblocklist"
+        },
+        {
+          "level": 3,
+          "text": "BuiltinColors",
+          "anchor": "builtincolors"
+        },
+        {
+          "level": 3,
+          "text": "BarConfig",
+          "anchor": "barconfig"
+        },
+        {
+          "level": 3,
+          "text": "GradientResult",
+          "anchor": "gradientresult"
+        },
+        {
+          "level": 3,
+          "text": "BgValue",
+          "anchor": "bgvalue"
+        },
+        {
+          "level": 3,
+          "text": "UsageData",
+          "anchor": "usagedata"
+        },
+        {
+          "level": 3,
+          "text": "ExtraUsageData",
+          "anchor": "extrausagedata"
+        },
+        {
+          "level": 3,
+          "text": "GitInfo",
+          "anchor": "gitinfo"
+        },
+        {
+          "level": 3,
+          "text": "LineChangeInfo",
+          "anchor": "linechangeinfo"
+        },
+        {
+          "level": 3,
+          "text": "BarColumn",
+          "anchor": "barcolumn"
+        },
+        {
+          "level": 3,
+          "text": "TimeBarInfo",
+          "anchor": "timebarinfo"
+        },
+        {
+          "level": 3,
+          "text": "RenderData",
+          "anchor": "renderdata"
+        },
+        {
+          "level": 3,
+          "text": "GradientStop",
+          "anchor": "gradientstop"
+        },
+        {
+          "level": 3,
+          "text": "ColorEntry",
+          "anchor": "colorentry"
+        },
+        {
+          "level": 3,
+          "text": "ShouldUsePartialBlocks",
+          "anchor": "shouldusepartialblocks"
+        },
+        {
+          "level": 3,
+          "text": "GetGradientStop",
+          "anchor": "getgradientstop"
+        },
+        {
+          "level": 3,
+          "text": "GetUrgencyColor",
+          "anchor": "geturgencycolor"
+        },
+        {
+          "level": 3,
+          "text": "HorizontalBar",
+          "anchor": "horizontalbar"
+        },
+        {
+          "level": 3,
+          "text": "VerticalBarCell",
+          "anchor": "verticalbarcell"
+        },
+        {
+          "level": 3,
+          "text": "TimeBarCell",
+          "anchor": "timebarcell"
+        },
+        {
+          "level": 3,
+          "text": "IsTruecolorSupported",
+          "anchor": "istruecolorsupported"
+        },
+        {
+          "level": 3,
+          "text": "ResetTruecolorCache",
+          "anchor": "resettruecolorcache"
+        },
+        {
+          "level": 3,
+          "text": "ResetDarkModeCache",
+          "anchor": "resetdarkmodecache"
+        },
+        {
+          "level": 3,
+          "text": "IsDarkMode",
+          "anchor": "isdarkmode"
+        },
+        {
+          "level": 3,
+          "text": "RgbTo256",
+          "anchor": "rgbto256"
+        },
+        {
+          "level": 3,
+          "text": "InterpolateRgb",
+          "anchor": "interpolatergb"
+        },
+        {
+          "level": 3,
+          "text": "FormatFg",
+          "anchor": "formatfg"
+        },
+        {
+          "level": 3,
+          "text": "FormatBg",
+          "anchor": "formatbg"
+        },
+        {
+          "level": 3,
+          "text": "NewBgRgb",
+          "anchor": "newbgrgb"
+        },
+        {
+          "level": 3,
+          "text": "NewBgIndex",
+          "anchor": "newbgindex"
+        },
+        {
+          "level": 3,
+          "text": "FormatBgFromValue",
+          "anchor": "formatbgfromvalue"
+        },
+        {
+          "level": 3,
+          "text": "ShortenModelName",
+          "anchor": "shortenmodelname"
+        },
+        {
+          "level": 3,
+          "text": "FormatPercent",
+          "anchor": "formatpercent"
+        },
+        {
+          "level": 3,
+          "text": "FormatExtraPercent",
+          "anchor": "formatextrapercent"
+        },
+        {
+          "level": 3,
+          "text": "FormatTimeRemaining",
+          "anchor": "formattimeremaining"
+        },
+        {
+          "level": 3,
+          "text": "FormatAge",
+          "anchor": "formatage"
+        },
+        {
+          "level": 3,
+          "text": "ShortenPath",
+          "anchor": "shortenpath"
+        },
+        {
+          "level": 3,
+          "text": "BuildLineText",
+          "anchor": "buildlinetext"
+        },
+        {
+          "level": 3,
+          "text": "WarmBgColors",
+          "anchor": "warmbgcolors"
+        },
+        {
+          "level": 3,
+          "text": "ComputeTimeBarBg",
+          "anchor": "computetimebarbg"
+        },
+        {
+          "level": 3,
+          "text": "ComputeTimePercent",
+          "anchor": "computetimepercent"
+        },
+        {
+          "level": 3,
+          "text": "RenderLines",
+          "anchor": "renderlines"
+        },
+        {
+          "level": 3,
+          "text": "ConfigColorToRenderColor",
+          "anchor": "configcolortorendercolor"
+        },
+        {
+          "level": 3,
+          "text": "ParseGradientStops",
+          "anchor": "parsegradientstops"
+        },
+        {
+          "level": 3,
+          "text": "ParseBgValue",
+          "anchor": "parsebgvalue"
+        },
+        {
+          "level": 3,
+          "text": "BuildBarConfig",
+          "anchor": "buildbarconfig"
+        },
+        {
+          "level": 3,
+          "text": "NewRgbStop",
+          "anchor": "newrgbstop"
+        },
+        {
+          "level": 3,
+          "text": "NewIndexStop",
+          "anchor": "newindexstop"
+        },
+        {
+          "level": 3,
+          "text": "IsRgbStop",
+          "anchor": "isrgbstop"
+        },
+        {
+          "level": 3,
+          "text": "FindColorMatch",
+          "anchor": "findcolormatch"
+        },
+        {
+          "level": 3,
+          "text": "HashToHue",
+          "anchor": "hashtohue"
+        },
+        {
+          "level": 3,
+          "text": "HueToAnsi",
+          "anchor": "huetoansi"
+        },
+        {
+          "level": 3,
+          "text": "TestColors",
+          "anchor": "testcolors"
+        }
+      ]
     }
   ],
   "posts": [],
-  "last_gen": "2026-08-09T12:46:28.572262+00:00"
+  "last_gen": "2026-08-12T03:44:12.893155+00:00"
 }
