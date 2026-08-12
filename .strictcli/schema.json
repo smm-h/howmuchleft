@@ -80,13 +80,13 @@
         "install": {
           "args": [
             {
-              "help": "Claude Code profile directory",
+              "help": "Claude Code profile directory to operate on; defaults to $CLAUDE_CONFIG_DIR when that is set, and to ~/.claude otherwise. A leading ~ is expanded to your home directory",
               "name": "dir",
               "required": false
             }
           ],
           "effect": "mutating",
-          "help": "Add howmuchleft to a Claude Code profile",
+          "help": "Add howmuchleft as the statusLine in a Claude Code profile's settings.json, writing a command entry that points back at that profile directory, then register the profile so it shows up in the dashboard. Reports and overwrites a statusLine another tool configured, and changes nothing when howmuchleft is already installed there",
           "name": "install"
         },
         "list": {
@@ -94,29 +94,29 @@
           "flags": [
             {
               "default": false,
-              "help": "Refresh dashboard every 30s",
+              "help": "Redraw the dashboard every 30 seconds until interrupted, instead of printing a single snapshot and exiting immediately",
               "name": "live",
               "negatable": true,
               "type": "bool"
             }
           ],
-          "help": "Show all profiles' usage",
+          "help": "Discover every registered Claude Code profile and render their token usage side by side in one dashboard, a row per profile. Prints a single snapshot and exits by default; with --live it redraws every 30 seconds until interrupted. Reports that none were found, and exits cleanly, when no profile has been registered yet",
           "name": "list"
         },
         "uninstall": {
           "args": [
             {
-              "help": "Claude Code profile directory",
+              "help": "Claude Code profile directory to operate on; defaults to $CLAUDE_CONFIG_DIR when that is set, and to ~/.claude otherwise. A leading ~ is expanded to your home directory",
               "name": "dir",
               "required": false
             }
           ],
           "effect": "mutating",
-          "help": "Remove howmuchleft from a Claude Code profile",
+          "help": "Remove howmuchleft's statusLine entry from a Claude Code profile's settings.json and unregister the profile so it no longer appears in the dashboard. Refuses to touch a statusLine that some other tool configured, printing it for inspection instead, and reports plainly when the profile has no statusLine at all",
           "name": "uninstall"
         }
       },
-      "help": "Manage profiles",
+      "help": "Install, remove and inspect the Claude Code profiles howmuchleft tracks: wire the statusLine into a profile's settings.json, take it back out again, and show every registered profile's token usage side by side in one dashboard",
       "name": "profile"
     }
   },
@@ -124,5 +124,5 @@
   "name": "howmuchleft",
   "project_id": "github.com/smm-h/howmuchleft",
   "schema_version": 1,
-  "version": "0.14.1"
+  "version": "(devel)"
 }

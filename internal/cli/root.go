@@ -78,9 +78,9 @@ func NewApp() *strictcli.App {
 	}, strictcli.WithEffect(strictcli.EffectMutating))
 
 	// profile group
-	profileGrp := app.Group("profile", "Manage profiles")
+	profileGrp := app.Group("profile", "Install, remove and inspect the Claude Code profiles howmuchleft tracks: wire the statusLine into a profile's settings.json, take it back out again, and show every registered profile's token usage side by side in one dashboard")
 
-	profileGrp.Command("install", "Add howmuchleft to a Claude Code profile", func(ctx *strictcli.Context, kwargs map[string]interface{}) strictcli.Outcome {
+	profileGrp.Command("install", "Add howmuchleft as the statusLine in a Claude Code profile's settings.json, writing a command entry that points back at that profile directory, then register the profile so it shows up in the dashboard. Reports and overwrites a statusLine another tool configured, and changes nothing when howmuchleft is already installed there", func(ctx *strictcli.Context, kwargs map[string]interface{}) strictcli.Outcome {
 		runMigrations()
 		var args []string
 		if dir := kwargs["dir"]; dir != nil {
@@ -93,10 +93,10 @@ func NewApp() *strictcli.App {
 		}
 		return strictcli.Exit(0)
 	}, strictcli.WithEffect(strictcli.EffectMutating), strictcli.WithArgs(
-		strictcli.NewArg("dir", "Claude Code profile directory", strictcli.ArgRequired(false)),
+		strictcli.NewArg("dir", "Claude Code profile directory to operate on; defaults to $CLAUDE_CONFIG_DIR when that is set, and to ~/.claude otherwise. A leading ~ is expanded to your home directory", strictcli.ArgRequired(false)),
 	))
 
-	profileGrp.Command("uninstall", "Remove howmuchleft from a Claude Code profile", func(ctx *strictcli.Context, kwargs map[string]interface{}) strictcli.Outcome {
+	profileGrp.Command("uninstall", "Remove howmuchleft's statusLine entry from a Claude Code profile's settings.json and unregister the profile so it no longer appears in the dashboard. Refuses to touch a statusLine that some other tool configured, printing it for inspection instead, and reports plainly when the profile has no statusLine at all", func(ctx *strictcli.Context, kwargs map[string]interface{}) strictcli.Outcome {
 		runMigrations()
 		var args []string
 		if dir := kwargs["dir"]; dir != nil {
@@ -109,10 +109,10 @@ func NewApp() *strictcli.App {
 		}
 		return strictcli.Exit(0)
 	}, strictcli.WithEffect(strictcli.EffectMutating), strictcli.WithArgs(
-		strictcli.NewArg("dir", "Claude Code profile directory", strictcli.ArgRequired(false)),
+		strictcli.NewArg("dir", "Claude Code profile directory to operate on; defaults to $CLAUDE_CONFIG_DIR when that is set, and to ~/.claude otherwise. A leading ~ is expanded to your home directory", strictcli.ArgRequired(false)),
 	))
 
-	profileGrp.Command("list", "Show all profiles' usage", func(ctx *strictcli.Context, kwargs map[string]interface{}) strictcli.Outcome {
+	profileGrp.Command("list", "Discover every registered Claude Code profile and render their token usage side by side in one dashboard, a row per profile. Prints a single snapshot and exits by default; with --live it redraws every 30 seconds until interrupted. Reports that none were found, and exits cleanly, when no profile has been registered yet", func(ctx *strictcli.Context, kwargs map[string]interface{}) strictcli.Outcome {
 		runMigrations()
 		live := kwargs["live"].(bool)
 		if err := dashboard.Run(live); err != nil {
@@ -121,7 +121,7 @@ func NewApp() *strictcli.App {
 		}
 		return strictcli.Exit(0)
 	}, strictcli.WithEffect(strictcli.EffectMutating), strictcli.WithFlags(
-		strictcli.BoolFlag("live", "Refresh dashboard every 30s", strictcli.Default(false)),
+		strictcli.BoolFlag("live", "Redraw the dashboard every 30 seconds until interrupted, instead of printing a single snapshot and exiting immediately", strictcli.Default(false)),
 	))
 
 	// demo
