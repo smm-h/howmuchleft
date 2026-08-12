@@ -1,6 +1,6 @@
 ---
 title: howmuchleft profile
-description: "Reference for the howmuchleft profile command group — subcommands, flags, arguments, and usage details for the profile group in the howmuchleft CLI."
+description: "Reference for the howmuchleft profile command group: install and uninstall the statusLine in a Claude Code profile settings.json, and show every registered profile token usage side by side in one dashboard."
 generated: true
 nav_group: "CLI Reference"
 nav_order: 4
