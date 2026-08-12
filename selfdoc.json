@@ -21,10 +21,6 @@
       "default": true
     }
   ],
-  "deploy": {
-    "provider": "cloudflare-pages",
-    "project": "howmuchleft"
-  },
   "topology": {
     "slug": "howmuchleft",
     "docs_base": "https://smmh.dev",
