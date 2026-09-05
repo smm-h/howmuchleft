@@ -27,3 +27,7 @@ will be addressed separately.
 # blog = false
 include = ["go"]
 exclude = []
+candidate_sha = "4bf0881113559f4e9c38b4a4669b08df1b2a94c0"
+
+[tree_hashes]
+"." = "ca546a3b8bbf8f2ba4e36e078eec4aec35303f29"

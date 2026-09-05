@@ -1,0 +1,21 @@
+# Materialized by `rlsbl release backfill`: this version shipped before
+# rlsbl archived a release file per version, so no archive existed.
+# Every reconstructed value names its source on the field below it. A
+# description is recovered from the first source that yields one: an
+# operator-reviewed --overrides file, then the version's GitHub Release
+# body, then its CHANGELOG.md section, then the commit subjects in its tag
+# range, and otherwise a placeholder naming the recovery obligation. bump
+# is derived by version arithmetic against the predecessor, and include
+# reflects the targets detected at backfill time (the historical target set
+# is not recoverable).
+# This archive's description came from: commit-subjects:9a3f350e..29c09079.
+# strictspec document version gate (do not remove)
+format_version = 1
+bump = "minor"
+include = ["go"]
+exclude = []
+description = "Reconstructed from this version's commit subjects: Bump version to 0.5.0; Show session elapsed time in statusline."
+candidate_sha = "29c090794a5d9251ebab1295a685a78718331a20"
+
+[tree_hashes]
+"." = "165b5b9de252919f711f772a23805392befacc18"

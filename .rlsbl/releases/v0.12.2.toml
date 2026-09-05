@@ -1,3 +1,5 @@
+# strictspec document version gate (do not remove)
+format_version = 1
 # Version bump type: patch, minor, or major
 bump = "patch"
 # Short description of this release (required)
@@ -6,3 +8,7 @@ description = "Fix OAuth detection to use stdin rate_limits"
 context = "v0.12.1 checked CLAUDE_CODE_OAUTH_TOKEN env var, but Claude Code doesn't pass it to statusline subprocesses. Now uses the presence of rate_limits in stdin instead, which is reliable and requires no external files or env vars."
 include = ["go"]
 exclude = []
+candidate_sha = "049721db69e6f4dc994c55fdcac91ef37637d40c"
+
+[tree_hashes]
+"." = "d17ea12c7323cd64a5423c72c55e6373844c1758"

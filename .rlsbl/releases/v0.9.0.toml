@@ -1,0 +1,21 @@
+# Materialized by `rlsbl release backfill`: this version shipped before
+# rlsbl archived a release file per version, so no archive existed.
+# Every reconstructed value names its source on the field below it. A
+# description is recovered from the first source that yields one: an
+# operator-reviewed --overrides file, then the version's GitHub Release
+# body, then its CHANGELOG.md section, then the commit subjects in its tag
+# range, and otherwise a placeholder naming the recovery obligation. bump
+# is derived by version arithmetic against the predecessor, and include
+# reflects the targets detected at backfill time (the historical target set
+# is not recoverable).
+# This archive's description came from: github-release:v0.9.0.
+# strictspec document version gate (do not remove)
+format_version = 1
+bump = "minor"
+include = ["go"]
+exclude = []
+description = "Profile discovery merges claudewheel profiles: when claudewheel's config is present (`~/.claudewheel/` or `~/.claudelauncher/`), its profile list is merged with the local scan and any explicit config entries, deduped by resolved path"
+candidate_sha = "707ac110df78d1bdf1489e78b57ae68373d41984"
+
+[tree_hashes]
+"." = "e875cc48ad9a838ad9f19a7a8d32243b9678e83b"

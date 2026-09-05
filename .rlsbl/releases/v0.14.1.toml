@@ -27,3 +27,7 @@ no user-facing code changes, hence bump = "infra".
 # blog = false
 include = ["go"]
 exclude = []
+candidate_sha = "a550904d682fcc0b4725adf64670b672c43cd134"
+
+[tree_hashes]
+"." = "7d4ae87c7db22592564cfa7e7b9cd68d4f441fa9"

@@ -1,0 +1,21 @@
+# Materialized by `rlsbl release backfill`: this version shipped before
+# rlsbl archived a release file per version, so no archive existed.
+# Every reconstructed value names its source on the field below it. A
+# description is recovered from the first source that yields one: an
+# operator-reviewed --overrides file, then the version's GitHub Release
+# body, then its CHANGELOG.md section, then the commit subjects in its tag
+# range, and otherwise a placeholder naming the recovery obligation. bump
+# is derived by version arithmetic against the predecessor, and include
+# reflects the targets detected at backfill time (the historical target set
+# is not recoverable).
+# This archive's description came from: commit-subjects:e5649b11..9a3f350e.
+# strictspec document version gate (do not remove)
+format_version = 1
+bump = "minor"
+include = ["go"]
+exclude = []
+description = "Reconstructed from this version's commit subjects: Bump version to 0.4.0; Default progress bar orientation to vertical; Fix usage API endpoint: api.anthropic.com moved to platform.claude.com; Add credential mtime detection for mid-session recovery; Fix stale file credentials shadowing fresh Keychain tokens. (and later commits)"
+candidate_sha = "9a3f350e1e45db0a170f8c7b77e69e43ba3d3b69"
+
+[tree_hashes]
+"." = "a766a0e9553f34c8be0868c5bee12a3cc0df8c1a"

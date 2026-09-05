@@ -1,0 +1,21 @@
+# Materialized by `rlsbl release backfill`: this version shipped before
+# rlsbl archived a release file per version, so no archive existed.
+# Every reconstructed value names its source on the field below it. A
+# description is recovered from the first source that yields one: an
+# operator-reviewed --overrides file, then the version's GitHub Release
+# body, then its CHANGELOG.md section, then the commit subjects in its tag
+# range, and otherwise a placeholder naming the recovery obligation. bump
+# is derived by version arithmetic against the predecessor, and include
+# reflects the targets detected at backfill time (the historical target set
+# is not recoverable).
+# This archive's description came from: github-release:v0.8.0.
+# strictspec document version gate (do not remove)
+format_version = 1
+bump = "minor"
+include = ["go"]
+exclude = []
+description = "Profile dashboard: `howmuchleft profile list` shows all Claude profiles with usage bars side-by-side; `--live` mode refreshes every 30s; discovers profiles from config or `~/.claude-*` dirs"
+candidate_sha = "917b086ae0df60e77fda44fa0364c9ef31f85c6b"
+
+[tree_hashes]
+"." = "96549d2ef4bc28c7491580bcc2ee61ae389e47d9"

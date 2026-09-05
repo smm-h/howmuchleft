@@ -1,0 +1,21 @@
+# Materialized by `rlsbl release backfill`: this version shipped before
+# rlsbl archived a release file per version, so no archive existed.
+# Every reconstructed value names its source on the field below it. A
+# description is recovered from the first source that yields one: an
+# operator-reviewed --overrides file, then the version's GitHub Release
+# body, then its CHANGELOG.md section, then the commit subjects in its tag
+# range, and otherwise a placeholder naming the recovery obligation. bump
+# is derived by version arithmetic against the predecessor, and include
+# reflects the targets detected at backfill time (the historical target set
+# is not recoverable).
+# This archive's description came from: github-release:v0.6.0.
+# strictspec document version gate (do not remove)
+format_version = 1
+bump = "minor"
+include = ["go"]
+exclude = []
+description = "Fix progressBarOrientation ignoring \"horizontal\" by @alimpfard in https://github.com/smm-h/howmuchleft/pull/1"
+candidate_sha = "d9a00992600059a91dcea1cd581e4d7f8308ee11"
+
+[tree_hashes]
+"." = "4913a7cdfd75a2f4ee787ea294c7c6ee96f763e8"
