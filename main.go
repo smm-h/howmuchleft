@@ -7,17 +7,20 @@ import (
 	"github.com/smm-h/howmuchleft/internal/cli"
 )
 
-var version string
+// Version is set by ldflags at build time: -X main.Version=x.y.z
+// The name must stay exported and spelled this way: .goreleaser.yml injects
+// main.Version, and the linker silently does nothing when the symbol is absent.
+var Version string
 
 func main() {
-	if version == "" {
+	if Version == "" {
 		if info, ok := debug.ReadBuildInfo(); ok && info.Main.Version != "" {
-			version = info.Main.Version
+			Version = info.Main.Version
 		} else {
-			version = "dev"
+			Version = "dev"
 		}
 	}
-	cli.SetVersion(version)
+	cli.SetVersion(Version)
 
 	// If stdin is piped and no subcommand args, run statusline directly.
 	if len(os.Args) == 1 {

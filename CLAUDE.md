@@ -88,7 +88,7 @@ go build -o howmuchleft .
 echo '{"model":"claude-sonnet-4-20250514","context_window":200000}' | ./howmuchleft
 ```
 
-The version is injected via `-ldflags "-X main.version=..."` at build time. Without ldflags, it falls back to `debug.ReadBuildInfo()` or `"dev"`.
+The version is injected via `-ldflags "-X main.Version=..."` at build time. Without ldflags, it falls back to `debug.ReadBuildInfo()` or `"dev"`. The symbol name must match `.goreleaser.yml` exactly -- the linker silently ignores an `-X` naming a symbol that does not exist.
 
 ## Patterns and conventions
 
