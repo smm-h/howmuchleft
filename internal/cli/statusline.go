@@ -19,9 +19,9 @@ import (
 
 // Time window durations in milliseconds.
 const (
-	fiveHourMs      = 5 * 60 * 60 * 1000
-	sevenDayMs      = 7 * 24 * 60 * 60 * 1000
-	fableWeeklyMs   = sevenDayMs // seven_day_overage_included is assumed to be a 7-day window
+	fiveHourMs    = 5 * 60 * 60 * 1000
+	sevenDayMs    = 7 * 24 * 60 * 60 * 1000
+	fableWeeklyMs = sevenDayMs // seven_day_overage_included is assumed to be a 7-day window
 )
 
 // stdinData represents the JSON structure piped from Claude Code.
@@ -171,9 +171,6 @@ func usageFromStdinRateLimits(rateLimits map[string]interface{}) *cache.UsageRes
 
 	return result
 }
-
-
-
 
 // runStatusline is the main statusline pipeline.
 func runStatusline() error {

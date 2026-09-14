@@ -30,15 +30,15 @@ const (
 
 // WaveState holds the computed wave values for a single frame.
 type WaveState struct {
-	Context              float64
-	FiveHour             float64
-	FiveHourResetIn      int64
-	FiveHourTimePercent  float64
-	Weekly               float64
-	WeeklyResetIn        int64
-	WeeklyTimePercent    float64
-	ExtraUsage           float64
-	ExtraUsageEnabled    bool
+	Context                float64
+	FiveHour               float64
+	FiveHourResetIn        int64
+	FiveHourTimePercent    float64
+	Weekly                 float64
+	WeeklyResetIn          int64
+	WeeklyTimePercent      float64
+	ExtraUsage             float64
+	ExtraUsageEnabled      bool
 	FableWeekly            float64
 	FableWeeklyResetIn     int64
 	FableWeeklyTimePercent float64
@@ -283,5 +283,3 @@ func splitLines(s string) []string {
 	}
 	return result
 }
-
-

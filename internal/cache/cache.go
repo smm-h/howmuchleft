@@ -19,10 +19,10 @@ import (
 
 // Cache TTL constants.
 const (
-	CacheTTL        = 60 * time.Second
-	ErrorCacheTTL   = 60 * time.Second
+	CacheTTL         = 60 * time.Second
+	ErrorCacheTTL    = 60 * time.Second
 	MaxErrorCacheTTL = 5 * time.Minute
-	CombinedTimeout = 7 * time.Second
+	CombinedTimeout  = 7 * time.Second
 )
 
 // ErrAuth is returned when the usage API responds with 401 or 403.
@@ -54,14 +54,14 @@ type ExtraUsage struct {
 
 // CacheData is persisted to .statusline-cache.json.
 type CacheData struct {
-	Status           string        `json:"status"`           // "ok" or "error"
-	Ts               int64         `json:"timestamp"`        // unix ms when cached
-	ErrorCount       int           `json:"consecutiveErrors"`
-	FiveHour         *CachedWindow `json:"fiveHour"`
-	Weekly           *CachedWindow `json:"weekly"`
-	FableWeekly      *CachedWindow `json:"fableWeekly"`
-	Extra            *CachedExtra  `json:"extraUsage"`
-	LastSuccessTs    *int64        `json:"lastSuccessTs"`
+	Status        string        `json:"status"`    // "ok" or "error"
+	Ts            int64         `json:"timestamp"` // unix ms when cached
+	ErrorCount    int           `json:"consecutiveErrors"`
+	FiveHour      *CachedWindow `json:"fiveHour"`
+	Weekly        *CachedWindow `json:"weekly"`
+	FableWeekly   *CachedWindow `json:"fableWeekly"`
+	Extra         *CachedExtra  `json:"extraUsage"`
+	LastSuccessTs *int64        `json:"lastSuccessTs"`
 }
 
 // CachedWindow stores a usage window in the cache.
@@ -537,7 +537,7 @@ func WriteUsageFromStdin(claudeDir string, rateLimits map[string]interface{}) er
 			entry.Weekly = cw
 		case "seven_day_overage_included":
 			entry.FableWeekly = cw
-		// Unknown keys are silently skipped
+			// Unknown keys are silently skipped
 		}
 	}
 

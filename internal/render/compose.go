@@ -239,26 +239,26 @@ type TimeBarInfo struct {
 
 // RenderData contains all data needed to render the 3-line statusline output.
 type RenderData struct {
-	Context      float64
-	Model        string
-	Tier         string
-	Elapsed      *int64 // milliseconds, nil if unknown
-	Profile      string
-	ProfileColor string
-	GhUser       string
-	FiveHour     UsageData
-	Weekly       UsageData
-	FableWeekly  UsageData
-	ExtraUsage   *ExtraUsageData
-	Stale        bool
-	LastSuccessTs int64
-	Git          GitInfo
-	LineChanges  LineChangeInfo
-	Cwd          string
+	Context                float64
+	Model                  string
+	Tier                   string
+	Elapsed                *int64 // milliseconds, nil if unknown
+	Profile                string
+	ProfileColor           string
+	GhUser                 string
+	FiveHour               UsageData
+	Weekly                 UsageData
+	FableWeekly            UsageData
+	ExtraUsage             *ExtraUsageData
+	Stale                  bool
+	LastSuccessTs          int64
+	Git                    GitInfo
+	LineChanges            LineChangeInfo
+	Cwd                    string
 	FiveHourTimePercent    *float64
 	WeeklyTimePercent      *float64
 	FableWeeklyTimePercent *float64
-	CcVersion    string
+	CcVersion              string
 }
 
 // RenderLines composes the 3-line statusline output from RenderData.

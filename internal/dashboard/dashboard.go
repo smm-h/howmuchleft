@@ -394,5 +394,3 @@ func formatResetTime(window *cache.WindowResult) string {
 	}
 	return ""
 }
-
-

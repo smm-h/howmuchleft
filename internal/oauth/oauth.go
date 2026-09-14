@@ -24,9 +24,9 @@ const OAuthClientID = "9d1c250a-e61b-44d9-88ed-5944d1962f5e"
 
 // tierNames maps rate limit tier identifiers to display names.
 var tierNames = map[string]string{
-	"default_claude_pro":        "Pro",
-	"default_claude_pro_max_5x": "Max 5x",
-	"default_claude_max_5x":     "Max 5x",
+	"default_claude_pro":         "Pro",
+	"default_claude_pro_max_5x":  "Max 5x",
+	"default_claude_max_5x":      "Max 5x",
 	"default_claude_pro_max_20x": "Max 20x",
 	"default_claude_max_20x":     "Max 20x",
 }
@@ -51,7 +51,7 @@ type OAuthData struct {
 // CredFile represents the full .credentials.json structure.
 // RawFields preserves unknown top-level keys for round-trip fidelity.
 type CredFile struct {
-	ClaudeAiOauth *OAuthData             `json:"claudeAiOauth"`
+	ClaudeAiOauth *OAuthData                 `json:"claudeAiOauth"`
 	RawFields     map[string]json.RawMessage `json:"-"`
 }
 
