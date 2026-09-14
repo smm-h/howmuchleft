@@ -1,3 +1,5 @@
+// Package dashboard discovers the registered Claude Code profiles and renders
+// their usage bars side by side, once or refreshing in place.
 package dashboard
 
 import (

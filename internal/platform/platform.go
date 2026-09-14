@@ -1,3 +1,7 @@
+// Package platform answers the host-specific questions the statusline needs:
+// where the Claude Code directory is, which profile and Claude Code version are
+// in use, how long the session has been running, whether the desktop is in dark
+// mode, and which GitHub user is signed in.
 package platform
 
 import (

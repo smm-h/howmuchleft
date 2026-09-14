@@ -1,12 +1,12 @@
 # HowMuchLeft
 
-Pixel-perfect progress bars for your Claude Code statusline.
+howmuchleft is a Claude Code statusline that shows context window, 5-hour and weekly limit usage as three progress bars with sub-cell precision, shading each from green to red as it fills. It is for Pro, Max and Team subscribers who want to see how much of every limit is left without leaving the terminal. Usage comes from the credentials Claude Code has already stored, so there is no API key to supply and no separate login.
 
 ![Dark mode demo](./assets/demo-dark.gif)
 
 ![Light mode demo](./assets/demo-light.gif)
 
-Three progress bars with sub-cell precision that shift from green to red as you approach your limits:
+What each bar tracks:
 
 | Bar | What it tracks |
 |---|---|

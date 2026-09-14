@@ -1,3 +1,6 @@
+// Package render composes the three-line ANSI statusline: horizontal and
+// vertical progress bars with fractional block characters, the green-to-red
+// gradients that fill them, and the labels laid out around them.
 package render
 
 import (

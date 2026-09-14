@@ -1,3 +1,6 @@
+// Package config loads ~/.config/howmuchleft/config.toml, validates and clamps
+// its values, and supplies the defaults every other package builds on. It also
+// converts a legacy JSON config to TOML.
 package config
 
 import (

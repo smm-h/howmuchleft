@@ -1,10 +1,10 @@
 ---
-description: "howmuchleft is a Claude Code statusline tool that displays pixel-perfect progress bars tracking context window usage, rate limits, and weekly spend."
+description: "howmuchleft is a Claude Code statusline that shows context window, 5-hour and weekly limit usage as three progress bars with sub-cell precision, shading each from green to red as it fills."
 ---
 
 # howmuchleft
 
-howmuchleft is a Claude Code statusline tool that displays pixel-perfect progress bars for context window usage, 5-hour rolling rate limits, and weekly spending limits with gradient colors.
+howmuchleft is a Claude Code statusline that shows context window, 5-hour and weekly limit usage as three progress bars with sub-cell precision, shading each from green to red as it fills.
 
 ## API Reference
 

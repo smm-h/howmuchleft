@@ -1,3 +1,6 @@
+// Package cache fetches the Claude usage windows from the platform API and
+// stores them in a file cache with a TTL, error backoff and stale-data
+// fallback, so a statusline render costs at most one network call per minute.
 package cache
 
 import (

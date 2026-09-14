@@ -1,3 +1,6 @@
+// Package oauth reads the credentials Claude Code already stores, refreshes an
+// expired access token, and reports whether the session is an OAuth
+// subscription and which tier it is on.
 package oauth
 
 import (

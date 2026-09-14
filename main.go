@@ -1,3 +1,12 @@
+// Command howmuchleft is a Claude Code statusline that shows context window,
+// 5-hour and weekly limit usage as three progress bars with sub-cell precision,
+// shading each from green to red as it fills.
+//
+// Claude Code pipes a JSON status object on stdin on every render; the binary
+// writes three lines of ANSI text to stdout and exits. Invoked without piped
+// stdin it behaves as an ordinary CLI, with commands for installing the
+// statusline into a Claude Code profile, listing profiles, running the demo,
+// previewing colors, inspecting the config and printing the version.
 package main
 
 import (

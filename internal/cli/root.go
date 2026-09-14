@@ -1,3 +1,6 @@
+// Package cli builds howmuchleft's strictcli command tree and runs the
+// statusline itself: it parses the status object Claude Code pipes on stdin,
+// gathers usage, git and profile data, and hands the result to internal/render.
 package cli
 
 import (

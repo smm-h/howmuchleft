@@ -1,3 +1,5 @@
+// Package demo animates the statusline from synthetic sawtooth usage waves, so
+// the bars and their gradient can be seen without waiting for real usage.
 package demo
 
 import (

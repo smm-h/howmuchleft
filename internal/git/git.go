@@ -1,3 +1,6 @@
+// Package git reports the current branch and working-tree diff statistics by
+// calling git with --no-optional-locks, so it never blocks a concurrent git
+// operation.
 package git
 
 import (
