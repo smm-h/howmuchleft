@@ -2,6 +2,14 @@
 
 # Changelog
 
+## 0.15.1
+
+Documentation frontmatter converted to TOML for the current selfdoc; no user-facing change.
+
+### Infrastructure
+
+- Documentation frontmatter converted to TOML for the current selfdoc; no user-facing change.
+
 ## 0.15.0
 
 Current strictcli, go-toml-edit and stricttest dependencies with a fuller top-level help line, in-repo config default seeding, version injection fixed, and the project describes itself consistently with its docs at the unified site.

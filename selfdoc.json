@@ -1,5 +1,5 @@
 {
-  "version": "0.15.0",
+  "version": "0.15.1",
   "description": "a Claude Code statusline that shows context window, 5-hour and weekly limit usage as three progress bars with sub-cell precision, shading each from green to red as it fills",
   "repo": "https://github.com/smm-h/howmuchleft",
   "base_url": "https://smmh.dev/howmuchleft",
@@ -13,7 +13,7 @@
   "output": "docs/_build/",
   "versions": [
     {
-      "version": "0.15.0"
+      "version": "0.15.1"
     }
   ],
   "locales": [
