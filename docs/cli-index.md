@@ -11,16 +11,16 @@ order: 91
 
 # howmuchleft CLI Reference
 
-Claude Code statusline tool
+a Claude Code statusline that shows context window, 5-hour and weekly limit usage as three progress bars with sub-cell precision, shading each from green to red as it fills
 
 Version: :-: var key="project.version"
 
 ## Commands
 
+- [version](../cli-version/) -- Print the version
+- [demo](../cli-demo/) -- Run demo animation
 - [colors](../cli-colors/) -- Preview gradient colors for your terminal
 - [config](../cli-config/) -- Show config file and current settings
-- [demo](../cli-demo/) -- Run demo animation
-- [version](../cli-version/) -- Print the version
 
 ## Command Groups
 

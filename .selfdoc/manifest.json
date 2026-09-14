@@ -3,9 +3,9 @@
   "name": "howmuchleft",
   "slug": "howmuchleft",
   "version": "0.14.1",
-  "description": "",
+  "description": "a Claude Code statusline that shows context window, 5-hour and weekly limit usage as three progress bars with sub-cell precision, shading each from green to red as it fills",
   "language": "go",
-  "base_url": "https://howmuchleft.smmh.dev",
+  "base_url": "https://smmh.dev/howmuchleft",
   "pages": [
     {
       "path": "cli-colors.md",
@@ -97,16 +97,6 @@
         },
         {
           "level": 2,
-          "text": "profile list",
-          "anchor": "profile-list"
-        },
-        {
-          "level": 3,
-          "text": "Flags",
-          "anchor": "flags"
-        },
-        {
-          "level": 2,
           "text": "profile uninstall",
           "anchor": "profile-uninstall"
         },
@@ -114,6 +104,16 @@
           "level": 3,
           "text": "Arguments",
           "anchor": "arguments-1"
+        },
+        {
+          "level": 2,
+          "text": "profile list",
+          "anchor": "profile-list"
+        },
+        {
+          "level": 3,
+          "text": "Flags",
+          "anchor": "flags"
         }
       ]
     },
@@ -153,8 +153,13 @@
         },
         {
           "level": 2,
-          "text": ".",
+          "text": "`.`",
           "anchor": ""
+        },
+        {
+          "level": 3,
+          "text": "`Version`",
+          "anchor": "version"
         }
       ]
     },
@@ -175,8 +180,13 @@
         },
         {
           "level": 2,
-          "text": ".",
+          "text": "`.`",
           "anchor": ""
+        },
+        {
+          "level": 3,
+          "text": "`Version`",
+          "anchor": "version"
         }
       ]
     },
@@ -192,117 +202,117 @@
         },
         {
           "level": 2,
-          "text": "internal/cache",
+          "text": "`internal/cache`",
           "anchor": "internalcache"
         },
         {
           "level": 3,
-          "text": "CacheTTL",
+          "text": "`CacheTTL`",
           "anchor": "cachettl"
         },
         {
           "level": 3,
-          "text": "ErrorCacheTTL",
+          "text": "`ErrorCacheTTL`",
           "anchor": "errorcachettl"
         },
         {
           "level": 3,
-          "text": "MaxErrorCacheTTL",
+          "text": "`MaxErrorCacheTTL`",
           "anchor": "maxerrorcachettl"
         },
         {
           "level": 3,
-          "text": "CombinedTimeout",
+          "text": "`CombinedTimeout`",
           "anchor": "combinedtimeout"
         },
         {
           "level": 3,
-          "text": "ErrAuth",
+          "text": "`ErrAuth`",
           "anchor": "errauth"
         },
         {
           "level": 3,
-          "text": "NowMs",
+          "text": "`NowMs`",
           "anchor": "nowms"
         },
         {
           "level": 3,
-          "text": "UsageResponse",
+          "text": "`UsageResponse`",
           "anchor": "usageresponse"
         },
         {
           "level": 3,
-          "text": "WindowUsage",
+          "text": "`WindowUsage`",
           "anchor": "windowusage"
         },
         {
           "level": 3,
-          "text": "ExtraUsage",
+          "text": "`ExtraUsage`",
           "anchor": "extrausage"
         },
         {
           "level": 3,
-          "text": "CacheData",
+          "text": "`CacheData`",
           "anchor": "cachedata"
         },
         {
           "level": 3,
-          "text": "CachedWindow",
+          "text": "`CachedWindow`",
           "anchor": "cachedwindow"
         },
         {
           "level": 3,
-          "text": "CachedExtra",
+          "text": "`CachedExtra`",
           "anchor": "cachedextra"
         },
         {
           "level": 3,
-          "text": "UsageResult",
+          "text": "`UsageResult`",
           "anchor": "usageresult"
         },
         {
           "level": 3,
-          "text": "WindowResult",
+          "text": "`WindowResult`",
           "anchor": "windowresult"
         },
         {
           "level": 3,
-          "text": "ExtraResult",
+          "text": "`ExtraResult`",
           "anchor": "extraresult"
         },
         {
           "level": 3,
-          "text": "FetchUsageFromAPI",
+          "text": "`FetchUsageFromAPI`",
           "anchor": "fetchusagefromapi"
         },
         {
           "level": 3,
-          "text": "ReadCache",
+          "text": "`ReadCache`",
           "anchor": "readcache"
         },
         {
           "level": 3,
-          "text": "WriteCache",
+          "text": "`WriteCache`",
           "anchor": "writecache"
         },
         {
           "level": 3,
-          "text": "IsCacheValid",
+          "text": "`IsCacheValid`",
           "anchor": "iscachevalid"
         },
         {
           "level": 3,
-          "text": "GetUsageData",
+          "text": "`GetUsageData`",
           "anchor": "getusagedata"
         },
         {
           "level": 3,
-          "text": "ParseWindowFromMap",
+          "text": "`ParseWindowFromMap`",
           "anchor": "parsewindowfrommap"
         },
         {
           "level": 3,
-          "text": "WriteUsageFromStdin",
+          "text": "`WriteUsageFromStdin`",
           "anchor": "writeusagefromstdin"
         }
       ]
@@ -319,22 +329,22 @@
         },
         {
           "level": 2,
-          "text": "internal/cli",
+          "text": "`internal/cli`",
           "anchor": "internalcli"
         },
         {
           "level": 3,
-          "text": "SetVersion",
+          "text": "`SetVersion`",
           "anchor": "setversion"
         },
         {
           "level": 3,
-          "text": "RunStatuslineDirect",
+          "text": "`RunStatuslineDirect`",
           "anchor": "runstatuslinedirect"
         },
         {
           "level": 3,
-          "text": "NewApp",
+          "text": "`NewApp`",
           "anchor": "newapp"
         }
       ]
@@ -351,77 +361,77 @@
         },
         {
           "level": 2,
-          "text": "internal/config",
+          "text": "`internal/config`",
           "anchor": "internalconfig"
         },
         {
           "level": 3,
-          "text": "ConfigDir",
+          "text": "`ConfigDir`",
           "anchor": "configdir"
         },
         {
           "level": 3,
-          "text": "ConfigFile",
+          "text": "`ConfigFile`",
           "anchor": "configfile"
         },
         {
           "level": 3,
-          "text": "Config",
+          "text": "`Config`",
           "anchor": "config"
         },
         {
           "level": 3,
-          "text": "ColorEntry",
+          "text": "`ColorEntry`",
           "anchor": "colorentry"
         },
         {
           "level": 3,
-          "text": "LinesConfig",
+          "text": "`LinesConfig`",
           "anchor": "linesconfig"
         },
         {
           "level": 3,
-          "text": "ConfigPath",
+          "text": "`ConfigPath`",
           "anchor": "configpath"
         },
         {
           "level": 3,
-          "text": "DefaultLines",
+          "text": "`DefaultLines`",
           "anchor": "defaultlines"
         },
         {
           "level": 3,
-          "text": "Default",
+          "text": "`Default`",
           "anchor": "default"
         },
         {
           "level": 3,
-          "text": "Load",
+          "text": "`Load`",
           "anchor": "load"
         },
         {
           "level": 3,
-          "text": "Get",
+          "text": "`Get`",
           "anchor": "get"
         },
         {
           "level": 3,
-          "text": "ResetCache",
+          "text": "`ResetCache`",
           "anchor": "resetcache"
         },
         {
           "level": 3,
-          "text": "OldConfigPath",
+          "text": "`OldConfigPath`",
           "anchor": "oldconfigpath"
         },
         {
           "level": 3,
-          "text": "ConvertJSONToTOML",
+          "text": "`ConvertJSONToTOML`",
           "anchor": "convertjsontotoml"
         },
         {
           "level": 3,
-          "text": "StripJSONComments",
+          "text": "`StripJSONComments`",
           "anchor": "stripjsoncomments"
         }
       ]
@@ -438,42 +448,42 @@
         },
         {
           "level": 2,
-          "text": "internal/dashboard",
+          "text": "`internal/dashboard`",
           "anchor": "internaldashboard"
         },
         {
           "level": 3,
-          "text": "ProfileResult",
+          "text": "`ProfileResult`",
           "anchor": "profileresult"
         },
         {
           "level": 3,
-          "text": "DiscoverProfiles",
+          "text": "`DiscoverProfiles`",
           "anchor": "discoverprofiles"
         },
         {
           "level": 3,
-          "text": "FetchAndRender",
+          "text": "`FetchAndRender`",
           "anchor": "fetchandrender"
         },
         {
           "level": 3,
-          "text": "RenderDashboard",
+          "text": "`RenderDashboard`",
           "anchor": "renderdashboard"
         },
         {
           "level": 3,
-          "text": "RunLive",
+          "text": "`RunLive`",
           "anchor": "runlive"
         },
         {
           "level": 3,
-          "text": "RunOnce",
+          "text": "`RunOnce`",
           "anchor": "runonce"
         },
         {
           "level": 3,
-          "text": "Run",
+          "text": "`Run`",
           "anchor": "run"
         }
       ]
@@ -490,22 +500,22 @@
         },
         {
           "level": 2,
-          "text": "internal/demo",
+          "text": "`internal/demo`",
           "anchor": "internaldemo"
         },
         {
           "level": 3,
-          "text": "WaveState",
+          "text": "`WaveState`",
           "anchor": "wavestate"
         },
         {
           "level": 3,
-          "text": "ComputeWaves",
+          "text": "`ComputeWaves`",
           "anchor": "computewaves"
         },
         {
           "level": 3,
-          "text": "Run",
+          "text": "`Run`",
           "anchor": "run"
         }
       ]
@@ -522,17 +532,17 @@
         },
         {
           "level": 2,
-          "text": "internal/git",
+          "text": "`internal/git`",
           "anchor": "internalgit"
         },
         {
           "level": 3,
-          "text": "Info",
+          "text": "`Info`",
           "anchor": "info"
         },
         {
           "level": 3,
-          "text": "GetInfo",
+          "text": "`GetInfo`",
           "anchor": "getinfo"
         }
       ]
@@ -549,17 +559,17 @@
         },
         {
           "level": 2,
-          "text": "internal/migrate",
+          "text": "`internal/migrate`",
           "anchor": "internalmigrate"
         },
         {
           "level": 3,
-          "text": "Result",
+          "text": "`Result`",
           "anchor": "result"
         },
         {
           "level": 3,
-          "text": "EnsureDefaults",
+          "text": "`EnsureDefaults`",
           "anchor": "ensuredefaults"
         }
       ]
@@ -576,77 +586,77 @@
         },
         {
           "level": 2,
-          "text": "internal/oauth",
+          "text": "`internal/oauth`",
           "anchor": "internaloauth"
         },
         {
           "level": 3,
-          "text": "OAuthClientID",
+          "text": "`OAuthClientID`",
           "anchor": "oauthclientid"
         },
         {
           "level": 3,
-          "text": "Credentials",
+          "text": "`Credentials`",
           "anchor": "credentials"
         },
         {
           "level": 3,
-          "text": "OAuthData",
+          "text": "`OAuthData`",
           "anchor": "oauthdata"
         },
         {
           "level": 3,
-          "text": "CredFile",
+          "text": "`CredFile`",
           "anchor": "credfile"
         },
         {
           "level": 3,
-          "text": "AuthInfo",
+          "text": "`AuthInfo`",
           "anchor": "authinfo"
         },
         {
           "level": 3,
-          "text": "ReadCredentialsFile",
+          "text": "`ReadCredentialsFile`",
           "anchor": "readcredentialsfile"
         },
         {
           "level": 3,
-          "text": "ReadKeychainCredentials",
+          "text": "`ReadKeychainCredentials`",
           "anchor": "readkeychaincredentials"
         },
         {
           "level": 3,
-          "text": "GetAuthInfo",
+          "text": "`GetAuthInfo`",
           "anchor": "getauthinfo"
         },
         {
           "level": 3,
-          "text": "ResetCredentialsCache",
+          "text": "`ResetCredentialsCache`",
           "anchor": "resetcredentialscache"
         },
         {
           "level": 3,
-          "text": "RefreshToken",
+          "text": "`RefreshToken`",
           "anchor": "refreshtoken"
         },
         {
           "level": 3,
-          "text": "GetValidToken",
+          "text": "`GetValidToken`",
           "anchor": "getvalidtoken"
         },
         {
           "level": 3,
-          "text": "WriteFileAtomic",
+          "text": "`WriteFileAtomic`",
           "anchor": "writefileatomic"
         },
         {
           "level": 3,
-          "text": "CredFile.UnmarshalJSON",
+          "text": "`CredFile.UnmarshalJSON`",
           "anchor": "credfileunmarshaljson"
         },
         {
           "level": 3,
-          "text": "CredFile.MarshalJSON",
+          "text": "`CredFile.MarshalJSON`",
           "anchor": "credfilemarshaljson"
         }
       ]
@@ -663,42 +673,42 @@
         },
         {
           "level": 2,
-          "text": "internal/platform",
+          "text": "`internal/platform`",
           "anchor": "internalplatform"
         },
         {
           "level": 3,
-          "text": "GetActiveGhUser",
+          "text": "`GetActiveGhUser`",
           "anchor": "getactiveghuser"
         },
         {
           "level": 3,
-          "text": "ResetGhUserCache",
+          "text": "`ResetGhUserCache`",
           "anchor": "resetghusercache"
         },
         {
           "level": 3,
-          "text": "GhTokenHash",
+          "text": "`GhTokenHash`",
           "anchor": "ghtokenhash"
         },
         {
           "level": 3,
-          "text": "GetSessionElapsed",
+          "text": "`GetSessionElapsed`",
           "anchor": "getsessionelapsed"
         },
         {
           "level": 3,
-          "text": "GetClaudeDir",
+          "text": "`GetClaudeDir`",
           "anchor": "getclaudedir"
         },
         {
           "level": 3,
-          "text": "GetProfileName",
+          "text": "`GetProfileName`",
           "anchor": "getprofilename"
         },
         {
           "level": 3,
-          "text": "GetCCVersion",
+          "text": "`GetCCVersion`",
           "anchor": "getccversion"
         }
       ]
@@ -715,347 +725,348 @@
         },
         {
           "level": 2,
-          "text": "internal/render",
+          "text": "`internal/render`",
           "anchor": "internalrender"
         },
         {
           "level": 3,
-          "text": "FullBlock",
+          "text": "`FullBlock`",
           "anchor": "fullblock"
         },
         {
           "level": 3,
-          "text": "Reset",
+          "text": "`Reset`",
           "anchor": "reset"
         },
         {
           "level": 3,
-          "text": "Bold",
+          "text": "`Bold`",
           "anchor": "bold"
         },
         {
           "level": 3,
-          "text": "Dim",
+          "text": "`Dim`",
           "anchor": "dim"
         },
         {
           "level": 3,
-          "text": "Green",
+          "text": "`Green`",
           "anchor": "green"
         },
         {
           "level": 3,
-          "text": "Yellow",
+          "text": "`Yellow`",
           "anchor": "yellow"
         },
         {
           "level": 3,
-          "text": "Orange",
+          "text": "`Orange`",
           "anchor": "orange"
         },
         {
           "level": 3,
-          "text": "Red",
+          "text": "`Red`",
           "anchor": "red"
         },
         {
           "level": 3,
-          "text": "Cyan",
+          "text": "`Cyan`",
           "anchor": "cyan"
         },
         {
           "level": 3,
-          "text": "Magenta",
+          "text": "`Magenta`",
           "anchor": "magenta"
         },
         {
           "level": 3,
-          "text": "White",
+          "text": "`White`",
           "anchor": "white"
         },
         {
           "level": 3,
-          "text": "Gray",
+          "text": "`Gray`",
           "anchor": "gray"
         },
         {
           "level": 3,
-          "text": "HorizontalChars",
+          "text": "`HorizontalChars`",
           "anchor": "horizontalchars"
         },
         {
           "level": 3,
-          "text": "VerticalChars",
+          "text": "`VerticalChars`",
           "anchor": "verticalchars"
         },
         {
           "level": 3,
-          "text": "PartialBlocksBlocklist",
+          "text": "`PartialBlocksBlocklist`",
           "anchor": "partialblocksblocklist"
         },
         {
           "level": 3,
-          "text": "BuiltinColors",
+          "text": "`BuiltinColors`",
           "anchor": "builtincolors"
         },
         {
           "level": 3,
-          "text": "BarConfig",
+          "text": "`BarConfig`",
           "anchor": "barconfig"
         },
         {
           "level": 3,
-          "text": "GradientResult",
+          "text": "`GradientResult`",
           "anchor": "gradientresult"
         },
         {
           "level": 3,
-          "text": "BgValue",
+          "text": "`BgValue`",
           "anchor": "bgvalue"
         },
         {
           "level": 3,
-          "text": "UsageData",
+          "text": "`UsageData`",
           "anchor": "usagedata"
         },
         {
           "level": 3,
-          "text": "ExtraUsageData",
+          "text": "`ExtraUsageData`",
           "anchor": "extrausagedata"
         },
         {
           "level": 3,
-          "text": "GitInfo",
+          "text": "`GitInfo`",
           "anchor": "gitinfo"
         },
         {
           "level": 3,
-          "text": "LineChangeInfo",
+          "text": "`LineChangeInfo`",
           "anchor": "linechangeinfo"
         },
         {
           "level": 3,
-          "text": "BarColumn",
+          "text": "`BarColumn`",
           "anchor": "barcolumn"
         },
         {
           "level": 3,
-          "text": "TimeBarInfo",
+          "text": "`TimeBarInfo`",
           "anchor": "timebarinfo"
         },
         {
           "level": 3,
-          "text": "RenderData",
+          "text": "`RenderData`",
           "anchor": "renderdata"
         },
         {
           "level": 3,
-          "text": "GradientStop",
+          "text": "`GradientStop`",
           "anchor": "gradientstop"
         },
         {
           "level": 3,
-          "text": "ColorEntry",
+          "text": "`ColorEntry`",
           "anchor": "colorentry"
         },
         {
           "level": 3,
-          "text": "ShouldUsePartialBlocks",
+          "text": "`ShouldUsePartialBlocks`",
           "anchor": "shouldusepartialblocks"
         },
         {
           "level": 3,
-          "text": "GetGradientStop",
+          "text": "`GetGradientStop`",
           "anchor": "getgradientstop"
         },
         {
           "level": 3,
-          "text": "GetUrgencyColor",
+          "text": "`GetUrgencyColor`",
           "anchor": "geturgencycolor"
         },
         {
           "level": 3,
-          "text": "HorizontalBar",
+          "text": "`HorizontalBar`",
           "anchor": "horizontalbar"
         },
         {
           "level": 3,
-          "text": "VerticalBarCell",
+          "text": "`VerticalBarCell`",
           "anchor": "verticalbarcell"
         },
         {
           "level": 3,
-          "text": "TimeBarCell",
+          "text": "`TimeBarCell`",
           "anchor": "timebarcell"
         },
         {
           "level": 3,
-          "text": "IsTruecolorSupported",
+          "text": "`IsTruecolorSupported`",
           "anchor": "istruecolorsupported"
         },
         {
           "level": 3,
-          "text": "ResetTruecolorCache",
+          "text": "`ResetTruecolorCache`",
           "anchor": "resettruecolorcache"
         },
         {
           "level": 3,
-          "text": "ResetDarkModeCache",
+          "text": "`ResetDarkModeCache`",
           "anchor": "resetdarkmodecache"
         },
         {
           "level": 3,
-          "text": "IsDarkMode",
+          "text": "`IsDarkMode`",
           "anchor": "isdarkmode"
         },
         {
           "level": 3,
-          "text": "RgbTo256",
+          "text": "`RgbTo256`",
           "anchor": "rgbto256"
         },
         {
           "level": 3,
-          "text": "InterpolateRgb",
+          "text": "`InterpolateRgb`",
           "anchor": "interpolatergb"
         },
         {
           "level": 3,
-          "text": "FormatFg",
+          "text": "`FormatFg`",
           "anchor": "formatfg"
         },
         {
           "level": 3,
-          "text": "FormatBg",
+          "text": "`FormatBg`",
           "anchor": "formatbg"
         },
         {
           "level": 3,
-          "text": "NewBgRgb",
+          "text": "`NewBgRgb`",
           "anchor": "newbgrgb"
         },
         {
           "level": 3,
-          "text": "NewBgIndex",
+          "text": "`NewBgIndex`",
           "anchor": "newbgindex"
         },
         {
           "level": 3,
-          "text": "FormatBgFromValue",
+          "text": "`FormatBgFromValue`",
           "anchor": "formatbgfromvalue"
         },
         {
           "level": 3,
-          "text": "ShortenModelName",
+          "text": "`ShortenModelName`",
           "anchor": "shortenmodelname"
         },
         {
           "level": 3,
-          "text": "FormatPercent",
+          "text": "`FormatPercent`",
           "anchor": "formatpercent"
         },
         {
           "level": 3,
-          "text": "FormatExtraPercent",
+          "text": "`FormatExtraPercent`",
           "anchor": "formatextrapercent"
         },
         {
           "level": 3,
-          "text": "FormatTimeRemaining",
+          "text": "`FormatTimeRemaining`",
           "anchor": "formattimeremaining"
         },
         {
           "level": 3,
-          "text": "FormatAge",
+          "text": "`FormatAge`",
           "anchor": "formatage"
         },
         {
           "level": 3,
-          "text": "ShortenPath",
+          "text": "`ShortenPath`",
           "anchor": "shortenpath"
         },
         {
           "level": 3,
-          "text": "BuildLineText",
+          "text": "`BuildLineText`",
           "anchor": "buildlinetext"
         },
         {
           "level": 3,
-          "text": "WarmBgColors",
+          "text": "`WarmBgColors`",
           "anchor": "warmbgcolors"
         },
         {
           "level": 3,
-          "text": "ComputeTimeBarBg",
+          "text": "`ComputeTimeBarBg`",
           "anchor": "computetimebarbg"
         },
         {
           "level": 3,
-          "text": "ComputeTimePercent",
+          "text": "`ComputeTimePercent`",
           "anchor": "computetimepercent"
         },
         {
           "level": 3,
-          "text": "RenderLines",
+          "text": "`RenderLines`",
           "anchor": "renderlines"
         },
         {
           "level": 3,
-          "text": "ConfigColorToRenderColor",
+          "text": "`ConfigColorToRenderColor`",
           "anchor": "configcolortorendercolor"
         },
         {
           "level": 3,
-          "text": "ParseGradientStops",
+          "text": "`ParseGradientStops`",
           "anchor": "parsegradientstops"
         },
         {
           "level": 3,
-          "text": "ParseBgValue",
+          "text": "`ParseBgValue`",
           "anchor": "parsebgvalue"
         },
         {
           "level": 3,
-          "text": "BuildBarConfig",
+          "text": "`BuildBarConfig`",
           "anchor": "buildbarconfig"
         },
         {
           "level": 3,
-          "text": "NewRgbStop",
+          "text": "`NewRgbStop`",
           "anchor": "newrgbstop"
         },
         {
           "level": 3,
-          "text": "NewIndexStop",
+          "text": "`NewIndexStop`",
           "anchor": "newindexstop"
         },
         {
           "level": 3,
-          "text": "IsRgbStop",
+          "text": "`IsRgbStop`",
           "anchor": "isrgbstop"
         },
         {
           "level": 3,
-          "text": "FindColorMatch",
+          "text": "`FindColorMatch`",
           "anchor": "findcolormatch"
         },
         {
           "level": 3,
-          "text": "HashToHue",
+          "text": "`HashToHue`",
           "anchor": "hashtohue"
         },
         {
           "level": 3,
-          "text": "HueToAnsi",
+          "text": "`HueToAnsi`",
           "anchor": "huetoansi"
         },
         {
           "level": 3,
-          "text": "TestColors",
+          "text": "`TestColors`",
           "anchor": "testcolors"
         }
       ]
     }
   ],
   "posts": [],
-  "last_gen": "2026-08-12T03:44:12.893155+00:00"
+  "last_gen": "2026-09-14T15:08:36.809027+00:00",
+  "theme": "minimal"
 }

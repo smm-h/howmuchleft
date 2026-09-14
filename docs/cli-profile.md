@@ -19,21 +19,9 @@ Add howmuchleft as the statusLine in a Claude Code profile's settings.json, writ
 
 ### Arguments
 
-| Name | Required | Description |
-| --- | --- | --- |
-| `dir` | no | Claude Code profile directory to operate on; defaults to $CLAUDE_CONFIG_DIR when that is set, and to ~/.claude otherwise. A leading ~ is expanded to your home directory |
-
-## profile list
-
-Discover every registered Claude Code profile and render their token usage side by side in one dashboard, a row per profile. Prints a single snapshot and exits by default; with --live it redraws every 30 seconds until interrupted. Reports that none were found, and exits cleanly, when no profile has been registered yet
-
-**Effect:** mutating
-
-### Flags
-
-| Name | Short | Type | Default | Env | Description |
-| --- | --- | --- | --- | --- | --- |
-| `--live` |  | bool |  |  | Redraw the dashboard every 30 seconds until interrupted, instead of printing a single snapshot and exiting immediately |
+| Name | Type | Presence | Description |
+| --- | --- | --- | --- |
+| `dir` | str | optional | Claude Code profile directory to operate on; defaults to $CLAUDE_CONFIG_DIR when that is set, and to ~/.claude otherwise. A leading ~ is expanded to your home directory |
 
 ## profile uninstall
 
@@ -43,6 +31,18 @@ Remove howmuchleft's statusLine entry from a Claude Code profile's settings.json
 
 ### Arguments
 
-| Name | Required | Description |
-| --- | --- | --- |
-| `dir` | no | Claude Code profile directory to operate on; defaults to $CLAUDE_CONFIG_DIR when that is set, and to ~/.claude otherwise. A leading ~ is expanded to your home directory |
+| Name | Type | Presence | Description |
+| --- | --- | --- | --- |
+| `dir` | str | optional | Claude Code profile directory to operate on; defaults to $CLAUDE_CONFIG_DIR when that is set, and to ~/.claude otherwise. A leading ~ is expanded to your home directory |
+
+## profile list
+
+Discover every registered Claude Code profile and render their token usage side by side in one dashboard, a row per profile. Prints a single snapshot and exits by default; with --live it redraws every 30 seconds until interrupted. Reports that none were found, and exits cleanly, when no profile has been registered yet
+
+**Effect:** mutating
+
+### Flags
+
+| Name | Short | Type | Presence | Env | Description |
+| --- | --- | --- | --- | --- | --- |
+| `--live`, `--no-live` |  | bool | optional |  | Redraw the dashboard every 30 seconds until interrupted, instead of printing a single snapshot and exiting immediately |

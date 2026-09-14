@@ -16,6 +16,6 @@ Run demo animation
 
 ## Arguments
 
-| Name | Required | Description |
-| --- | --- | --- |
-| `duration_seconds` | no | Duration in seconds |
+| Name | Type | Presence | Description |
+| --- | --- | --- | --- |
+| `duration_seconds` | str | optional | Duration in seconds |
