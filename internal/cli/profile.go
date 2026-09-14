@@ -194,7 +194,7 @@ func registerProfile(claudeDir string) error {
 		return err
 	}
 
-	var doc *tomledit.DocumentNode
+	var doc *tomledit.Document
 	if len(data) > 0 {
 		doc, err = tomledit.Parse(data)
 		if err != nil {
@@ -278,21 +278,24 @@ func unregisterProfile(claudeDir string) error {
 }
 
 // getProfilesFromDoc extracts the profiles string array from a parsed TOML doc.
-func getProfilesFromDoc(doc *tomledit.DocumentNode) []string {
-	node := doc.Get("profiles")
-	if node == nil {
+func getProfilesFromDoc(doc *tomledit.Document) []string {
+	node, ok := doc.Lookup("profiles")
+	if !ok {
 		return nil
 	}
 
-	val := node.Value()
-	arr, ok := val.([]interface{})
+	arr, ok := node.(*tomledit.ArrayNode)
 	if !ok {
 		return nil
 	}
 
 	var result []string
-	for _, item := range arr {
-		if s, ok := item.(string); ok {
+	for _, elem := range arr.Elements() {
+		scalar, ok := elem.(tomledit.Scalar)
+		if !ok {
+			continue
+		}
+		if s, err := scalar.AsString(); err == nil {
 			result = append(result, s)
 		}
 	}

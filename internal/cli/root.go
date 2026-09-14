@@ -71,7 +71,7 @@ func RunStatuslineDirect() bool {
 // filesystem mutations, so no command here can honestly claim read_only.
 // classification_test.go pins the table.
 func NewApp() *strictcli.App {
-	app := strictcli.NewApp("howmuchleft", appVersion, "Claude Code statusline tool")
+	app := strictcli.NewApp("howmuchleft", appVersion, "a Claude Code statusline that shows context window, 5-hour and weekly limit usage as three progress bars with sub-cell precision, shading each from green to red as it fills")
 
 	// version
 	app.Command("version", "Print the version", func(ctx *strictcli.Context, kwargs map[string]interface{}) strictcli.Outcome {
@@ -96,7 +96,7 @@ func NewApp() *strictcli.App {
 		}
 		return strictcli.Exit(0)
 	}, strictcli.WithEffect(strictcli.EffectMutating), strictcli.WithArgs(
-		strictcli.NewArg("dir", "Claude Code profile directory to operate on; defaults to $CLAUDE_CONFIG_DIR when that is set, and to ~/.claude otherwise. A leading ~ is expanded to your home directory", strictcli.ArgRequired(false)),
+		strictcli.NewArg("dir", "Claude Code profile directory to operate on; defaults to $CLAUDE_CONFIG_DIR when that is set, and to ~/.claude otherwise. A leading ~ is expanded to your home directory", strictcli.ArgOptional()),
 	))
 
 	profileGrp.Command("uninstall", "Remove howmuchleft's statusLine entry from a Claude Code profile's settings.json and unregister the profile so it no longer appears in the dashboard. Refuses to touch a statusLine that some other tool configured, printing it for inspection instead, and reports plainly when the profile has no statusLine at all", func(ctx *strictcli.Context, kwargs map[string]interface{}) strictcli.Outcome {
@@ -112,19 +112,19 @@ func NewApp() *strictcli.App {
 		}
 		return strictcli.Exit(0)
 	}, strictcli.WithEffect(strictcli.EffectMutating), strictcli.WithArgs(
-		strictcli.NewArg("dir", "Claude Code profile directory to operate on; defaults to $CLAUDE_CONFIG_DIR when that is set, and to ~/.claude otherwise. A leading ~ is expanded to your home directory", strictcli.ArgRequired(false)),
+		strictcli.NewArg("dir", "Claude Code profile directory to operate on; defaults to $CLAUDE_CONFIG_DIR when that is set, and to ~/.claude otherwise. A leading ~ is expanded to your home directory", strictcli.ArgOptional()),
 	))
 
 	profileGrp.Command("list", "Discover every registered Claude Code profile and render their token usage side by side in one dashboard, a row per profile. Prints a single snapshot and exits by default; with --live it redraws every 30 seconds until interrupted. Reports that none were found, and exits cleanly, when no profile has been registered yet", func(ctx *strictcli.Context, kwargs map[string]interface{}) strictcli.Outcome {
 		runMigrations()
-		live := kwargs["live"].(bool)
+		live, _ := kwargs["live"].(bool)
 		if err := dashboard.Run(live); err != nil {
 			fmt.Fprintf(os.Stderr, "howmuchleft: %v\n", err)
 			return strictcli.Exit(1)
 		}
 		return strictcli.Exit(0)
 	}, strictcli.WithEffect(strictcli.EffectMutating), strictcli.WithFlags(
-		strictcli.BoolFlag("live", "Redraw the dashboard every 30 seconds until interrupted, instead of printing a single snapshot and exiting immediately", strictcli.Default(false)),
+		strictcli.BoolFlag("live", "Redraw the dashboard every 30 seconds until interrupted, instead of printing a single snapshot and exiting immediately", strictcli.Optional()),
 	))
 
 	// demo
@@ -145,7 +145,7 @@ func NewApp() *strictcli.App {
 		}
 		return strictcli.Exit(0)
 	}, strictcli.WithEffect(strictcli.EffectMutating), strictcli.WithArgs(
-		strictcli.NewArg("duration_seconds", "Duration in seconds", strictcli.ArgRequired(false)),
+		strictcli.NewArg("duration_seconds", "Duration in seconds", strictcli.ArgOptional()),
 	))
 
 	// colors

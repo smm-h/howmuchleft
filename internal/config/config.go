@@ -94,8 +94,8 @@ func Load(path string) (*Config, error) {
 		return Default(), nil
 	}
 
-	cfg := &Config{}
-	if err := tomledit.Unmarshal(data, cfg); err != nil {
+	cfg, err := tomledit.Unmarshal[Config](data)
+	if err != nil {
 		fmt.Fprintf(os.Stderr, "howmuchleft: warning: failed to parse config %s: %v\n", path, err)
 		return Default(), nil
 	}

@@ -74,7 +74,7 @@ func EnsureDefaults(configDir string) (*Result, error) {
 
 	result := &Result{Created: created}
 	for _, entry := range defaultEntries() {
-		if doc.Get(entry.path) != nil {
+		if doc.Has(entry.path) {
 			continue
 		}
 		if err := doc.SetCreate(entry.path, entry.value); err != nil {
