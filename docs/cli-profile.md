@@ -1,7 +1,8 @@
 +++
 title = "howmuchleft profile"
-description = "Reference for the howmuchleft profile command group: install and uninstall the statusLine in a Claude Code profile settings.json, and show every registered profile token usage side by side in one dashboard."
+description = "Install, remove and inspect the Claude Code profiles howmuchleft tracks: wire the statusLine into a profile's settings.json, take it back out again, and show every registered profile's token usage side by side in one dashboard"
 generated = true
+seeded = true
 nav_group = "CLI Reference"
 nav_order = 4
 +++
