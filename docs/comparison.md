@@ -1,6 +1,7 @@
 +++
 title = "Comparison with other statuslines"
 description = "How howmuchleft measures up against the other Claude Code statuslines: start-up time, peak memory, what each one can show, and how to rerun the benchmark."
+nav_order = 10
 +++
 
 # Comparison with other statuslines

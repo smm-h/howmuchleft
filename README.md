@@ -56,7 +56,18 @@ Config lives at `~/.config/howmuchleft/config.toml`, auto-created on first run.
 
 ## Performance
 
-The Go rewrite is 6x faster than the previous Node.js version: 17ms average per invocation vs 101ms. Measured over 50 iterations of the real workload (stdin JSON parsing, git subprocess, config read, ANSI rendering).
+Claude Code spawns the statusline on every render, so start-up cost is paid every time. Medians of 50 warm runs per tool on one machine, every tool fed the same status object:
+
+| Tool | Language | Median ms |
+|---|---|---|
+| cship | Rust | 7.7 |
+| **howmuchleft** | Go | 11.2 |
+| CCometixLine (ccline) | Rust | 15.1 |
+| best-claude-hud | Rust | 15.2 |
+| claude-code-statusline-pro | Rust | 19.1 |
+| claude-powerline | TypeScript on Node | 194.4 |
+
+Spawning `/bin/true` on the same machine medians 2.9 ms, so a good part of every compiled tool's number is the cost of starting a process at all. The full table, what each tool shows, the caveats and the harness that produced the numbers are in [Comparison with other statuslines](https://smmh.dev/howmuchleft/comparison/).
 
 ## License
 
