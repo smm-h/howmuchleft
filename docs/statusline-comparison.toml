@@ -5,8 +5,8 @@
 date = "2026-09-15"
 machine = "x86_64"
 cpu = "AMD Ryzen 7 6800HS with Radeon Graphics"
-floor_ms = 2.9
-howmuchleft_commit = "f3348f5"
+floor_ms = 2.7
+howmuchleft_commit = "d6bc11f"
 
 [[tool]]
 name = "howmuchleft"
@@ -16,12 +16,12 @@ source = "built from this checkout"
 shows_five_hour = "yes"
 shows_weekly = "yes"
 reads_transcripts = "no"
-median_ms = 11.2
-mean_ms = 11.6
-min_ms = 9.2
-max_ms = 14.9
-peak_mb = 9.2
-runs = 50
+median_ms = 5.5
+mean_ms = 5.6
+min_ms = 4.3
+max_ms = 7.7
+peak_mb = 9.3
+runs = 100
 
 [[tool]]
 name = "cship"
@@ -31,12 +31,12 @@ source = "GitHub release stephenleo/cship, cship-x86_64-unknown-linux-musl"
 shows_five_hour = "yes"
 shows_weekly = "yes"
 reads_transcripts = "no"
-median_ms = 7.7
+median_ms = 7.8
 mean_ms = 7.8
-min_ms = 6.5
-max_ms = 9.7
-peak_mb = 8.7
-runs = 50
+min_ms = 6.1
+max_ms = 9.3
+peak_mb = 8.9
+runs = 100
 
 [[tool]]
 name = "CCometixLine (ccline)"
@@ -47,11 +47,11 @@ shows_five_hour = "api"
 shows_weekly = "api"
 reads_transcripts = "yes"
 median_ms = 15.1
-mean_ms = 15.0
-min_ms = 13.1
-max_ms = 16.9
-peak_mb = 5.1
-runs = 50
+mean_ms = 15.1
+min_ms = 13.2
+max_ms = 17.3
+peak_mb = 5.2
+runs = 100
 
 [[tool]]
 name = "best-claude-hud"
@@ -61,12 +61,12 @@ source = "GitHub release GaoSSR/best-claude-hud, best-claude-hud-linux-x64-musl.
 shows_five_hour = "yes"
 shows_weekly = "no"
 reads_transcripts = "no"
-median_ms = 15.2
-mean_ms = 15.1
-min_ms = 13.3
-max_ms = 17.3
-peak_mb = 5.2
-runs = 50
+median_ms = 15.4
+mean_ms = 15.4
+min_ms = 13.2
+max_ms = 17.7
+peak_mb = 5.0
+runs = 100
 
 [[tool]]
 name = "claude-code-statusline-pro"
@@ -76,12 +76,12 @@ source = "GitHub release Wangnov/claude-code-statusline-pro, claude-code-statusl
 shows_five_hour = "yes"
 shows_weekly = "yes"
 reads_transcripts = "yes"
-median_ms = 19.1
-mean_ms = 19.2
-min_ms = 17.3
-max_ms = 21.6
-peak_mb = 12.0
-runs = 50
+median_ms = 18.9
+mean_ms = 19.0
+min_ms = 17.1
+max_ms = 21.9
+peak_mb = 12.2
+runs = 100
 
 [[tool]]
 name = "ccusage statusline"
@@ -91,12 +91,12 @@ source = "npm package ccusage"
 shows_five_hour = "no"
 shows_weekly = "no"
 reads_transcripts = "yes"
-median_ms = 105.6
-mean_ms = 107.6
-min_ms = 101.0
-max_ms = 144.0
-peak_mb = 53.6
-runs = 50
+median_ms = 107.0
+mean_ms = 111.4
+min_ms = 102.8
+max_ms = 145.7
+peak_mb = 53.7
+runs = 100
 
 [[tool]]
 name = "ccstatusline"
@@ -106,12 +106,12 @@ source = "npm package ccstatusline"
 shows_five_hour = "yes"
 shows_weekly = "yes"
 reads_transcripts = "no"
-median_ms = 338.7
-mean_ms = 338.9
-min_ms = 331.2
-max_ms = 353.8
-peak_mb = 91.8
-runs = 50
+median_ms = 340.1
+mean_ms = 341.6
+min_ms = 329.8
+max_ms = 367.5
+peak_mb = 91.7
+runs = 100
 
 [[tool]]
 name = "claude-powerline"
@@ -121,9 +121,9 @@ source = "npm package @owloops/claude-powerline"
 shows_five_hour = "yes"
 shows_weekly = "yes"
 reads_transcripts = "yes"
-median_ms = 194.4
-mean_ms = 194.0
-min_ms = 186.4
-max_ms = 209.3
-peak_mb = 74.5
-runs = 50
+median_ms = 201.4
+mean_ms = 202.7
+min_ms = 189.8
+max_ms = 225.8
+peak_mb = 74.6
+runs = 100
