@@ -13,7 +13,7 @@ internal/
   oauth/             OAuth token refresh, usage API client
   cache/             Atomic file cache with TTL, stale-data fallback
   git/               Branch name, read straight out of .git/HEAD
-  platform/          Claude dir resolution, dark/light mode detection, GitHub user lookup
+  platform/          Claude dir resolution, GitHub user lookup
   demo/              Animated sawtooth-wave demo
   dashboard/         Multi-profile live dashboard
   migrate/           Config default seeding (creates/completes config.toml)
@@ -41,7 +41,7 @@ TOML file at `~/.config/howmuchleft/config.toml`. Parsed via go-toml-edit. Per-p
 - `compose.go`: `RenderLines()` takes usage data and produces 3-line ANSI output. Configurable line elements via `[lines]` table.
 - `bar.go`: `ProgressBar()` with horizontal (fractional left blocks U+258F-U+2589) and vertical (lower blocks U+2581-U+2587) orientations.
 - `gradient.go`: truecolor RGB interpolation and 256-color palette snapping.
-- `colors.go`: builtin gradients for 4 combos (dark/light x truecolor/256). Condition matching via `FindColorMatch()`.
+- `colors.go`: builtin gradients for 4 combos (dark/light x truecolor/256). Condition matching via `FindColorMatch()`. `IsDarkMode()` detects the desktop theme -- macOS (`defaults read -g AppleInterfaceStyle`), Linux (`gsettings` color-scheme query) -- and keeps the answer in `.dark-mode-cache.json` in the Claude directory, so all but a handful of renders read a file instead of starting a process.
 - `hash.go`: djb2 hash to hue for profile label coloring.
 - `config_bridge.go`: converts `config.Config` to render-internal `BarConfig`.
 
@@ -60,7 +60,6 @@ Reads `.git/HEAD` directly, walking up from the working directory and following 
 ### Platform (internal/platform)
 
 - `GetClaudeDir()`: resolves Claude Code config directory
-- `IsDarkMode()`: macOS (`defaults read -g AppleInterfaceStyle`), Linux (`gsettings` color-scheme query)
 - `ghuser.go`: GitHub username from `gh` CLI auth status
 
 ### Demo (internal/demo)
@@ -94,7 +93,7 @@ The version is injected via `-ldflags "-X main.Version=..."` at build time. With
 
 - All state is computed fresh per invocation (no daemon, no IPC)
 - Atomic file writes via tmpfile + rename for cache
-- Git state on the statusline path comes from reading `.git/HEAD`, never from a git process
+- Keep processes off the render path: git state comes from reading `.git/HEAD`, and the desktop theme and the GitHub user are detected once and cached on disk
 - Tests use `go test ./... -race`
 - Model aliases: O4.6 (opus), S4.6 (sonnet), H4.5 (haiku)
 

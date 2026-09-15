@@ -2,14 +2,18 @@ package render
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"math"
 	"os"
 	"os/exec"
+	"path/filepath"
 	"runtime"
 	"strings"
 	"sync"
 	"time"
+
+	"github.com/smm-h/howmuchleft/internal/platform"
 )
 
 // ANSI escape constants matching the Node.js colors object.
@@ -56,9 +60,29 @@ func ResetDarkModeCache() {
 	darkModeOnce = sync.Once{}
 }
 
-// IsDarkMode detects OS dark/light mode.
-// Check order: HOWMUCHLEFT_DARK env override, then OS-specific detection.
-// Result is cached per-process.
+// darkModeCacheTTLMs bounds how long a detected desktop dark/light preference
+// is reused before the detector runs again. Detection costs a subprocess on
+// every platform, and the answer is an OS setting a person changes by hand, so
+// running the detector on every render buys nothing: ten seconds keeps the
+// subprocess off all but a handful of renders and still follows a theme switch
+// while the user is still looking at the terminal.
+const darkModeCacheTTLMs = 10 * 1000
+
+// DarkModeCacheFile is the file name, inside the Claude configuration
+// directory, that holds the last detected dark/light preference.
+const DarkModeCacheFile = ".dark-mode-cache.json"
+
+// darkModeCacheEntry is what DarkModeCacheFile holds.
+type darkModeCacheEntry struct {
+	Dark bool  `json:"dark"`
+	Ts   int64 `json:"ts"`
+}
+
+// IsDarkMode reports whether the desktop is set to a dark theme.
+// Check order: HOWMUCHLEFT_DARK env override, then a cache file in the Claude
+// configuration directory younger than darkModeCacheTTLMs, then OS-specific
+// detection, whose answer refreshes that cache file. Within one process the
+// answer is computed once.
 func IsDarkMode() bool {
 	darkModeOnce.Do(func() {
 		darkModeCached = detectDarkMode()
@@ -72,11 +96,71 @@ func detectDarkMode() bool {
 		return v == "1"
 	}
 
+	cachePath := filepath.Join(platform.GetClaudeDir(), DarkModeCacheFile)
+	if dark, ok := readDarkModeCache(cachePath); ok {
+		return dark
+	}
+
+	dark := detectDarkModeFromOS()
+	writeDarkModeCache(cachePath, dark)
+	return dark
+}
+
+func detectDarkModeFromOS() bool {
 	switch runtime.GOOS {
 	case "darwin":
 		return detectDarkModeDarwin()
 	default:
 		return detectDarkModeLinux()
+	}
+}
+
+// readDarkModeCache returns the cached preference when the cache file exists
+// and is younger than darkModeCacheTTLMs. The second return value says whether
+// the first one means anything.
+func readDarkModeCache(path string) (bool, bool) {
+	data, err := os.ReadFile(path)
+	if err != nil {
+		return false, false
+	}
+	var entry darkModeCacheEntry
+	if err := json.Unmarshal(data, &entry); err != nil {
+		return false, false
+	}
+	age := time.Now().UnixMilli() - entry.Ts
+	if age < 0 || age >= darkModeCacheTTLMs {
+		return false, false
+	}
+	return entry.Dark, true
+}
+
+// writeDarkModeCache stores the preference with the time it was detected. A
+// failure here only costs the next render another detection, so it is silent.
+func writeDarkModeCache(path string, dark bool) {
+	data, err := json.Marshal(darkModeCacheEntry{Dark: dark, Ts: time.Now().UnixMilli()})
+	if err != nil {
+		return
+	}
+	dir := filepath.Dir(path)
+	if err := os.MkdirAll(dir, 0o700); err != nil {
+		return
+	}
+	tmp, err := os.CreateTemp(dir, ".tmp-dark-mode-*")
+	if err != nil {
+		return
+	}
+	tmpPath := tmp.Name()
+	if _, err := tmp.Write(data); err != nil {
+		tmp.Close()
+		os.Remove(tmpPath)
+		return
+	}
+	if err := tmp.Close(); err != nil {
+		os.Remove(tmpPath)
+		return
+	}
+	if err := os.Rename(tmpPath, path); err != nil {
+		os.Remove(tmpPath)
 	}
 }
 
