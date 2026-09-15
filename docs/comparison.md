@@ -46,12 +46,15 @@ the text of your conversations to do it.
 
 - **howmuchleft** renders three lines: a context window bar, a 5-hour limit bar
   and a weekly limit bar, each shaded green to red as it fills, plus the model,
-  the subscription tier, the reset times, the git branch, the session's added
-  and removed line counts, and the working directory. The limit percentages and
-  the line counts come from the status object. The branch name comes from
-  reading the repository's `HEAD` file rather than from running `git`, and the
-  desktop light/dark preference, which decides the gradient, is detected once
-  and kept in a cache file, so a render is a short series of file reads.
+  the subscription tier, the reset times, the git branch with how far it is
+  ahead of and behind its upstream and how many paths have changed, the
+  session's added and removed line counts, and the working directory. The limit
+  percentages and the line counts come from the status object. The branch name
+  comes from reading the repository's `HEAD` file rather than from running
+  `git`; the counts beside it are read from a cache file, which a `git status`
+  the render starts detached and never waits for rewrites when it has gone
+  stale; and the desktop light/dark preference, which decides the gradient, is
+  kept in a cache file too. The render itself is a short series of file reads.
 - **cship** renders a single configurable line in the style of Starship: model,
   a context bar, session cost and both limit windows. Its directory and git
   segments are Starship passthrough modules, which means they need Starship
@@ -129,10 +132,11 @@ part of every one of those numbers is the cost of starting a process at all,
 which no statusline can avoid: compare any of them against the `/bin/true`
 floor in the results file. howmuchleft is the quickest of them in this run, and
 the reason is not the language it is written in -- the `Language` column says
-what the tools behind it are written in. The reason is that these renders start
-no child process at all: the branch comes out of the repository's `HEAD` file,
-the limit percentages come out of the status object, and the desktop theme
-comes out of a cache file. Between compiled statuslines the choice is still
+what the tools behind it are written in. The reason is that a render waits for
+no child process: the branch comes out of the repository's `HEAD` file, the
+limit percentages come out of the status object, the desktop theme comes out of
+a cache file, and the branch's counts come out of a cache file that a `git
+status` started in the background, and never waited for, rewrites. Between compiled statuslines the choice is still
 mostly about what they show and where they get it, but the milliseconds are no
 longer an argument against showing more.
 

@@ -60,14 +60,14 @@ Claude Code spawns the statusline on every render, so start-up cost is paid ever
 
 | Tool | Language | Median ms |
 |---|---|---|
-| **howmuchleft** | Go | 5.5 |
-| cship | Rust | 7.8 |
-| CCometixLine (ccline) | Rust | 15.1 |
-| best-claude-hud | Rust | 15.4 |
-| claude-code-statusline-pro | Rust | 18.9 |
-| claude-powerline | TypeScript on Node | 201.4 |
+| **howmuchleft** | Go | 5.9 |
+| cship | Rust | 8.3 |
+| CCometixLine (ccline) | Rust | 15.0 |
+| best-claude-hud | Rust | 15.3 |
+| claude-code-statusline-pro | Rust | 19.7 |
+| claude-powerline | TypeScript on Node | 194.5 |
 
-Spawning `/bin/true` on the same machine medians 2.7 ms, so a good part of every compiled tool's number is the cost of starting a process at all. The full table, what each tool shows, the caveats and the harness that produced the numbers are in [Comparison with other statuslines](https://smmh.dev/howmuchleft/comparison/).
+Spawning `/bin/true` on the same machine medians 2.8 ms, so a good part of every compiled tool's number is the cost of starting a process at all. The full table, what each tool shows, the caveats and the harness that produced the numbers are in [Comparison with other statuslines](https://smmh.dev/howmuchleft/comparison/).
 
 ## License
 
