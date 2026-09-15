@@ -1,6 +1,6 @@
 +++
 title = "internal/git"
-description = "Runs git status with a timeout and parses porcelain v2 output for branch name, ahead/behind counts, and working tree changes."
+description = "Reads the current branch straight out of the repository's HEAD file, walking up from the working directory and following a .git file to a worktree or submodule gitdir, so a render starts no git process."
 generated = true
 nav_group = "API Reference"
 nav_order = 7
