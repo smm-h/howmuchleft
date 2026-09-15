@@ -2,7 +2,7 @@
   "schema_version": 1,
   "name": "howmuchleft",
   "slug": "howmuchleft",
-  "version": "0.15.0",
+  "version": "0.15.1",
   "description": "a Claude Code statusline that shows context window, 5-hour and weekly limit usage as three progress bars with sub-cell precision, shading each from green to red as it fills",
   "language": "go",
   "base_url": "https://smmh.dev/howmuchleft",
@@ -126,6 +126,43 @@
           "level": 1,
           "text": "howmuchleft version",
           "anchor": "howmuchleft-version"
+        }
+      ]
+    },
+    {
+      "path": "comparison.md",
+      "title": "Comparison with other statuslines",
+      "type": "doc",
+      "headings": [
+        {
+          "level": 1,
+          "text": "Comparison with other statuslines",
+          "anchor": "comparison-with-other-statuslines"
+        },
+        {
+          "level": 2,
+          "text": "What was compared",
+          "anchor": "what-was-compared"
+        },
+        {
+          "level": 2,
+          "text": "Results",
+          "anchor": "results"
+        },
+        {
+          "level": 2,
+          "text": "What each tool shows",
+          "anchor": "what-each-tool-shows"
+        },
+        {
+          "level": 2,
+          "text": "Reproducing the measurement",
+          "anchor": "reproducing-the-measurement"
+        },
+        {
+          "level": 2,
+          "text": "The honest summary",
+          "anchor": "the-honest-summary"
         }
       ]
     },
@@ -1067,6 +1104,6 @@
     }
   ],
   "posts": [],
-  "last_gen": "2026-09-14T17:13:55.795514+00:00",
+  "last_gen": "2026-09-15T13:05:03.901997+00:00",
   "theme": "minimal"
 }
