@@ -36,7 +36,7 @@
     "seed_hash": "0a73172e8c01f8788c6756644890efba9bbd57992e340f93384b67cbf1252689"
   },
   "en/comparison.md": {
-    "content": "9c42aa2b49bec75f7934864c4556a1410f9f81b040baf6f255d0fe102a6413d0",
+    "content": "656c05b3cfaf41abfdd6badeb3a67d19d1820dcdd8dd95c4870b4bc8de54c858",
     "description": "0f1db0812caa32481428de0ebb44a754859f3553c9c214a8b14125a2711fd136"
   },
   "en/gen-index.md": {
@@ -47,12 +47,12 @@
   "en/howmuchleft.md": {
     "content": "7fcf5da941fce73c2b98fab1da349973e21b7302aa4f33975db16bf3312d6490",
     "description": "7526715bbb511542ae622b571b8fe01fcb82ccd875b37bb2afce03b922ed7497",
-    "source_docstring": "d8c2e9b447ed25bac14f5c9f441b96d5ddd7d12055f3c9156a414b8d46cf4fde"
+    "source_docstring": "1e62f14e30a207468cb20efc9a737c39c1e06831463367e16789d87cfec1c09f"
   },
   "en/index.md": {
     "content": "b4be6926d6866650fb05a3a59c9284dd5182010b0abfbce708c1cbbc88d73717",
     "description": "70e33fc08130a124a1ecc881824a0a296c875656d64442a60e5dcef40a85338b",
-    "source_docstring": "d8c2e9b447ed25bac14f5c9f441b96d5ddd7d12055f3c9156a414b8d46cf4fde"
+    "source_docstring": "1e62f14e30a207468cb20efc9a737c39c1e06831463367e16789d87cfec1c09f"
   },
   "en/internal-cache.md": {
     "content": "383847f2f37041aecc40355767092536a89cf3e013402cc26dbcaeca1cf409e5",
