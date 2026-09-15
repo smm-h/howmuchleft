@@ -11,7 +11,7 @@ What each bar tracks:
 | Bar | What it tracks |
 |---|---|
 | **Context window** | How full your conversation is, plus subscription tier and model |
-| **5-hour usage** | Rolling rate limit, time until reset, git branch and diff stats |
+| **5-hour usage** | Rolling rate limit, time until reset, git branch and the session's line counts |
 | **Weekly usage** | Rolling 7-day rate limit, time until reset, current directory |
 
 Works with Pro, Max 5x, Max 20x, and Team subscriptions. API key users see context bar only.
@@ -56,18 +56,18 @@ Config lives at `~/.config/howmuchleft/config.toml`, auto-created on first run.
 
 ## Performance
 
-Claude Code spawns the statusline on every render, so start-up cost is paid every time. Medians of 50 warm runs per tool on one machine, every tool fed the same status object:
+Claude Code spawns the statusline on every render, so start-up cost is paid every time. Medians of 100 warm runs per tool on one machine, every tool fed the same status object:
 
 | Tool | Language | Median ms |
 |---|---|---|
-| cship | Rust | 7.7 |
-| **howmuchleft** | Go | 11.2 |
+| **howmuchleft** | Go | 5.5 |
+| cship | Rust | 7.8 |
 | CCometixLine (ccline) | Rust | 15.1 |
-| best-claude-hud | Rust | 15.2 |
-| claude-code-statusline-pro | Rust | 19.1 |
-| claude-powerline | TypeScript on Node | 194.4 |
+| best-claude-hud | Rust | 15.4 |
+| claude-code-statusline-pro | Rust | 18.9 |
+| claude-powerline | TypeScript on Node | 201.4 |
 
-Spawning `/bin/true` on the same machine medians 2.9 ms, so a good part of every compiled tool's number is the cost of starting a process at all. The full table, what each tool shows, the caveats and the harness that produced the numbers are in [Comparison with other statuslines](https://smmh.dev/howmuchleft/comparison/).
+Spawning `/bin/true` on the same machine medians 2.7 ms, so a good part of every compiled tool's number is the cost of starting a process at all. The full table, what each tool shows, the caveats and the harness that produced the numbers are in [Comparison with other statuslines](https://smmh.dev/howmuchleft/comparison/).
 
 ## License
 
