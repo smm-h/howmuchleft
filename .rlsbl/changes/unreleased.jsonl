@@ -8,3 +8,4 @@
 {"format_version":1,"id":"18d599559af18c932fb43da0f09e4688a3b5cdf6203ec631","commits":["7ffc3bf9787725aa29f6a4e3c896fc4f13ef89fd"],"user_facing":true,"description":"**A theme switch shows up right away.** Switching the desktop between light and dark now reaches the statusline within a couple of renders instead of up to ten seconds later.","type":"fix"}
 {"format_version":1,"id":"18d599aaad6547ad0a7e9c70012a4573873b1fdd3efe3243","commits":["dfbdae225f3eb556e8037e70e4740dfc64159b95"],"user_facing":false}
 {"format_version":1,"id":"18d599b6aa02da39acdb78ed08884f51843e90d4cc05de7f","commits":["066aa53c172d99e65210ebbdd4c46b97813f54e9"],"user_facing":false}
+{"format_version":1,"id":"18d599d344453b82768f27a29b324e3385227f30db5365c9","commits":["1a95c38359b5796b6d37c50b69f28a02a80a48a0"],"user_facing":false}
