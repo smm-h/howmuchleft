@@ -17,7 +17,7 @@ internal/
   demo/              Animated sawtooth-wave demo
   dashboard/         Multi-profile live dashboard
   migrate/           Config default seeding (creates/completes config.toml)
-assets/              demo-dark.gif and demo-light.gif (recorded via VHS)
+assets/              demo-dark.gif and demo-light.gif (scripts/record-demo-gifs.sh, via VHS)
 ```
 
 ## How the statusline protocol works
