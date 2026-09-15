@@ -2,6 +2,21 @@
 
 # Changelog
 
+## 0.16.0
+
+The fastest Claude Code statusline, measured against the others by a reproducible harness: git ahead/behind and changed-file counts return through a detached two-second cache, the theme cache is two seconds, and the documentation moved onto selfdoc's .stricttools/ layout.
+
+### Features
+
+- **A reproducible comparison with other statuslines.** A new harness installs pinned builds of the other Claude Code statuslines into a scratch directory, feeds every one of them the same status object, and records each one's median render time and peak memory. The measured table, the caveats behind it and the steps to rerun it are on the new comparison page, and the README's performance section now carries those medians instead of a comparison against the old Node.js implementation.
+- **A faster render.** Finding the git branch no longer starts a `git` process -- the branch name is read straight out of the repository's `HEAD` file -- and the desktop light/dark preference behind the gradient is detected once and reused instead of being asked for on every render. On the machine the comparison page is measured on, the median render dropped from 11.2 ms to 5.9 ms, ahead of every other statusline the harness measures.
+- **The branch counts are back, without the git process.** The statusline shows the branch's ahead and behind counts against its upstream again, and the number of changed paths in the working tree, without starting `git` while it renders: a detached refresh writes them to a cache file the render reads, so the counts trail the working tree by up to two seconds and the render still costs no fork.
+
+### Fixes
+
+- **The description says what it now is.** The project's one-line description, which the README, the docs site, the CLI help and the package metadata all repeat, now reads "The fastest Claude Code statusline: context window, 5-hour, and weekly limit usage as three customizable gradient bars, rendering in about 6 ms".
+- **A theme switch shows up right away.** Switching the desktop between light and dark now reaches the statusline within a couple of renders instead of up to ten seconds later.
+
 ## 0.15.1
 
 Documentation frontmatter converted to TOML for the current selfdoc; no user-facing change.
