@@ -257,7 +257,7 @@ npm_config_cache="$SCRATCH/npm-cache" npm install --prefix "$SCRATCH/npm" \
   "ccusage@$CCUSAGE_VERSION" "ccstatusline@$CCSTATUSLINE_VERSION" \
   "$POWERLINE_PKG@$POWERLINE_VERSION"
 
-# Binaries land at different depths depending on how each project packages its
+# Binaries sit at different depths depending on how each project packages its
 # archive, so resolve each one by name instead of assuming a layout.
 find_binary() {
   local dir="$1" name="$2" found
