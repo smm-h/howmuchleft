@@ -3,7 +3,7 @@
   "name": "howmuchleft",
   "slug": "howmuchleft",
   "version": "0.15.1",
-  "description": "a Claude Code statusline that shows context window, 5-hour and weekly limit usage as three progress bars with sub-cell precision, shading each from green to red as it fills",
+  "description": "The fastest Claude Code statusline: context window, 5-hour, and weekly limit usage as three customizable gradient bars, rendering in about 6 ms",
   "language": "go",
   "base_url": "https://smmh.dev/howmuchleft",
   "pages": [
@@ -827,6 +827,11 @@
         },
         {
           "level": 3,
+          "text": "`DarkModeCacheFile`",
+          "anchor": "darkmodecachefile"
+        },
+        {
+          "level": 3,
           "text": "`HorizontalChars`",
           "anchor": "horizontalchars"
         },
@@ -1104,6 +1109,6 @@
     }
   ],
   "posts": [],
-  "last_gen": "2026-09-15T13:05:03.901997+00:00",
+  "last_gen": "2026-09-15T13:37:03.630681+00:00",
   "theme": "minimal"
 }
