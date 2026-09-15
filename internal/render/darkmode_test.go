@@ -139,3 +139,31 @@ func TestDetectDarkMode_EnvOverrideBeatsCacheAndWritesNothing(t *testing.T) {
 		t.Error("HOWMUCHLEFT_DARK=0 must win over a cache saying dark")
 	}
 }
+
+// The TTL is what decides how soon a theme switch reaches the statusline, so
+// it is pinned in time, not against the constant that sets it.
+func TestDetectDarkMode_CacheYoungerThanTwoSecondsIsUsed(t *testing.T) {
+	for _, dark := range []bool{true, false} {
+		t.Run(map[bool]string{true: "dark", false: "light"}[dark], func(t *testing.T) {
+			path := darkModeFixture(t)
+			writeCacheEntry(t, path, dark, 1500)
+
+			if got := detectDarkMode(); got != dark {
+				t.Errorf("detectDarkMode() = %v, want the cached %v", got, dark)
+			}
+		})
+	}
+}
+
+func TestDetectDarkMode_CacheOlderThanTwoSecondsIsRedetected(t *testing.T) {
+	path := darkModeFixture(t)
+	writeCacheEntry(t, path, true, 2500)
+
+	before := time.Now().UnixMilli()
+	detectDarkMode()
+
+	if entry := readCacheEntry(t, path); entry.Ts < before {
+		t.Errorf("a cache 2.5 seconds old was not refreshed: timestamp %d predates the call at %d",
+			entry.Ts, before)
+	}
+}

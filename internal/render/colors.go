@@ -63,10 +63,10 @@ func ResetDarkModeCache() {
 // darkModeCacheTTLMs bounds how long a detected desktop dark/light preference
 // is reused before the detector runs again. Detection costs a subprocess on
 // every platform, and the answer is an OS setting a person changes by hand, so
-// running the detector on every render buys nothing: ten seconds keeps the
-// subprocess off all but a handful of renders and still follows a theme switch
-// while the user is still looking at the terminal.
-const darkModeCacheTTLMs = 10 * 1000
+// running the detector on every render buys nothing: two seconds keeps the
+// subprocess off the renders that follow one another closely, and follows a
+// theme switch within a couple of renders of it happening.
+const darkModeCacheTTLMs = 2 * 1000
 
 // DarkModeCacheFile is the file name, inside the Claude configuration
 // directory, that holds the last detected dark/light preference.

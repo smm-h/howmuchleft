@@ -41,7 +41,7 @@ TOML file at `~/.config/howmuchleft/config.toml`. Parsed via go-toml-edit. Per-p
 - `compose.go`: `RenderLines()` takes usage data and produces 3-line ANSI output. Configurable line elements via `[lines]` table.
 - `bar.go`: `ProgressBar()` with horizontal (fractional left blocks U+258F-U+2589) and vertical (lower blocks U+2581-U+2587) orientations.
 - `gradient.go`: truecolor RGB interpolation and 256-color palette snapping.
-- `colors.go`: builtin gradients for 4 combos (dark/light x truecolor/256). Condition matching via `FindColorMatch()`. `IsDarkMode()` detects the desktop theme -- macOS (`defaults read -g AppleInterfaceStyle`), Linux (`gsettings` color-scheme query) -- and keeps the answer in `.dark-mode-cache.json` in the Claude directory, so all but a handful of renders read a file instead of starting a process.
+- `colors.go`: builtin gradients for 4 combos (dark/light x truecolor/256). Condition matching via `FindColorMatch()`. `IsDarkMode()` detects the desktop theme -- macOS (`defaults read -g AppleInterfaceStyle`), Linux (`gsettings` color-scheme query) -- and keeps the answer in `.dark-mode-cache.json` in the Claude directory for `darkModeCacheTTLMs`, so renders following one another closely read a file instead of starting a process.
 - `hash.go`: djb2 hash to hue for profile label coloring.
 - `config_bridge.go`: converts `config.Config` to render-internal `BarConfig`.
 
