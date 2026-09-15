@@ -11,7 +11,7 @@
 #
 # The fixture lives outside the repository (mktemp -d), because a nested git
 # repository inside the checkout would be picked up by repo-integrity walks.
-# Remove it with `rm -rf` when done; nothing else is written outside it.
+# Delete it when done; nothing else is written outside it.
 
 set -euo pipefail
 
@@ -40,10 +40,6 @@ EOF
 die() {
   echo "$SELF_NAME: $*" >&2
   exit 1
-}
-
-need_binary() {
-  [ $# -gt 0 ] || die "$1 needs a path to a binary"
 }
 
 while [ $# -gt 0 ]; do
