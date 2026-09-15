@@ -18,7 +18,6 @@ dist/
 *.local-only
 
 # Selfdoc / Cloudflare
-docs/_build/
 .wrangler/
 
 node_modules/
