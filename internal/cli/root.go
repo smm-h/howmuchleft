@@ -12,6 +12,7 @@ import (
 	"github.com/smm-h/howmuchleft/internal/config"
 	"github.com/smm-h/howmuchleft/internal/dashboard"
 	"github.com/smm-h/howmuchleft/internal/demo"
+	"github.com/smm-h/howmuchleft/internal/git"
 	"github.com/smm-h/howmuchleft/internal/migrate"
 	"github.com/smm-h/howmuchleft/internal/platform"
 	"github.com/smm-h/howmuchleft/internal/render"
@@ -59,6 +60,32 @@ func RunStatuslineDirect() bool {
 		return true
 	}
 	return false
+}
+
+// RunGitCacheRefresh handles the detached invocation a render starts to
+// refresh a repository's status cache:
+//
+//	howmuchleft --refresh-git-cache <repository-root>
+//
+// Like statusline mode, it is dispatched before the strictcli app is built and
+// is not a command in it: it exists for howmuchleft to call on itself, takes
+// no options, prints nothing on success, and running any of the app's commands
+// instead would run the migrations a render has no business running.
+// Returns true if it handled the invocation (caller should exit), false
+// otherwise.
+func RunGitCacheRefresh() bool {
+	if len(os.Args) < 2 || os.Args[1] != git.RefreshFlag {
+		return false
+	}
+	if len(os.Args) != 3 {
+		fmt.Fprintf(os.Stderr, "howmuchleft: usage: howmuchleft %s <repository-root>\n", git.RefreshFlag)
+		os.Exit(2)
+	}
+	if err := git.RefreshCache(os.Args[2]); err != nil {
+		fmt.Fprintf(os.Stderr, "howmuchleft: %v\n", err)
+		os.Exit(1)
+	}
+	return true
 }
 
 // NewApp builds and returns the strictcli application.

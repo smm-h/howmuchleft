@@ -653,3 +653,95 @@ func TestNonFableOutputUnchanged(t *testing.T) {
 		t.Errorf("non-Fable output differs between old and new line configs:\nold: %q\nnew: %q", resultOld, resultNew)
 	}
 }
+
+// renderGitFixture renders one fixed statusline whose only variable is the git
+// state, and returns the output, so the branch element can be asserted on
+// exactly.
+func renderGitFixture(t *testing.T, gitInfo GitInfo) string {
+	t.Helper()
+	hygiene.Isolate(t, hygiene.Preserve(hygiene.GoPath, hygiene.GoModCache, hygiene.GoCache))
+	t.Setenv("HOWMUCHLEFT_DARK", "1")
+	t.Setenv("COLORTERM", "truecolor")
+	ResetDarkModeCache()
+	ResetTruecolorCache()
+	t.Cleanup(func() {
+		ResetDarkModeCache()
+		ResetTruecolorCache()
+	})
+
+	barCfg := &BarConfig{
+		Width:         12,
+		EmptyBg:       "\x1b[48;2;48;48;48m",
+		TimeBarBg:     "\x1b[48;2;38;38;38m",
+		Gradient:      []GradientStop{NewRgbStop(0, 255, 0), NewRgbStop(255, 0, 0)},
+		Truecolor:     true,
+		IsRgb:         true,
+		PartialBlocks: true,
+	}
+
+	fiveHourPct := 30.0
+	weeklyPct := 45.0
+	elapsed := int64(120000)
+
+	data := &RenderData{
+		Context:  50,
+		Model:    "claude-sonnet-4-5-20250514",
+		Tier:     "Pro",
+		Elapsed:  &elapsed,
+		FiveHour: UsageData{Percent: &fiveHourPct, ResetIn: 3600000},
+		Weekly:   UsageData{Percent: &weeklyPct, ResetIn: 86400000},
+		Git:      gitInfo,
+		Cwd:      "~/Projects/test",
+	}
+
+	lineElements := &config.LinesConfig{
+		Line1: []string{"context", "elapsed", "tier", "model"},
+		Line2: []string{"usage5h", "age", "branch"},
+		Line3: []string{"usageWeekly", "age", "cwd"},
+	}
+
+	return RenderLines(data, barCfg, lineElements, nil)
+}
+
+func TestRenderLines_BranchCountsAreRendered(t *testing.T) {
+	result := renderGitFixture(t, GitInfo{Branch: "main", HasGit: true, Ahead: 2, Behind: 1, Changed: 3})
+
+	want := Cyan + "main" + Reset +
+		" " + Magenta + "↑2" + Reset +
+		" " + Magenta + "↓1" + Reset +
+		" " + Yellow + "+3" + Reset
+	if !strings.Contains(result, want) {
+		t.Errorf("branch element = ...%q..., want it to contain %q", result, want)
+	}
+}
+
+func TestRenderLines_OnlyTheNonZeroCountsAreRendered(t *testing.T) {
+	result := renderGitFixture(t, GitInfo{Branch: "main", HasGit: true, Behind: 4})
+
+	want := Cyan + "main" + Reset + " " + Magenta + "↓4" + Reset
+	if !strings.Contains(result, want) {
+		t.Errorf("branch element = ...%q..., want it to contain %q", result, want)
+	}
+	if strings.Contains(result, "↑") {
+		t.Error("an ahead count of zero was rendered")
+	}
+	if strings.Contains(result, "+") {
+		t.Error("a changed count of zero was rendered")
+	}
+}
+
+// A render with no counts -- no cache yet, or a cache describing another
+// branch -- must produce what it produced before the counts existed: the
+// branch name alone, in cyan.
+func TestRenderLines_NoCountsRenderTheBranchAlone(t *testing.T) {
+	result := renderGitFixture(t, GitInfo{Branch: "main", HasGit: true})
+
+	if !strings.Contains(result, Cyan+"main"+Reset) {
+		t.Errorf("the branch name is not rendered on its own: %q", result)
+	}
+	for _, mark := range []string{"↑", "↓", "+"} {
+		if strings.Contains(result, mark) {
+			t.Errorf("a render with no counts contains %q: %q", mark, result)
+		}
+	}
+}

@@ -31,6 +31,11 @@ func main() {
 	}
 	cli.SetVersion(Version)
 
+	// The detached status-cache refresh a render starts on itself.
+	if cli.RunGitCacheRefresh() {
+		return
+	}
+
 	// If stdin is piped and no subcommand args, run statusline directly.
 	if len(os.Args) == 1 {
 		if cli.RunStatuslineDirect() {

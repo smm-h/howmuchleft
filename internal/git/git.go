@@ -1,13 +1,17 @@
 // Package git reports the current branch by reading the repository's HEAD file
 // directly. It starts at the working directory, walks up until it finds a .git
 // directory or a .git file pointing at a worktree or submodule gitdir, and
-// reads the branch name out of HEAD. No git process is started, so a render
-// costs two file reads instead of a fork, an exec and a status scan.
+// reads the branch name out of HEAD. No git process is started on the render
+// path, so a render costs file reads instead of a fork, an exec and a status
+// scan.
 //
-// Only the branch name is reported. Ahead/behind counts need the commit graph
-// and a working-tree change count needs the index, the ignore rules and an
-// lstat per tracked path -- work that cannot be done without either a git
-// process or a reimplementation of git, so the statusline does not show them.
+// The ahead/behind counts and the number of changed working-tree paths need
+// the commit graph, the index and the ignore rules, which cannot be read
+// without a git process. They come from a cache file instead: a render shows
+// what the last git status measured, and when that measurement is older than
+// statusCacheTTLMs the render starts a detached refresher and returns without
+// waiting for it. The counts a render shows are therefore up to a couple of
+// seconds behind the working tree.
 package git
 
 import (
@@ -23,17 +27,29 @@ type Info struct {
 	Branch string
 	// HasGit is true when cwd is inside a git repository whose HEAD was read.
 	HasGit bool
+	// Ahead and Behind are the commit counts between the branch and its
+	// upstream, and Changed is the number of changed working-tree paths, all
+	// taken from the status cache the refresh subcommand writes. They are zero
+	// when no cached status applies to the checked-out branch.
+	Ahead   int
+	Behind  int
+	Changed int
+	// HasCounts is true when Ahead, Behind and Changed come from a cached
+	// status for this branch, false when no such status was available.
+	HasCounts bool
 }
 
 // detachedBranch is what Branch reads when HEAD names a commit, not a branch.
 // It is spelled the way git status --porcelain=v2 spells it.
 const detachedBranch = "(detached)"
 
-// GetInfo resolves the repository containing cwd and reads its current branch.
-// Returns HasGit=false when cwd is not inside a repository or HEAD is missing
-// or unreadable.
+// GetInfo resolves the repository containing cwd, reads its current branch out
+// of HEAD and fills in the counts from the status cache, starting a detached
+// refresh when that cache no longer describes the branch it is on. Returns
+// HasGit=false when cwd is not inside a repository or HEAD is missing or
+// unreadable.
 func GetInfo(cwd string) *Info {
-	gitDir := findGitDir(cwd)
+	root, gitDir := findRepo(cwd)
 	if gitDir == "" {
 		return &Info{HasGit: false}
 	}
@@ -43,18 +59,27 @@ func GetInfo(cwd string) *Info {
 		return &Info{HasGit: false}
 	}
 
-	return &Info{HasGit: true, Branch: parseHead(string(head))}
+	info := &Info{HasGit: true, Branch: parseHead(string(head))}
+	applyStatusCache(info, root)
+	return info
 }
 
-// findGitDir returns the repository's git directory for cwd, or "" when cwd is
-// not inside a repository. GIT_DIR wins when it is set, the way git itself
-// treats it; otherwise the search walks up from cwd.
-func findGitDir(cwd string) string {
+// findRepo returns the working-tree root containing cwd and the repository's
+// git directory, or two empty strings when cwd is not inside a repository. The
+// root is what git status is run in and what the status cache is keyed by; the
+// git directory is where HEAD is read. GIT_DIR wins when it is set, the way
+// git itself treats it, and GIT_WORK_TREE then names the root; otherwise the
+// search walks up from cwd.
+func findRepo(cwd string) (root, gitDir string) {
 	if env := os.Getenv("GIT_DIR"); env != "" {
-		return env
+		root = os.Getenv("GIT_WORK_TREE")
+		if root == "" {
+			root = cwd
+		}
+		return root, env
 	}
 	if cwd == "" {
-		return ""
+		return "", ""
 	}
 
 	dir := cwd
@@ -65,7 +90,7 @@ func findGitDir(cwd string) string {
 		case err != nil:
 			// keep walking up
 		case st.IsDir():
-			return candidate
+			return dir, candidate
 		default:
 			// A .git file: a linked worktree or a submodule. Its single
 			// "gitdir: <path>" line points at the real git directory, and a
@@ -74,13 +99,13 @@ func findGitDir(cwd string) string {
 				if !filepath.IsAbs(target) {
 					target = filepath.Join(dir, target)
 				}
-				return target
+				return dir, target
 			}
 		}
 
 		parent := filepath.Dir(dir)
 		if parent == dir {
-			return ""
+			return "", ""
 		}
 		dir = parent
 	}

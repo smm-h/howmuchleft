@@ -210,10 +210,17 @@ type ExtraUsageData struct {
 }
 
 // GitInfo holds the git state the branch element renders: the branch name of
-// the repository the working directory sits in, and whether there is one.
+// the repository the working directory sits in, whether there is one, and the
+// counts the status cache last measured for that branch -- how far it is ahead
+// of and behind its upstream, and how many working-tree paths have changed.
+// A count of zero renders nothing, which is also what a render with no cached
+// status yet shows.
 type GitInfo struct {
-	Branch string
-	HasGit bool
+	Branch  string
+	HasGit  bool
+	Ahead   int
+	Behind  int
+	Changed int
 }
 
 // LineChangeInfo holds line addition/removal counts.
@@ -315,6 +322,15 @@ func RenderLines(data *RenderData, barCfg *BarConfig, lineElements *config.Lines
 	var gitStr string
 	if data.Git.HasGit {
 		gitStr = Cyan + data.Git.Branch + Reset
+		if data.Git.Ahead > 0 {
+			gitStr += " " + Magenta + fmt.Sprintf("↑%d", data.Git.Ahead) + Reset
+		}
+		if data.Git.Behind > 0 {
+			gitStr += " " + Magenta + fmt.Sprintf("↓%d", data.Git.Behind) + Reset
+		}
+		if data.Git.Changed > 0 {
+			gitStr += " " + Yellow + fmt.Sprintf("+%d", data.Git.Changed) + Reset
+		}
 	} else {
 		gitStr = Gray + "no .git" + Reset
 	}

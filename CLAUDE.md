@@ -12,7 +12,7 @@ internal/
   render/            Progress bars, gradients, color system, ANSI output composition
   oauth/             OAuth token refresh, usage API client
   cache/             Atomic file cache with TTL, stale-data fallback
-  git/               Branch name, read straight out of .git/HEAD
+  git/               Branch name from .git/HEAD, counts from an async status cache
   platform/          Claude dir resolution, GitHub user lookup
   demo/              Animated sawtooth-wave demo
   dashboard/         Multi-profile live dashboard
@@ -28,7 +28,7 @@ Claude Code spawns `howmuchleft` as a child process on every render. It pipes a 
 
 ### CLI (internal/cli)
 
-Uses go-strictcli. `NewApp()` builds a `strictcli.App` with subcommands: `version`, `profile {install,uninstall,list}`, `demo`, `colors`, `config`. Pipe detection is handled separately by `RunStatuslineDirect()` in `main.go` before the app is built. Each command calls `runMigrations()` (sync.Once-wrapped) for JSON-to-TOML conversion and config default seeding.
+Uses go-strictcli. `NewApp()` builds a `strictcli.App` with subcommands: `version`, `profile {install,uninstall,list}`, `demo`, `colors`, `config`. Two invocations are handled in `main.go` before the app is built and are therefore not commands in it: piped stdin, dispatched by `RunStatuslineDirect()`, and `--refresh-git-cache <repository-root>`, dispatched by `RunGitCacheRefresh()`, which is what a render starts on the binary itself to refresh the git status cache. Each command calls `runMigrations()` (sync.Once-wrapped) for JSON-to-TOML conversion and config default seeding.
 
 ### Config (internal/config)
 
@@ -55,7 +55,9 @@ File-based at `<claude-dir>/.statusline-cache.json`. Atomic writes (tmpfile + re
 
 ### Git (internal/git)
 
-Reads `.git/HEAD` directly, walking up from the working directory and following a `.git` file to a worktree or submodule gitdir. Returns the branch name, or `(detached)` when HEAD names a commit. No git process is started.
+Reads `.git/HEAD` directly, walking up from the working directory and following a `.git` file to a worktree or submodule gitdir. Returns the branch name, or `(detached)` when HEAD names a commit.
+
+The ahead/behind counts and the changed-path count need a git process, so they come from a cache file instead: `<claude-dir>/.git-status-cache/<hash-of-repository-root>.json` holds the branch, the counts and when they were measured. A render shows what that file holds and never waits for git. When the entry is missing, older than `statusCacheTTLMs`, unparseable, or names another branch or another root, the render takes a lock file beside the cache and starts `howmuchleft --refresh-git-cache <root>` detached (`cmd.Start()`, its own session, stdio on /dev/null, never waited for). That child runs `git status --porcelain=v2 --branch`, writes the cache atomically and releases the lock, so the counts a render shows lag the working tree by up to the TTL. The lock keeps one refresh in flight at a time; a lock left by a killed refresher is reclaimed once it is `refreshLockStaleness` old.
 
 ### Platform (internal/platform)
 
@@ -93,7 +95,7 @@ The version is injected via `-ldflags "-X main.Version=..."` at build time. With
 
 - All state is computed fresh per invocation (no daemon, no IPC)
 - Atomic file writes via tmpfile + rename for cache
-- Keep processes off the render path: git state comes from reading `.git/HEAD`, and the desktop theme and the GitHub user are detected once and cached on disk
+- Keep processes off the render path: the branch comes from reading `.git/HEAD`, the git counts come from a cache a detached child refreshes, and the desktop theme and the GitHub user are detected once and cached on disk
 - Tests use `go test ./... -race`
 - Model aliases: O4.6 (opus), S4.6 (sonnet), H4.5 (haiku)
 
