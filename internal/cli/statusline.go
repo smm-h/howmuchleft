@@ -309,11 +309,8 @@ func runStatusline() error {
 
 	// Build git info for render
 	gitRender := render.GitInfo{
-		Branch:  gitInfo.Branch,
-		Ahead:   gitInfo.Ahead,
-		Behind:  gitInfo.Behind,
-		Changes: gitInfo.Changes,
-		HasGit:  gitInfo.HasGit,
+		Branch: gitInfo.Branch,
+		HasGit: gitInfo.HasGit,
 	}
 
 	// Build line changes from cost

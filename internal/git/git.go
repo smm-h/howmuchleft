@@ -1,75 +1,123 @@
-// Package git reports the current branch and working-tree diff statistics by
-// calling git with --no-optional-locks, so it never blocks a concurrent git
-// operation.
+// Package git reports the current branch by reading the repository's HEAD file
+// directly. It starts at the working directory, walks up until it finds a .git
+// directory or a .git file pointing at a worktree or submodule gitdir, and
+// reads the branch name out of HEAD. No git process is started, so a render
+// costs two file reads instead of a fork, an exec and a status scan.
+//
+// Only the branch name is reported. Ahead/behind counts need the commit graph
+// and a working-tree change count needs the index, the ignore rules and an
+// lstat per tracked path -- work that cannot be done without either a git
+// process or a reimplementation of git, so the statusline does not show them.
 package git
 
 import (
-	"context"
-	"os/exec"
-	"strconv"
+	"os"
+	"path/filepath"
 	"strings"
-	"time"
 )
 
-// Info holds parsed git status information for a working directory.
+// Info holds the git state the statusline renders for a working directory.
 type Info struct {
-	Branch  string
-	Ahead   int
-	Behind  int
-	Changes int
-	HasGit  bool
+	// Branch is the checked-out branch name, or "(detached)" when HEAD points
+	// straight at a commit. Empty when HasGit is false.
+	Branch string
+	// HasGit is true when cwd is inside a git repository whose HEAD was read.
+	HasGit bool
 }
 
-// GetInfo runs git status in cwd and returns parsed branch/change info.
-// Returns HasGit=false on any error (not a repo, git missing, timeout).
+// detachedBranch is what Branch reads when HEAD names a commit, not a branch.
+// It is spelled the way git status --porcelain=v2 spells it.
+const detachedBranch = "(detached)"
+
+// GetInfo resolves the repository containing cwd and reads its current branch.
+// Returns HasGit=false when cwd is not inside a repository or HEAD is missing
+// or unreadable.
 func GetInfo(cwd string) *Info {
-	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
-	defer cancel()
+	gitDir := findGitDir(cwd)
+	if gitDir == "" {
+		return &Info{HasGit: false}
+	}
 
-	cmd := exec.CommandContext(ctx, "git",
-		"--no-optional-locks", "status", "--porcelain=v2", "--branch", "-unormal", "--no-renames",
-	)
-	cmd.Dir = cwd
-
-	out, err := cmd.Output()
+	head, err := os.ReadFile(filepath.Join(gitDir, "HEAD"))
 	if err != nil {
 		return &Info{HasGit: false}
 	}
 
-	return parseStatus(string(out))
+	return &Info{HasGit: true, Branch: parseHead(string(head))}
 }
 
-// parseStatus parses git status --porcelain=v2 --branch output.
-func parseStatus(output string) *Info {
-	info := &Info{HasGit: true}
+// findGitDir returns the repository's git directory for cwd, or "" when cwd is
+// not inside a repository. GIT_DIR wins when it is set, the way git itself
+// treats it; otherwise the search walks up from cwd.
+func findGitDir(cwd string) string {
+	if env := os.Getenv("GIT_DIR"); env != "" {
+		return env
+	}
+	if cwd == "" {
+		return ""
+	}
 
-	for _, line := range strings.Split(output, "\n") {
-		if strings.HasPrefix(line, "# branch.head ") {
-			info.Branch = line[len("# branch.head "):]
-		} else if strings.HasPrefix(line, "# branch.ab ") {
-			parts := strings.Fields(line[len("# branch.ab "):])
-			if len(parts) >= 1 {
-				if v, err := strconv.Atoi(parts[0]); err == nil {
-					info.Ahead = v
+	dir := cwd
+	for {
+		candidate := filepath.Join(dir, ".git")
+		st, err := os.Stat(candidate)
+		switch {
+		case err != nil:
+			// keep walking up
+		case st.IsDir():
+			return candidate
+		default:
+			// A .git file: a linked worktree or a submodule. Its single
+			// "gitdir: <path>" line points at the real git directory, and a
+			// relative path there is relative to the directory holding the file.
+			if target := parseGitFile(candidate); target != "" {
+				if !filepath.IsAbs(target) {
+					target = filepath.Join(dir, target)
 				}
-			}
-			if len(parts) >= 2 {
-				if v, err := strconv.Atoi(parts[1]); err == nil {
-					info.Behind = -v // porcelain reports behind as negative
-				}
-			}
-		} else if len(line) >= 2 {
-			prefix := line[:2]
-			if prefix == "1 " || prefix == "2 " || prefix == "u " || prefix == "? " {
-				info.Changes++
+				return target
 			}
 		}
+
+		parent := filepath.Dir(dir)
+		if parent == dir {
+			return ""
+		}
+		dir = parent
+	}
+}
+
+// parseGitFile reads a .git file and returns the gitdir path it names, or ""
+// when the file is unreadable or does not carry a gitdir line.
+func parseGitFile(path string) string {
+	data, err := os.ReadFile(path)
+	if err != nil {
+		return ""
+	}
+	for _, line := range strings.Split(string(data), "\n") {
+		if rest, ok := strings.CutPrefix(strings.TrimSpace(line), "gitdir:"); ok {
+			return strings.TrimSpace(rest)
+		}
+	}
+	return ""
+}
+
+// parseHead turns the contents of a HEAD file into a branch name. A symbolic
+// ref to refs/heads/<name> yields <name>; a symbolic ref anywhere else yields
+// the ref as written; a raw object id yields "(detached)".
+func parseHead(head string) string {
+	head = strings.TrimSpace(head)
+
+	rest, ok := strings.CutPrefix(head, "ref:")
+	if !ok {
+		return detachedBranch
 	}
 
-	// Default to "(detached)" if no branch header was found
-	if info.Branch == "" {
-		info.Branch = "(detached)"
+	ref := strings.TrimSpace(rest)
+	if ref == "" {
+		return detachedBranch
 	}
-
-	return info
+	if name, ok := strings.CutPrefix(ref, "refs/heads/"); ok {
+		return name
+	}
+	return ref
 }

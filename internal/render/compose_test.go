@@ -258,7 +258,7 @@ func TestRenderLines_ProducesThreeLines(t *testing.T) {
 		Elapsed:  &elapsed,
 		FiveHour: UsageData{Percent: &fiveHourPct, ResetIn: 3600000},
 		Weekly:   UsageData{Percent: &weeklyPct, ResetIn: 86400000},
-		Git:      GitInfo{Branch: "main", HasGit: true, Changes: 2},
+		Git:      GitInfo{Branch: "main", HasGit: true},
 		Cwd:      "~/Projects/test",
 	}
 

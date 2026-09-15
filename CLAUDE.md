@@ -12,7 +12,7 @@ internal/
   render/            Progress bars, gradients, color system, ANSI output composition
   oauth/             OAuth token refresh, usage API client
   cache/             Atomic file cache with TTL, stale-data fallback
-  git/               Branch name, diff stats via git subprocess
+  git/               Branch name, read straight out of .git/HEAD
   platform/          Claude dir resolution, dark/light mode detection, GitHub user lookup
   demo/              Animated sawtooth-wave demo
   dashboard/         Multi-profile live dashboard
@@ -55,7 +55,7 @@ File-based at `<claude-dir>/.statusline-cache.json`. Atomic writes (tmpfile + re
 
 ### Git (internal/git)
 
-Subprocess calls with `--no-optional-locks`. Returns branch name, lines added/removed, file change count.
+Reads `.git/HEAD` directly, walking up from the working directory and following a `.git` file to a worktree or submodule gitdir. Returns the branch name, or `(detached)` when HEAD names a commit. No git process is started.
 
 ### Platform (internal/platform)
 
@@ -94,7 +94,7 @@ The version is injected via `-ldflags "-X main.Version=..."` at build time. With
 
 - All state is computed fresh per invocation (no daemon, no IPC)
 - Atomic file writes via tmpfile + rename for cache
-- `--no-optional-locks` on git commands to avoid blocking concurrent git operations
+- Git state on the statusline path comes from reading `.git/HEAD`, never from a git process
 - Tests use `go test ./... -race`
 - Model aliases: O4.6 (opus), S4.6 (sonnet), H4.5 (haiku)
 

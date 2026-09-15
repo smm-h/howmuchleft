@@ -209,13 +209,11 @@ type ExtraUsageData struct {
 	Enabled bool
 }
 
-// GitInfo holds git repository state.
+// GitInfo holds the git state the branch element renders: the branch name of
+// the repository the working directory sits in, and whether there is one.
 type GitInfo struct {
-	Branch  string
-	Ahead   int
-	Behind  int
-	Changes int
-	HasGit  bool
+	Branch string
+	HasGit bool
 }
 
 // LineChangeInfo holds line addition/removal counts.
@@ -317,15 +315,6 @@ func RenderLines(data *RenderData, barCfg *BarConfig, lineElements *config.Lines
 	var gitStr string
 	if data.Git.HasGit {
 		gitStr = Cyan + data.Git.Branch + Reset
-		if data.Git.Ahead > 0 {
-			gitStr += " " + Magenta + fmt.Sprintf("↑%d", data.Git.Ahead) + Reset
-		}
-		if data.Git.Behind > 0 {
-			gitStr += " " + Magenta + fmt.Sprintf("↓%d", data.Git.Behind) + Reset
-		}
-		if data.Git.Changes > 0 {
-			gitStr += " " + Yellow + fmt.Sprintf("+%d", data.Git.Changes) + Reset
-		}
 	} else {
 		gitStr = Gray + "no .git" + Reset
 	}

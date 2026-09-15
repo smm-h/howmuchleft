@@ -149,7 +149,6 @@ func Run(durationSec int) error {
 	defer ticker.Stop()
 
 	frame := 0
-	changes := 0
 	linesAdded := 0
 	linesRemoved := 0
 	prevCtxCycle := 0
@@ -175,7 +174,6 @@ func Run(durationSec int) error {
 		// Accumulate git stats on each context cycle reset
 		currCtxCycle := int(math.Floor(t * contextCycles))
 		if frame > 0 && currCtxCycle > prevCtxCycle {
-			changes += rand.Intn(3) + 1
 			linesAdded += rand.Intn(50) + 10
 			linesRemoved += rand.Intn(20)
 		}
@@ -215,7 +213,7 @@ func Run(durationSec int) error {
 			FableWeekly:            render.UsageData{Percent: &fableWeeklyPct, ResetIn: waves.FableWeeklyResetIn},
 			ExtraUsage:             extraUsage,
 			Stale:                  false,
-			Git:                    render.GitInfo{HasGit: true, Branch: branch, Changes: changes},
+			Git:                    render.GitInfo{HasGit: true, Branch: branch},
 			LineChanges:            render.LineChangeInfo{Added: &added, Removed: &removed},
 			Cwd:                    cwd,
 			FiveHourTimePercent:    &fiveHourTimePct,
