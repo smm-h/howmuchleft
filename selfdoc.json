@@ -1,6 +1,9 @@
 {
   "version": "0.15.1",
   "description": "a Claude Code statusline that shows context window, 5-hour and weekly limit usage as three progress bars with sub-cell precision, shading each from green to red as it fills",
+  "directives": {
+    "statusline-comparison": "scripts/statusline-comparison-directive.py"
+  },
   "repo": "https://github.com/smm-h/howmuchleft",
   "base_url": "https://smmh.dev/howmuchleft",
   "source": [
