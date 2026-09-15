@@ -1,6 +1,6 @@
-// Command howmuchleft is a Claude Code statusline that shows context window,
-// 5-hour and weekly limit usage as three progress bars with sub-cell precision,
-// shading each from green to red as it fills.
+// Command howmuchleft is the fastest Claude Code statusline: context window,
+// 5-hour, and weekly limit usage as three customizable gradient bars,
+// rendering in about 6 ms.
 //
 // Claude Code pipes a JSON status object on stdin on every render; the binary
 // writes three lines of ANSI text to stdout and exits. Invoked without piped

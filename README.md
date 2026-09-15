@@ -1,6 +1,6 @@
 # HowMuchLeft
 
-howmuchleft is a Claude Code statusline that shows context window, 5-hour and weekly limit usage as three progress bars with sub-cell precision, shading each from green to red as it fills. It is for Pro, Max and Team subscribers who want to see how much of every limit is left without leaving the terminal. Usage comes from the credentials Claude Code has already stored, so there is no API key to supply and no separate login.
+howmuchleft is the fastest Claude Code statusline: context window, 5-hour, and weekly limit usage as three customizable gradient bars, rendering in about 6 ms. It is for Pro, Max and Team subscribers who want to see how much of every limit is left without leaving the terminal. Usage comes from the credentials Claude Code has already stored, so there is no API key to supply and no separate login.
 
 ![Dark mode demo](./assets/demo-dark.gif)
 

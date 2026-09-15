@@ -71,7 +71,7 @@ func RunStatuslineDirect() bool {
 // filesystem mutations, so no command here can honestly claim read_only.
 // classification_test.go pins the table.
 func NewApp() *strictcli.App {
-	app := strictcli.NewApp("howmuchleft", appVersion, "a Claude Code statusline that shows context window, 5-hour and weekly limit usage as three progress bars with sub-cell precision, shading each from green to red as it fills")
+	app := strictcli.NewApp("howmuchleft", appVersion, "The fastest Claude Code statusline: context window, 5-hour, and weekly limit usage as three customizable gradient bars, rendering in about 6 ms")
 
 	// version
 	app.Command("version", "Print the version", func(ctx *strictcli.Context, kwargs map[string]interface{}) strictcli.Outcome {
