@@ -1,6 +1,6 @@
 +++
 title = "internal/git"
-description = "Reads the current branch straight out of the repository's HEAD file, walking up from the working directory and following a .git file to a worktree or submodule gitdir, so a render starts no git process."
+description = "Reads the branch from the repository's HEAD file, and its ahead/behind and changed-path counts from a status cache a detached git status refreshes."
 generated = true
 nav_group = "API Reference"
 nav_order = 7
