@@ -4,7 +4,8 @@ Registered in selfdoc.json as ``statusline-comparison``. selfdoc runs this file
 through its Python driver and calls ``resolve(attrs, config, body) -> str``; the
 returned markdown replaces the ``:-: statusline-comparison`` directive line.
 
-The measurements come from ``docs/statusline-comparison.toml``, written by
+The measurements come from ``.stricttools/docs/statusline-comparison.toml``,
+written by
 ``scripts/compare-statuslines.sh --run``. That file is the single source of
 every number on the comparison page, so no measurement is ever typed by hand
 into prose.
@@ -19,7 +20,7 @@ import os
 import tomllib
 from typing import Any
 
-DEFAULT_RESULTS = "docs/statusline-comparison.toml"
+DEFAULT_RESULTS = ".stricttools/docs/statusline-comparison.toml"
 
 # The project whose page this is; its row says so.
 THIS_PROJECT = "howmuchleft"
@@ -46,8 +47,19 @@ LIMIT_LABELS = {"yes": "yes", "no": "no", "api": "from the API"}
 
 
 def _repo_root() -> str:
-    """Return the repository root: this file lives in ``scripts/``."""
-    return os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    """Return the repository root: the nearest ancestor holding selfdoc.json.
+
+    Found by marker rather than by a parent count, so this resolves correctly
+    wherever this script sits inside the repository.
+    """
+    directory = os.path.dirname(os.path.abspath(__file__))
+    while True:
+        if os.path.isfile(os.path.join(directory, "selfdoc.json")):
+            return directory
+        parent = os.path.dirname(directory)
+        if parent == directory:
+            raise RuntimeError(f"no selfdoc.json above {__file__}")
+        directory = parent
 
 
 def _load(path: str) -> dict[str, Any]:
